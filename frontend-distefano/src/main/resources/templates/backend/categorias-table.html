@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout}">
+
+<body>
+    <div th:fragment="content">
+    <div class="agregar-boton">
+			<a th:href="@{/backend/categorias/agregar/}" class="btn btn-success">
+				<i class="fa fa-add"></i> Agregar Categoria
+			</a><br>
+		</div>
+        <div class="container">
+            <table class="table table-bordered">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Descripción</th>
+                        <th colspan="2">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="categoria : ${categorias}">
+                        <td th:text="${categoria.nombre}"></td>
+                        <td th:text="${categoria.descripcion}"></td>                      
+                        
+                        <td class="acciones-table">
+                            <a th:href="@{/backend/categorias/modificar/{id}(id=${categoria.id_categoria})}"
+                               class="btn btn-warning">
+                                <i class="fa fa-pencil"></i>
+                            </a>
+                        </td>
+                        <td class="acciones-table">
+                            <a th:href="@{/backend/categorias/eliminar/{id}(id=${categoria.id_categoria})}"
+                               class="btn btn-danger">
+                                <i class="fa fa-trash"></i>
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,33 @@
+<!-- src/main/resources/templates/usuarios.html -->
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout}">
+
+
+<body>
+	<div th:fragment="content">
+		<div class="container">			
+			
+			<table class="table usuarios-table">
+				<thead>
+					<tr class="table-dark">
+						<th>ID</th>
+						<th>Correo</th>
+						<th>Nombre</th>
+						<th>Password</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="usuario : ${usuarios}">
+						<td th:text="${usuario.id}"></td>
+						<td th:text="${usuario.correo}"></td>
+						<td th:text="${usuario.nombre}"></td>
+						<td th:text="${usuario.password}"></td>
+					</tr>
+				</tbody>
+			</table>
+			
+		</div>
+	</div>
+</body>
+</html>

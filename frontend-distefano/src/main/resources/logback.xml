@@ -1,0 +1,25 @@
+<configuration>
+
+    <conversionRule conversionWord="colorLevel" converterClass="com.educacionit.logging.CustomColorConverter" />
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <!-- Layout del log -->
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <Pattern>FrontEnd | Alejandro Di Stefano | %d{HH:mm:ss.SSS} [%thread] %colorLevel(%-5level) %logger{36} - %msg%n</Pattern>
+        </layout>
+    </appender>
+
+    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+        <file>logs/logfile.log</file> <!-- Ruta del archivo de log -->
+        <!-- Layout del log -->
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <Pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</Pattern>
+        </layout>
+    </appender>
+
+    <root level="INFO">
+        <appender-ref ref="STDOUT" /> <!-- Refiriendo al appender para la consola -->
+        <appender-ref ref="FILE" /> <!-- Refiriendo al appender para el archivo -->
+    </root>
+
+</configuration>

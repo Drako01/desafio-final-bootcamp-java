@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout}">
+
+<body>
+	<div th:fragment="content">
+		<div class="container">
+			<h2>Modificar Producto</h2>
+			<form
+				th:action="@{/backend/productos/modificar/{id}(id=${producto.id_producto})}"
+				method="post">
+
+				<div class="form-group">
+					<label for="imagen">URL de la Imagen:</label> <input type="text"
+						class="form-control" id="imagen" th:value="${producto.imagen}"
+						name="imagen">
+				</div>
+				<div class="form-group">
+					<label for="nombre">Nombre:</label> <input type="text"
+						class="form-control" id="nombre" th:value="${producto.nombre}"
+						name="nombre">
+				</div>
+				<div class="form-group">
+					<label for="descripcion">Descripción:</label> <input type="text"
+						class="form-control" id="descripcion"
+						th:value="${producto.descripcion}" name="descripcion">
+				</div>
+				<div class="form-group">
+					<label for="stock">Stock:</label> <input type="number"
+						class="form-control" id="stock" th:value="${producto.stock}"
+						name="stock">
+				</div>
+				<div class="form-group">
+					<label for="precio">Precio:</label> <input type="number"
+						class="form-control" id="precio" th:value="${producto.precio}"
+						name="precio">
+				</div>
+				<div class="form-group">
+					<label for="categoria">Categoría:</label> <select
+						class="form-control" id="categoria" name="categoriaId">
+						<option th:each="categoria : ${categorias}"
+							th:value="${categoria.id_categoria}"
+							th:text="${categoria.nombre}"
+							th:selected="${categoria.id_categoria == producto.categoria.id_categoria}"></option>
+					</select>
+				</div>
+
+
+				<br>
+				<button type="submit" class="btn btn-primary">Guardar
+					Cambios</button>
+			</form>
+		</div>
+	</div>
+</body>
+
+</html>

@@ -1,0 +1,44 @@
+<!-- src/main/resources/templates/productos_agregar.html -->
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout}">
+
+<body>
+	<div th:fragment="content">
+		<div class="container">
+			<form th:action="@{/productos/agregar}" th:object="${nuevoProducto}" method="post">
+				<div class="mb-3">
+					<label for="nombre" class="form-label">Nombre:</label> <input
+						type="text" class="form-control" id="nombre" th:field="*{nombre}"
+						required>
+				</div>
+				<div class="mb-3">
+					<label for="descripcion" class="form-label">Descripción:</label>
+					<textarea class="form-control" id="descripcion"
+						th:field="*{descripcion}" required></textarea>
+				</div>
+				<div class="mb-3">
+					<label for="imagen" class="form-label">URL de la Imagen:</label> <input
+						type="text" class="form-control" id="imagen" th:field="*{imagen}"
+						required>
+				</div>
+				<div class="mb-3">
+					<label for="price" class="form-label">Precio:</label> <input
+						type="number" class="form-control" id="price" th:field="*{price}"
+						required>
+				</div>
+
+				<div class="mb-3">
+					<label for="stock" class="form-label">Stock:</label> <input
+						type="number" class="form-control" id="stock" th:field="*{stock}"
+						required>
+				</div>
+				
+				<button type="submit" class="btn btn-primary">Agregar
+					Producto</button>
+			</form>
+		</div>
+	</div>
+</body>
+
+</html>

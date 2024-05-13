@@ -1,0 +1,272 @@
+/* styles.css */
+
+/* Variables */
+:root {
+    /* Colores */
+    --first: #c29336;
+    --second: #fff;
+    --thirt: #474747;
+    --blur: #eeeeeed3;
+    --black: #000;
+    --shadow: #00000080;
+    --blue: #007bff;
+    --indigo: #6610f2;
+    --purple: #6f42c1;
+    --pink: #e83e8c;
+    --red: #dc3545;
+    --orange: #fd7e14;
+    --yellow: #ffc107;
+    --green: #28a745;
+    --teal: #20c997;
+    --cyan: #17a2b8;
+    --white: #fff;
+    --gray: #6c757d;
+    --gray-dark: #343a40;
+    --primary: #007bff;
+    --secondary: #6c757d;
+    --success: #28a745;
+    --info: #17a2b8;
+    --warning: #ffc107;
+    --danger: #dc3545;
+    --light: #f8f9fa;
+    --dark: #343a40;
+    /* Tamaños */
+    --small: 1rem;
+    --medium: 5rem;
+    --large: 10rem;
+    /* Fonts */
+    --font: 'Roboto', sans-serif;
+}
+
+body.dark {
+    /* Colores opuestos cuando body tiene la clase "dark" */
+    --second: #3f3f3f;
+    --thirt: #b8b8b8;
+    --blur: #252525e5;
+    --black: #fff;
+    --shadow: #0000009a;
+    --blue: #ff8420;
+    --indigo: #99ef0d;
+    --purple: #90bd3e;
+    --pink: #17c174;
+    --red: #23cab5;
+    --orange: #0271eb;
+    --yellow: #003ef8;
+    --green: #d75dba;
+    --teal: #df3668;
+    --cyan: #e85d47;
+    --white: #ffffff;
+    --gray: #9398a2;
+    --gray-dark: #cbc5bf;
+    --primary: #ff8420;
+    --secondary: #9398a2;
+    --success: #d75dba;
+    --info: #e85d47;
+    --warning: #003ef8;
+    --danger: #23cab5;
+    --light: #070606;
+    --dark: #cbc5bf;
+    --bs-body-color: #ffffff;
+    --bs-body-bg: #4a4a4a;
+    background-color: var(--second);
+}
+
+body {
+    position: relative;
+    z-index: 0;
+}
+* {
+    box-sizing: border-box;
+    scroll-behavior: smooth;
+    font-family: var(--font);
+}
+
+/* Reinicios de Estilos */
+/* Margenes */
+body,
+h1,
+h2,
+h3,
+h4,
+header p,
+.submenu,
+.subitems,
+.menu {
+    margin: 0;
+}
+
+/* Rellenos */
+.submenu,
+.subitems,
+.menu {
+    padding: 0;
+}
+
+/* Bordes */
+iframe {
+    border: 0;
+}
+
+/* Estilos */
+:is(header,
+    nav,
+    footer) a {
+    text-decoration: none;
+}
+
+.submenu,
+.subitems,
+.menu {
+    list-style: none;
+}
+
+label {
+    color: var(--black);
+}
+h1{
+	text-align: center;
+	margin-top: 8rem;
+	color: var(--first);
+}
+.product-details,
+.inicio {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+    align-items: center;
+}
+.imagen-error,
+.imagen-init{
+	max-width: 680px;
+}
+.imagen-error{
+	margin: 3rem 0;
+	border-radius: 1.5rem;
+}
+.parrafo-error {
+	font-size: 2rem;
+	color: var(--danger);
+}
+.navbar{
+	position: fixed;
+    top: 0;
+    width: 100%;
+    height: 70px;
+    background-color: var(--black) !important;
+    z-index: 5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.navbar a{
+	color: var(--first)!important;
+    font-size: var(--small);
+    font-weight: 400;
+}
+.nav-link.disabled {
+	color: var(--blur)!important;
+}
+.navbar-brand img{
+	max-height: 60px;
+}
+.btn{
+	min-width: 100px;
+}
+.btn-info{
+	color: var(--second);
+}
+.btn-info:hover{
+	color: var(--second);
+}
+footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    height: 5vh;
+    background-color: var(--black);
+    color: var(--second);
+    font-size: var(--small);
+    font-weight: 400;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+footer p {
+    margin-top: calc(0.7 * var(--small));
+    color: var(--first);
+    padding: calc(0.5 * var(--small));
+    font-size: calc(1.1 * var(--small));
+}
+.container {
+	margin-top: 2rem;
+}
+.products{
+	display: flex;
+	padding: 2rem;
+	margin:4rem 0;
+	justify-content: space-evenly;
+	gap: 1rem;
+	flex-wrap: wrap;
+}
+.foto-producto {
+	width: calc(100% - 1.5rem) !important;
+	height: 280px;
+	object-fit: cover;
+	margin: auto;
+}
+.card img{
+	
+	min-height: 240px;
+}
+.card .line{
+	width: calc(100% - 1.5rem) !important;
+	height: 4px;
+	margin: auto;
+	background-color: var(--blur);
+	border-radius: 50%;
+	box-shadow: 0px 5px 15px var(--blur);
+	margin-bottom: 2rem;
+}
+.usuarios-table{
+	margin-top: 3rem;
+}
+.product-details{
+	padding: 3rem;
+}
+.botones{
+	gap:1rem;
+}
+
+.product-details {
+	flex-direction: row;
+	justify-content: space-evenly;
+}
+.product-details img{
+	padding: 1rem;
+	width: 360px;
+}
+
+.product-details h2 {
+	text-align: center;
+}
+
+.acciones-table{
+	width: 2rem;
+}
+.acciones-table a{
+	width: 1.8rem;
+	
+}
+.container {
+	margin-bottom: 6rem;
+}
+.thead-dark{
+	background-color: var(--shadow);
+	color: var(--blur);
+	text-align: center;
+}
+.agregar-boton{
+	margin-bottom: 1.6rem;
+	margin-left: 2rem;
+}

@@ -1,0 +1,15 @@
+<!-- src/main/resources/templates/error404.html -->
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout}">
+
+<body>
+	<div th:fragment="content">
+		<div class='d-flex inicio'>
+			<img th:src="@{${imageError}}" alt="Error 404" class='imagen-error'>			
+			<p class="parrafo-error">Lo siento, Intente nuevamente..!</p>		
+				<a href="/" class="btn btn-danger">VOLVER</a> 
+		</div>
+	</div>
+</body>
+</html>

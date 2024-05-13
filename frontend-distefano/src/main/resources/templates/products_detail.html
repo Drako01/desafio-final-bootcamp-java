@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout}">
+
+<body>
+	<div th:fragment="content">
+		<div class="container product-details">
+			<div class="column center">
+				<h2 th:text="${nombre}"></h2>
+				<img th:src="${imagen}" alt="Product Image" class="detalles">
+			</div>
+			<div class="column center">
+				<p th:text="${descripcion}"></p>
+				<p th:text="'Stock: ' + ${stock} + ' Unid.'"></p>
+				<p th:text="'Precio: $ ' + ${precio} + '.-'"></p>
+				<p>
+					Categoría: <span th:each="categoria : ${categorias}"
+						th:if="${categoria.id_categoria == categoria_id}"
+						th:text="${categoria.nombre}"></span>
+				</p>
+				<div class="botones">
+					<a th:href="@{/productos/}" class="btn btn-secondary">VOLVER</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+
+</html>
