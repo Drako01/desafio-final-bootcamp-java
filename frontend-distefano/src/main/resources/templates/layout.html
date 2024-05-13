@@ -17,6 +17,20 @@
 	<!-- Incluye aquí el script de Bootstrap -->
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>	
 
+	<script>
+		if (window.location.pathname === '/backend/categorias/') {
+		
+			var script = document.createElement('script');
+			script.src = '/js/categoria.js';
+			document.body.appendChild(script);
+			
+		} else if (window.location.pathname === '/backend/productos/') {
+		
+			var script = document.createElement('script');
+			script.src = '/js/producto.js';
+			document.body.appendChild(script);
+		} 
+	</script>
 	<script src="/js/index.js" ></script>	
 </body>
 </html>

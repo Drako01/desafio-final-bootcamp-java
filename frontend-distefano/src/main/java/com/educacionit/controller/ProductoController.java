@@ -105,72 +105,52 @@ public class ProductoController {
 	}
 
 	@PostMapping("/backend/productos/modificar/{id}")
-	public String actualizarProducto(@PathVariable("id") Integer id, 
-	        @ModelAttribute Producto productoModificado,
-	        @RequestParam("categoriaId") Integer categoriaId,
-	        Model model) {
+	public String actualizarProducto(@PathVariable("id") Integer id, @ModelAttribute Producto productoModificado,
+			@RequestParam("categoriaId") Integer categoriaId, Model model) {
 
-	    String apiUrl = baseUrl + "/productos/" + id;
-	    Producto productoExistente = restTemplate.getForObject(apiUrl, Producto.class);
+		String apiUrl = baseUrl + "/productos/" + id;
+		Producto productoExistente = restTemplate.getForObject(apiUrl, Producto.class);
 
-	    if (productoExistente != null) {
-	        productoExistente.setNombre(productoModificado.getNombre());
-	        productoExistente.setDescripcion(productoModificado.getDescripcion());
-	        productoExistente.setPrecio(productoModificado.getPrecio());
-	        productoExistente.setImagen(productoModificado.getImagen());
-	        productoExistente.setStock(productoModificado.getStock());
-	        
-	        Categoria categoria = new Categoria();
-	        categoria.setId_categoria(categoriaId);
-	        productoExistente.setCategoria(categoria);
+		if (productoExistente != null) {
+			productoExistente.setNombre(productoModificado.getNombre());
+			productoExistente.setDescripcion(productoModificado.getDescripcion());
+			productoExistente.setPrecio(productoModificado.getPrecio());
+			productoExistente.setImagen(productoModificado.getImagen());
+			productoExistente.setStock(productoModificado.getStock());
 
-	        restTemplate.put(apiUrl, productoExistente);
+			Categoria categoria = new Categoria();
+			categoria.setId_categoria(categoriaId);
+			productoExistente.setCategoria(categoria);
 
-	        return "redirect:/backend/productos/";
-	    } else {
-	        model.addAttribute("pageTitle", "Error - Producto no encontrado");
-	        model.addAttribute("mensajeError", "El producto con ID " + id + " no existe.");
-	        return "error";
-	    }
-	    
-	    
+			restTemplate.put(apiUrl, productoExistente);
+
+			return "redirect:/backend/productos/";
+		} else {
+			model.addAttribute("pageTitle", "Error - Producto no encontrado");
+			model.addAttribute("mensajeError", "El producto con ID " + id + " no existe.");
+			return "error";
+		}
+
 	}
 
 	@GetMapping("/backend/productos/eliminar/{id}")
 	public String eliminarProducto(@PathVariable Integer id, Model model) {
-	    String apiUrl = baseUrl + "/productos/" + id;        
-	    restTemplate.delete(apiUrl);        
-	    return "redirect:/backend/productos/";
+		String apiUrl = baseUrl + "/productos/" + id;
+		restTemplate.delete(apiUrl);
+		return "redirect:/backend/productos/";
 	}
 
-	@GetMapping("/backend/productos/agregar/")
-	public String mostrarFormularioAgregarProducto(Model model) {
-	    String apiUrlCategorias = baseUrl + "/categorias/";
-	    Categoria[] categorias = restTemplate.getForObject(apiUrlCategorias, Categoria[].class);
-
-	    model.addAttribute("imagePath", "/img/spring.png");
-		model.addAttribute("imagePathEducaciontIt", "/img/educacionit.svg");
-	    model.addAttribute("categorias", categorias);
-	    model.addAttribute("pageTitle", "Agregar Producto | App Spring Boot");
-	    model.addAttribute("titulo", "Agregar Producto");
-
-	    return "backend/producto-agregar";
-	}
-
-	
 	@PostMapping("/backend/productos/agregar/")
 	public String agregarProductoBackend(@ModelAttribute Producto nuevoProducto,
-	                                     @RequestParam("categoriaId") Integer categoriaId,
-	                                     Model model) {
-	    String apiUrl = baseUrl + "/productos/";
-	    String apiUrlCategorias = baseUrl + "/categorias/";
-	    
-	    Categoria categoria = restTemplate.getForObject(apiUrlCategorias + categoriaId, Categoria.class);
-	    nuevoProducto.setCategoria(categoria);	    
-	    restTemplate.postForObject(apiUrl, nuevoProducto, Producto.class);
-	    
-	    return "redirect:/backend/productos/";
-	}
+			@RequestParam("categoriaId") Integer categoriaId, Model model) {		
 
+		String apiUrl = baseUrl + "/productos/";
+		String apiUrlCategorias = baseUrl + "/categorias/";
+		Categoria categoria = restTemplate.getForObject(apiUrlCategorias + categoriaId, Categoria.class);
+		nuevoProducto.setCategoria(categoria);		
+		restTemplate.postForObject(apiUrl, nuevoProducto, Producto.class);
+
+		return "redirect:/backend/productos/";
+	}
 
 }

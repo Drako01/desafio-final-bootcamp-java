@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 
 import com.educacionit.model.Categoria;
@@ -113,7 +114,8 @@ public class CategoriaController {
             if (producto.getCategoria() != null && producto.getCategoria().getId_categoria().equals(id)) {
                 model.addAttribute("pageTitle", "Error al eliminar categoría");
                 model.addAttribute("mensajeError",
-                        "No se puede eliminar la categoría porque está asignada a productos.");
+                        "No se puede eliminar la categoría porque está asignada "
+                        + "a uno o varios productos.");
                 model.addAttribute("imagePath", "/img/spring.png");
                 model.addAttribute("imagePathEducaciontIt", "/img/educacionit.svg");
                 return "/backend/error-categoria";
@@ -124,5 +126,13 @@ public class CategoriaController {
         restTemplate.delete(apiUrl);
         return "redirect:/backend/categorias/";
     }
+	
+	@GetMapping("/backend/categorias/json")
+	@ResponseBody
+	public Categoria[] obtenerCategoriasJson() {
+	    String apiUrlCategorias = baseUrl + "/categorias/";
+	    return restTemplate.getForObject(apiUrlCategorias, Categoria[].class);
+	}
+
 
 }
