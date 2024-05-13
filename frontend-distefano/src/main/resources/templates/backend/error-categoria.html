@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout}">
+
+<body>
+    <div th:fragment="content">
+    <div class="container">
+        <h1 class="mt-5">Error al eliminar categoría</h1>
+        <div class="alert alert-danger mt-3" role="alert">
+            <p th:text="${mensajeError}"></p>
+        </div>
+        <a href="/backend/categorias/" class="btn btn-primary">Volver a categorías</a>
+    </div>
+    
+    
+    </div>
+</body>
+
+</html>
+    

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.client.RestTemplate;
 
 import com.educacionit.model.Categoria;
+import com.educacionit.model.Producto;
 
 @Controller
 public class CategoriaController {
@@ -54,15 +55,7 @@ public class CategoriaController {
 		}
 	}
 
-	@GetMapping("/backend/categorias/agregar/")
-	public String mostrarFormularioAgregarCategoria(Model model) {
-		model.addAttribute("pageTitle", "Agregar Categoría");
-		model.addAttribute("titulo", "Agregar Categoría");
-		model.addAttribute("imagePath", "/img/spring.png");
-		model.addAttribute("imagePathEducaciontIt", "/img/educacionit.svg");
-		return "backend/agregar-categoria-form";
-	}
-
+	
 	@PostMapping("/backend/categorias/agregar/")
 	public String agregarCategoriaBackend(@ModelAttribute Categoria nuevaCategoria, Model model) {
 		String apiUrl = baseUrl + "/categorias/";
@@ -103,7 +96,7 @@ public class CategoriaController {
 
 			return "redirect:/backend/categorias/";
 		} else {
-			model.addAttribute("pageTitle", "Error - Categoría no encontrada");
+			model.addAttribute("pageTitle", "Error - Categoría no encontrada");			
 			model.addAttribute("mensajeError", "La categoría con ID " + id + " no existe.");
 			model.addAttribute("imagePath", "/img/spring.png");
 			model.addAttribute("imagePathEducaciontIt", "/img/educacionit.svg");
@@ -112,9 +105,24 @@ public class CategoriaController {
 	}
 
 	@GetMapping("/backend/categorias/eliminar/{id}")
-	public String eliminarCategoriaBackend(@PathVariable Integer id, Model model) {
-		String apiUrl = baseUrl + "/categorias/" + id;
-		restTemplate.delete(apiUrl);
-		return "redirect:/backend/categorias/";
-	}
+    public String eliminarCategoriaBackend(@PathVariable Integer id, Model model) {
+        String apiUrlProductos = baseUrl + "/productos/";
+        Producto[] productos = restTemplate.getForObject(apiUrlProductos, Producto[].class);
+
+        for (Producto producto : productos) {
+            if (producto.getCategoria() != null && producto.getCategoria().getId_categoria().equals(id)) {
+                model.addAttribute("pageTitle", "Error al eliminar categoría");
+                model.addAttribute("mensajeError",
+                        "No se puede eliminar la categoría porque está asignada a productos.");
+                model.addAttribute("imagePath", "/img/spring.png");
+                model.addAttribute("imagePathEducaciontIt", "/img/educacionit.svg");
+                return "/backend/error-categoria";
+            }
+        }
+
+        String apiUrl = baseUrl + "/categorias/" + id;
+        restTemplate.delete(apiUrl);
+        return "redirect:/backend/categorias/";
+    }
+
 }
