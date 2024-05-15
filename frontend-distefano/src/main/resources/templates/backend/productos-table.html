@@ -23,7 +23,7 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr th:each="producto : ${productos}">
+					<tr th:each="producto : ${productos}"  th:data-id="${producto.id_producto}">
 						<td style="text-align: center;"><img
 							th:src="${producto.imagen}" alt="Foto del Producto"
 							style="width: 40px;"></td>
@@ -37,17 +37,43 @@
 							th:text="${categoria.nombre}"></span></td>
 
 						<td class="acciones-table"><a
-							th:href="@{/backend/productos/modificar/{id}(id=${producto.id_producto})}"
-							class="btn btn-warning"> <i class="fa fa-pencil"></i>
+							th:href="@{#}"
+							class="btn btn-warning btn-modificar-prod"> 
+							<i class="fa fa-pencil"></i>
 						</a></td>
 						<td class="acciones-table"><a
-							th:href="@{/backend/productos/eliminar/{id}(id=${producto.id_producto})}"
-							class="btn btn-danger"> <i class="fa fa-trash"></i>
+							th:href="@{#}"
+							class="btn btn-danger btn-eliminar-prod"> 
+							<i class="fa fa-trash"></i>
 						</a></td>
 
 					</tr>
 				</tbody>
 			</table>
+		</div>
+		<div id="modalEliminarProducto" class="modal fade" tabindex="-1"
+			role="dialog" aria-labelledby="modalEliminarProductoLabel"
+			aria-hidden="true">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="modalEliminarProductoLabel">Confirmar
+							eliminación</h5>
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">¿Está seguro de que desea eliminar
+						este producto?</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary"
+							data-dismiss="modal">Cancelar</button>
+						<button type="button" class="btn btn-danger"
+							id="confirmarEliminacionProducto">Eliminar</button>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 

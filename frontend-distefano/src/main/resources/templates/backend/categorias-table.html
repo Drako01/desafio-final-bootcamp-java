@@ -2,41 +2,66 @@
 <html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout}">
 
 <body>
-    <div th:fragment="content">
-        <div class="agregar-boton">
-            <a th:href="@{#}" class="btn btn-success agregar-cat-btn" id="boton-agregar-cat">
-                <i class="fa fa-add"></i> Agregar Categoria
-            </a><br>
-        </div>
-        <div class="container">
-            <table class="table table-bordered">
-                <thead class="thead-dark">
-                    <tr>
-                        <th>Nombre</th>
-                        <th>Descripción</th>
-                        <th colspan="2">Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr th:each="categoria : ${categorias}">
-                        <td th:text="${categoria.nombre}"></td>
-                        <td th:text="${categoria.descripcion}"></td>
-                        <td class="acciones-table">
-                            <a th:href="@{/backend/categorias/modificar/{id}(id=${categoria.id_categoria})}" class="btn btn-warning">
-                                <i class="fa fa-pencil"></i>
-                            </a>
-                        </td>
-                        <td class="acciones-table">
-                            <a th:href="@{/backend/categorias/eliminar/{id}(id=${categoria.id_categoria})}" class="btn btn-danger">
-                                <i class="fa fa-trash"></i>
-                            </a>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-    
+	<div th:fragment="content">
+		<div class="agregar-boton">
+			<a th:href="@{#}" class="btn btn-success agregar-cat-btn"
+				id="boton-agregar-cat"> <i class="fa fa-add"></i> Agregar
+				Categoria
+			</a><br>
+		</div>
+		<div class="container">
+			<table class="table table-bordered">
+				<thead class="thead-dark">
+					<tr>
+						<th>Nombre</th>
+						<th>Descripción</th>
+						<th colspan="2">Acciones</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="categoria : ${categorias}"
+						th:data-id="${categoria.id_categoria}">
+						<td th:text="${categoria.nombre}"></td>
+						<td th:text="${categoria.descripcion}"></td>
+						<td class="acciones-table"><a th:href="@{#}"
+							class="btn btn-warning btn-modificar-cat"> <i
+								class="fa fa-pencil"></i>
+						</a></td>
+						<td class="acciones-table"><a th:href="@{#}"
+							class="btn btn-danger btn-eliminar-cat"> <i
+								class="fa fa-trash"></i>
+						</a></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div id="modalEliminarCategoria" class="modal fade" tabindex="-1"
+			role="dialog" aria-labelledby="modalEliminarCategoriaLabel"
+			aria-hidden="true">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="modalEliminarCategoriaLabel">Confirmar
+							eliminación</h5>
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">¿Está seguro de que desea eliminar
+						esta categoría?</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary"
+							data-dismiss="modal">Cancelar</button>
+						<button type="button" class="btn btn-danger"
+							id="confirmarEliminacion">Eliminar</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+
 </body>
 
 </html>

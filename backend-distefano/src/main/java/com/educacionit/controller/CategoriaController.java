@@ -99,10 +99,16 @@ public class CategoriaController {
 	@DeleteMapping(value = "/{id}")
 	public ResponseEntity<Void> deleteCategoria(@PathVariable("id") Integer id) {
 		Categoria categoria = categoriaService.getById(id);
-		if (categoria == null) {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		try {
+
+			if (categoria == null) {
+				return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			}
+			categoriaService.delete(id);
+			return new ResponseEntity<>(HttpStatus.OK);
+		} catch (Exception e) {
+
 		}
-		categoriaService.delete(id);
-		return new ResponseEntity<>(HttpStatus.OK);
+		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 }

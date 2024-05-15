@@ -8,7 +8,9 @@ window.onload = function() {
 };
 
 const fechaHoraElement = document.getElementById('fechaHora');
-
+$(document).ready(function() {
+  $('[data-toggle="modal"]').modal();
+});
 function obtenerFechaYHora() {
     fetch('/fecha/')
         .then(response => response.text())

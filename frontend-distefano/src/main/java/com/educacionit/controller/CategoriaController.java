@@ -1,5 +1,7 @@
 package com.educacionit.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,11 +13,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 
 import com.educacionit.model.Categoria;
-import com.educacionit.model.Producto;
 
 @Controller
 public class CategoriaController {
-
+	final Logger logger = LoggerFactory.getLogger(CategoriaController.class);
 	@Autowired
 	private RestTemplate restTemplate;
 
@@ -56,7 +57,6 @@ public class CategoriaController {
 		}
 	}
 
-	
 	@PostMapping("/backend/categorias/agregar/")
 	public String agregarCategoriaBackend(@ModelAttribute Categoria nuevaCategoria, Model model) {
 		String apiUrl = baseUrl + "/categorias/";
@@ -88,7 +88,7 @@ public class CategoriaController {
 			@ModelAttribute Categoria categoriaModificada, Model model) {
 		String apiUrl = baseUrl + "/categorias/" + id;
 		Categoria categoriaExistente = restTemplate.getForObject(apiUrl, Categoria.class);
-		
+
 		if (categoriaExistente != null) {
 			categoriaExistente.setNombre(categoriaModificada.getNombre());
 			categoriaExistente.setDescripcion(categoriaModificada.getDescripcion());
@@ -97,7 +97,7 @@ public class CategoriaController {
 
 			return "redirect:/backend/categorias/";
 		} else {
-			model.addAttribute("pageTitle", "Error - Categoría no encontrada");			
+			model.addAttribute("pageTitle", "Error - Categoría no encontrada");
 			model.addAttribute("mensajeError", "La categoría con ID " + id + " no existe.");
 			model.addAttribute("imagePath", "/img/spring.png");
 			model.addAttribute("imagePathEducaciontIt", "/img/educacionit.svg");
@@ -106,33 +106,32 @@ public class CategoriaController {
 	}
 
 	@GetMapping("/backend/categorias/eliminar/{id}")
-    public String eliminarCategoriaBackend(@PathVariable Integer id, Model model) {
-        String apiUrlProductos = baseUrl + "/productos/";
-        Producto[] productos = restTemplate.getForObject(apiUrlProductos, Producto[].class);
+	public String eliminarCategoriaBackend(@PathVariable Integer id, Model model) {
+		String apiUrl = baseUrl + "/categorias/" + id;
 
-        for (Producto producto : productos) {
-            if (producto.getCategoria() != null && producto.getCategoria().getId_categoria().equals(id)) {
-                model.addAttribute("pageTitle", "Error al eliminar categoría");
-                model.addAttribute("mensajeError",
-                        "No se puede eliminar la categoría porque está asignada "
-                        + "a uno o varios productos.");
-                model.addAttribute("imagePath", "/img/spring.png");
-                model.addAttribute("imagePathEducaciontIt", "/img/educacionit.svg");
-                return "/backend/error-categoria";
-            }
-        }
+		restTemplate.delete(apiUrl);
+		logger.info("Categoría eliminada con éxito. Redireccionando a la página de categorías.");
 
-        String apiUrl = baseUrl + "/categorias/" + id;
-        restTemplate.delete(apiUrl);
-        return "redirect:/backend/categorias/";
-    }
-	
+		return "redirect:/backend/categorias/";
+	}
+
+	@GetMapping("/backend/eliminar/error-categoria/")
+	public String errorAlEliminarCategoriasBackend(Model model) {
+		model.addAttribute("pageTitle", "Error al eliminar categoría");
+		model.addAttribute("mensajeError",
+				"No se puede eliminar la categoría porque está asignada a uno o varios productos.");
+		model.addAttribute("imagePath", "/img/spring.png");
+		model.addAttribute("imageError403", "/img/error-403.jpg");
+		
+		model.addAttribute("imagePathEducaciontIt", "/img/educacionit.svg");
+		return "backend/error-categoria";
+	}
+
 	@GetMapping("/backend/categorias/json")
 	@ResponseBody
 	public Categoria[] obtenerCategoriasJson() {
-	    String apiUrlCategorias = baseUrl + "/categorias/";
-	    return restTemplate.getForObject(apiUrlCategorias, Categoria[].class);
+		String apiUrlCategorias = baseUrl + "/categorias/";
+		return restTemplate.getForObject(apiUrlCategorias, Categoria[].class);
 	}
-
 
 }

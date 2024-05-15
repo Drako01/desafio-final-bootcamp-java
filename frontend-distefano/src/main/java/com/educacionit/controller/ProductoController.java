@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 
 import com.educacionit.model.Categoria;
@@ -151,6 +152,13 @@ public class ProductoController {
 		restTemplate.postForObject(apiUrl, nuevoProducto, Producto.class);
 
 		return "redirect:/backend/productos/";
+	}
+	
+	@GetMapping("/backend/productos/json")
+	@ResponseBody
+	public Producto[] obtenerProductosJson() {
+	    String apiUrl = baseUrl + "/productos/";
+	    return restTemplate.getForObject(apiUrl, Producto[].class);
 	}
 
 }
