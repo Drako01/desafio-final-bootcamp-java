@@ -2,9 +2,9 @@ function inicializarEventoCategoria() {
 	let botonAgregarCat = document.getElementById("boton-agregar-cat");
 	botonAgregarCat.addEventListener('click', () => {
 		if (!botonAgregarCat.classList.contains('disabled')) {
-            botonAgregarCat.classList.add('disabled');
-            agregarNuevaCategoria();
-        }
+			botonAgregarCat.classList.add('disabled');
+			agregarNuevaCategoria();
+		}
 	});
 
 }
@@ -16,29 +16,37 @@ function agregarNuevaCategoria() {
 	const primeraFila = tabla.firstChild;
 	const nuevaFila = document.createElement('tr');
 
-	const celdaNombre = document.createElement('td');
+	const estiloInput = `
+        width: 100%;
+        height: 39px;
+        border-radius: .25rem;
+        border: none;
+        background-color: #eeeeeed3;
+        vertical-align: middle;
+    `;
+
+	const crearCelda = () => {
+		const celda = document.createElement('td');
+		return celda;
+	};
+
+	const crearInput = () => {
+		const input = document.createElement('input');
+		input.type = 'text';
+		input.required = true;
+		input.style.cssText = estiloInput;
+		return input;
+	};
+
+	const celdaNombre = crearCelda();
 	celdaNombre.classList.add('celda-entera');
-	const inputNombre = document.createElement('input');
-	inputNombre.type = 'text';
-	inputNombre.placeholder = 'Nombre de la categoría';
-	inputNombre.style.width = '100%';
-	inputNombre.style.height = '39px';
-	inputNombre.style.borderRadius = '.25rem';
-	inputNombre.style.border = 'none';
-	inputNombre.style.backgroundColor = '#eeeeeed3';
+	const inputNombre = crearInput();
 	celdaNombre.appendChild(inputNombre);
 
-	const celdaDescripcion = document.createElement('td');
+	const celdaDescripcion = crearCelda();
 	celdaDescripcion.classList.add('celda-entera');
-	const inputDescripcion = document.createElement('input');
-	inputDescripcion.type = 'text';
-	inputDescripcion.placeholder = 'Descripción de la categoría';
-	inputDescripcion.style.width = '100%';
-	inputDescripcion.style.height = '39px';
-	inputDescripcion.style.borderRadius = '.25rem';
-	inputDescripcion.style.border = 'none';
-	inputDescripcion.style.backgroundColor = '#eeeeeed3';
-	inputDescripcion.style.verticalAlign = 'middle';
+	const inputDescripcion = crearInput();
+
 	celdaDescripcion.appendChild(inputDescripcion);
 
 	const celdaAcciones = document.createElement('td');
@@ -65,25 +73,28 @@ function agregarNuevaCategoria() {
 	botonGuardar.addEventListener('click', () => {
 		const nombreCategoria = inputNombre.value;
 		const descripcionCategoria = inputDescripcion.value;
-		const formData = 'nombre=' + encodeURIComponent(nombreCategoria) 
-		+ '&descripcion=' + encodeURIComponent(descripcionCategoria);
-		
-		fetch('/backend/categorias/agregar/', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/x-www-form-urlencoded'
-			},
-			body: formData.toString()
-		})
-			.then(response => {
-				if (response.ok) {
-					window.location.href = '/backend/categorias/';
-				}
-				botonAgregarCat.classList.remove('disabled');
-			})
-			.catch(error => {
-				console.error('Error al guardar la categoría:', error);
-				botonAgregarCat.classList.remove('disabled');
-			});
+		const formData = 'nombre=' + encodeURIComponent(nombreCategoria)
+			+ '&descripcion=' + encodeURIComponent(descripcionCategoria);
+		if (nombreCategoria != '' && descripcionCategoria != '') {
+			if (formData) {
+				fetch('/backend/categorias/agregar/', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/x-www-form-urlencoded'
+					},
+					body: formData.toString()
+				})
+					.then(response => {
+						if (response.ok) {
+							window.location.href = '/backend/categorias/';
+						}
+						botonAgregarCat.classList.remove('disabled');
+					})
+					.catch(error => {
+						console.error('Error al guardar la categoría:', error);
+						botonAgregarCat.classList.remove('disabled');
+					});
+			}
+		}
 	});
 }
