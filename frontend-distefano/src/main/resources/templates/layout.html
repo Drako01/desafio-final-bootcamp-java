@@ -29,7 +29,17 @@
 			var script = document.createElement('script');
 			script.src = '/js/producto.js';
 			document.body.appendChild(script);
-		} 
+		} else if (window.location.pathname === '/productos/') {
+		
+			var script = document.createElement('script');
+			script.src = '/js/productos-container.js';
+			document.body.appendChild(script);
+		} else if (window.location.pathname === '/carrito/') {
+		
+			var script = document.createElement('script');
+			script.src = '/js/carrito.js';
+			document.body.appendChild(script);
+		}
 	</script>
 	<script src="/js/index.js" ></script>	
 </body>

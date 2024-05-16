@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout}">
+<body>
+	<div th:fragment="content">
+		<div class="agregar-boton"></div>
+		<div class="container">
+			<table class="table table-bordered">
+				<thead class="thead-dark">
+					<tr>
+						<th>Nombre</th>
+						<th>Cantidad</th>
+						<th>Precio</th>
+						<th>Subtotal</th>
+						<th style="width: 4rem;">Eliminar</th>
+					</tr>
+				</thead>
+				<tbody id="carrito-table"></tbody>
+			</table>
+			<p>Total: <span id="total-amount"></span></p>
+			<a href="#" class="btn btn-success" id="btn-compar-carrito">Comprar</a>
+		</div>
+	</div>
+</body>
+</html>
