@@ -15,6 +15,7 @@ let precioTotal = 0;
 let carritoTable = document.querySelector('#carrito-table');
 let botonComprarCarrito = document.querySelector('#btn-compar-carrito');
 const fechaHoraElement = document.getElementById('fechaHora');
+
 let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
 
 $(document).ready(function() {

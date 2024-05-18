@@ -8,13 +8,24 @@ let productoId;
 function guardarCarritoEnLocalStorage() {
 	localStorage.setItem('carrito', JSON.stringify(carrito));
 }
-
-
+let parrafoStockCero = document.querySelectorAll('.stock-p');
+        parrafoStockCero.forEach(parrafo => {
+            let stockProducto = parseInt(parrafo.innerText.split(':')[1].trim());
+            if (stockProducto === 0) {
+                parrafo.style.color = 'red';
+                let btnComprar = parrafo.closest('.card').querySelector('.compar-btn');               
+                btnComprar.classList.add('disabled');
+                btnComprar.innerText = 'Sin Stock';
+                btnComprar.classList.remove('btn-success');
+                btnComprar.classList.add('btn-warning');
+            }
+        });
+        
 if (parseInt(stockProd) === 0) {
 	botonComprar.innerText = 'Sin Stock';
 	botonComprar.classList.remove('btn-success');
 	botonComprar.classList.add('btn-info');
-	botonComprar.disabled = true;
+	botonComprar.disabled = true;	
 } else {
 	botonComprar.forEach(btn => {
 		btn.addEventListener('click', () => {
@@ -28,7 +39,7 @@ if (parseInt(stockProd) === 0) {
 			inputCantidad.setAttribute('type', 'number');
 			inputCantidad.setAttribute('min', '1');
 			inputCantidad.setAttribute('max', parseInt(stockProducto));
-			inputCantidad.setAttribute('value', '1');			
+			inputCantidad.setAttribute('value', '1');
 			inputCantidad.style.height = '36px';
 			inputCantidad.style.borderRadius = '.25rem';
 
@@ -39,7 +50,7 @@ if (parseInt(stockProd) === 0) {
 				inputCantidad.setAttribute('max', parseInt(stockProducto));
 			});
 
-			
+
 			let botonAgregar = document.createElement('button');
 			botonAgregar.classList.add('btn', 'btn-success', 'agregar-btn');
 			botonAgregar.innerHTML = 'Agregar <i class="fa fa-cart-plus"></i>';
@@ -70,13 +81,9 @@ if (parseInt(stockProd) === 0) {
 			});
 
 			if (parseInt(stockProducto) === 0) {
-				botonAgregar.innerText = 'Sin Stock';
-				botonAgregar.classList.remove('btn-success');
-				botonAgregar.classList.add('btn-warning');
-				botonAgregar.disabled = true;
 				inputCantidad.setAttribute('value', '0');
 				inputCantidad.setAttribute('type', 'hidden');
-							
+
 			}
 
 

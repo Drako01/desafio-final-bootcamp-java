@@ -13,7 +13,7 @@ fetch('/backend/categorias/json')
 	.catch(error => {
 		console.error('Error en la solicitud AJAX:', error);
 	});
-	
+
 let productos = [];
 
 fetch('/backend/productos/json')
@@ -26,12 +26,12 @@ fetch('/backend/productos/json')
 	.then(data => {
 		productos = data;
 		productos.forEach(producto => {
-            if (producto.stock === 0) {
-                const fila = document.querySelector(`tr[data-id="${producto.id_producto}"]`);
-                fila.style.backgroundColor = '#dddddd';
-                fila.style.color = 'red';
-            }
-        });
+			if (producto.stock === 0) {
+				const fila = document.querySelector(`tr[data-id="${producto.id_producto}"]`);
+				fila.style.backgroundColor = '#dddddd';
+				fila.style.color = 'red';
+			}
+		});
 	})
 	.catch(error => {
 		console.error('Error en la solicitud AJAX:', error);
@@ -57,7 +57,7 @@ function inicializarEventoProducto() {
 			modificarProducto(boton.closest('tr'));
 		});
 	});
-	
+
 	let botonesEliminarProd = document.querySelectorAll(".btn-eliminar-prod");
 
 
@@ -130,7 +130,7 @@ function crearEntornoProducto() {
 	celdaStock.appendChild(inputStock);
 
 	const celdaPrecio = crearCelda();
-	const inputPrecio = crearInput('number', 'Precio');	
+	const inputPrecio = crearInput('number', 'Precio');
 	inputPrecio.min = 0;
 	celdaPrecio.appendChild(inputPrecio);
 
@@ -189,13 +189,16 @@ function agregarNuevoProducto() {
 		const fotoProducto = inputFoto.value;
 		const nombreProducto = inputNombre.value;
 		const descripcionProducto = inputDescripcion.value;
-		const stockProducto = inputStock.value;
-		const precioProducto = inputPrecio.value.trim();
+		let stockProducto = inputStock.value;
+		let precioProducto = inputPrecio.value.trim();
 
-		if (precioProducto === isNaN(parseFloat(precioProducto))) {
-			return null;
+		if (precioProducto === "" || isNaN(parseFloat(precioProducto))) {
+			precioProducto = 0;
 		}
 
+		if (stockProducto === "" || isNaN(parseFloat(stockProducto))) {
+			stockProducto = 0;
+		}
 		const selectCategoria = document.getElementById('categoriaId');
 		const categoriaId = selectCategoria.value;
 
@@ -250,9 +253,9 @@ function modificarProducto(filaProducto) {
 	inputNombre.value = nombreActual;
 	inputDescripcion.value = descripcionActual;
 	inputStock.value = stockActual;
-	
+
 	const precioNumerico = parseFloat(precioActual.replace(/[^0-9.-]+/g, ""));
-	inputPrecio.value = precioNumerico.toFixed(2); 
+	inputPrecio.value = precioNumerico.toFixed(2);
 
 
 	const nuevaFila = document.createElement('tr');
@@ -273,10 +276,17 @@ function modificarProducto(filaProducto) {
 		const fotoProducto = inputFoto.value;
 		const nombreProducto = inputNombre.value;
 		const descripcionProducto = inputDescripcion.value;
-		const stockProducto = inputStock.value;
-		const precioProducto = inputPrecio.value.trim();
+		let stockProducto = inputStock.value;
+		let precioProducto = inputPrecio.value.trim();
 		const categoriaId = selectCategoria.value;
 
+		if (precioProducto === "" || isNaN(parseFloat(precioProducto))) {
+			precioProducto = 0;
+		}
+
+		if (stockProducto === "") {
+			stockProducto = 0;
+		}
 		const formData =
 			'nombre=' + encodeURIComponent(nombreProducto) +
 			'&descripcion=' + encodeURIComponent(descripcionProducto) +
@@ -312,24 +322,24 @@ function eliminarProducto(fila) {
 	modal.classList.add('show');
 	modal.style.display = 'block';
 	const confirmarEliminacionBtn = document.getElementById('confirmarEliminacionProducto');
-	
-	
-	
-	 if (modal && confirmarEliminacionBtn) {
-        confirmarEliminacionBtn.addEventListener('click', () => {
-            fetch(`/backend/productos/eliminar/${idProducto}`, {
-                method: 'GET',
-            })
-                .then(response => {
-                    if (response.ok) {
-                        window.location.href = '/backend/productos/';
-                    } 
-                })
-                .catch(error => {
-					
-                    console.error('Error al eliminar la producto:', error);
-                });
-        });
+
+
+
+	if (modal && confirmarEliminacionBtn) {
+		confirmarEliminacionBtn.addEventListener('click', () => {
+			fetch(`/backend/productos/eliminar/${idProducto}`, {
+				method: 'GET',
+			})
+				.then(response => {
+					if (response.ok) {
+						window.location.href = '/backend/productos/';
+					}
+				})
+				.catch(error => {
+
+					console.error('Error al eliminar la producto:', error);
+				});
+		});
 
 		$(modal).modal('show');
 	} else {
