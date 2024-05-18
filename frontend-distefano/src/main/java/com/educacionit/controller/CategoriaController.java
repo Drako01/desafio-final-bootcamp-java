@@ -118,13 +118,15 @@ public class CategoriaController {
 	@GetMapping("/backend/eliminar/error-categoria/")
 	public String errorAlEliminarCategoriasBackend(Model model) {
 		model.addAttribute("pageTitle", "Error al eliminar categoría");
+		model.addAttribute("btnTitle", "Volver a categorías");
 		model.addAttribute("mensajeError",
 				"No se puede eliminar la categoría porque está asignada a uno o varios productos.");
 		model.addAttribute("imagePath", "/img/spring.png");
 		model.addAttribute("imageError403", "/img/error-403.jpg");
+		model.addAttribute("href", "/backend/categorias/");
 		
 		model.addAttribute("imagePathEducaciontIt", "/img/educacionit.svg");
-		return "backend/error-categoria";
+		return "backend/error403";
 	}
 
 	@GetMapping("/backend/categorias/json")

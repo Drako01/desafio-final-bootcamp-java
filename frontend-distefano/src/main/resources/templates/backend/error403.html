@@ -5,14 +5,14 @@
 	<div th:fragment="content">
 		<div class='d-flex inicio'>
 
-			<h1 class="mt-5">Error al eliminar categoría</h1>
+			<h1 class="mt-5" th:text="${pageTitle}">
+			</h1>
 			<img th:src="@{${imageError403}}" alt="Error 403"
 				class='imagen-error'>
 			<div class="alert alert-danger mt-3" role="alert">
 				<p th:text="${mensajeError}"></p>
 			</div>
-			<a href="/backend/categorias/" class="btn btn-primary">Volver a
-				categorías</a> 
+			<a th:href="@{${href}}" class="btn btn-primary" th:text="${btnTitle}"></a> 
 		</div>
 
 

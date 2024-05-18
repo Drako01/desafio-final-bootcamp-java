@@ -2,12 +2,12 @@
 <html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout}">
 
 <body>
-	<div th:fragment="content">
-		<div class='d-flex inicio'>
-			<img th:src="@{${imageError}}" alt="Error 404" class='imagen-error'>			
-			<p class="parrafo-error">Lo siento, la página que estás buscando no se encuentra.</p>		
-				<a href="/" class="btn btn-danger">VOLVER</a> 
-		</div>
-	</div>
+    <div th:fragment="content">
+        <div class='d-flex inicio'>
+            <img th:src="@{${imageError}}" alt="Error 404" class='imagen-error'>
+            <p class="parrafo-error" th:text=${mensaje}></p>
+            <a th:href="@{${lastVisitedUrl}}" class="btn btn-danger">VOLVER</a>
+        </div>
+    </div>
 </body>
 </html>

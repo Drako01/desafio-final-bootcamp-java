@@ -61,12 +61,7 @@ public class ProductoController {
 
 			return "products_detail";
 		} else {
-			model.addAttribute("pageTitle", "Error 404 - El producto no existe.");
-			model.addAttribute("imagePath", "/img/spring.png");
-			model.addAttribute("imagePathEducaciontIt", "/img/educacionit.svg");
-			model.addAttribute("imageError", "/img/sinstock.png");
-			model.addAttribute("titulo", "El producto " + id + " no existe o no hay Stock.");
-			return "error-product";
+			return "error";
 		}
 	}
 
