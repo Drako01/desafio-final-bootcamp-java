@@ -73,6 +73,31 @@ INSERT INTO producto (nombre, descripcion, precio, imagen, stock, categoria_id) 
 
 ```
 
+## Para iniciar el Servidor:
+
+#### Abrir un Terminal y dirigirse al Directorio (C:\ o donde lo descargues ):
+
+```cmd
+C:\desafio-final\backend-distefano\
+
+./mvnw clean install   # En Unix/Linux/Mac
+mvnw.cmd clean install # En Windows
+```
+
+#### Ejecutar:
+
+```cmd
+cd target
+
+C:\desafio-final\backend-distefano\target\java -jar backend-distefano-v1.0.0.jar
+```
+
+#### O tambien se puede hacer:
+
+```cmd
+ C:\desafio-final\backend-distefano\mvnw spring-boot:run
+```
+
 ---
 
 #### Aplicación Web Cliente de Comercialización
@@ -94,6 +119,33 @@ Puerto: http://localhost:3000/
 6. **Compatibilidad con Diferentes Dispositivos**: La aplicación web cliente está diseñada para ser compatible con una variedad de dispositivos y tamaños de pantalla, garantizando una experiencia consistente para todos los usuarios, ya sea que accedan desde una computadora de escritorio, una tableta o un dispositivo móvil.
 
 En resumen, el proyecto consiste en dos partes principales: un sistema backoffice de gestión de productos para administradores y una aplicación web cliente de comercialización para usuarios finales. Ambas partes se integran para ofrecer una experiencia completa y satisfactoria tanto para los administradores como para los clientes.
+
+---
+
+## Para iniciar la App del Front:
+
+#### Abrir un Terminal y dirigirse al Directorio (C:\ o donde lo descargues ):
+
+```cmd
+C:\desafio-final\frontend-distefano\
+
+./mvnw clean install   # En Unix/Linux/Mac
+mvnw.cmd clean install # En Windows
+```
+
+#### Ejecutar:
+
+```cmd
+cd target
+
+C:\desafio-final\frontend-distefano\target\java -jar frontend-distefano-v1.0.0.jar
+```
+
+#### O tambien se puede hacer:
+
+```cmd
+ C:\desafio-final\frontend-distefano\mvnw spring-boot:run
+```
 
 ---
 
