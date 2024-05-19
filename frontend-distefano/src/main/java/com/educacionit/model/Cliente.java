@@ -13,15 +13,18 @@ public class Cliente {
 	private String password;
 
 	private String telefono;
+	
+	private String level;
 
 	private List<Producto> productosFav;
 
 	public Cliente() {
 		super();
+		this.level = "seller";
 	}
 
 	public Cliente(Integer id_cliente, String nombre, String email, String password, String telefono,
-			List<Producto> productosFav) {
+			String level, List<Producto> productosFav) {
 		super();
 		this.id_cliente = id_cliente;
 		this.nombre = nombre;
@@ -29,6 +32,7 @@ public class Cliente {
 		this.password = password;
 		this.telefono = telefono;
 		this.productosFav = productosFav;
+		this.level = level;
 	}
 
 	public Integer getId_cliente() {
@@ -79,9 +83,17 @@ public class Cliente {
 		this.productosFav = productosFav;
 	}
 
+	public String getLevel() {
+		return level;
+	}
+
+	public void setLevel(String level) {
+		this.level = level;
+	}
+
 	@Override
 	public String toString() {
 		return "Cliente [id_cliente=" + id_cliente + ", nombre=" + nombre + ", email=" + email + ", password="
-				+ password + ", telefono=" + telefono + ", productosFav=" + productosFav + "]";
+				+ password + ", telefono=" + telefono + ", level=" + level + ", productosFav=" + productosFav + "]";
 	}
 }
