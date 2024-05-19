@@ -93,5 +93,4 @@ public class Producto {
 		return "Producto [id_producto=" + id_producto + ", nombre=" + nombre + ", descripcion=" + descripcion
 				+ ", precio=" + precio + ", imagen=" + imagen + ", stock=" + stock + ", categoria=" + categoria + "]";
 	}
-
 }

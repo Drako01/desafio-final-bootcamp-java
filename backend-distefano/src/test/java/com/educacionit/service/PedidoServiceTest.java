@@ -38,7 +38,7 @@ class PedidoServiceTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
 
-        Cliente cliente = new Cliente(1, "NombreCliente", "cliente@correo.com", "123456789", null);
+        Cliente cliente = new Cliente(1, "NombreCliente", "cliente@correo.com", null, "123456789", null);
         DetallePedido detallePedido = new DetallePedido(1, null, null, 2, 10.5, 21.0);
         List<DetallePedido> detalles = new ArrayList<>();
         detalles.add(detallePedido);

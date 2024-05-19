@@ -1,5 +1,7 @@
 package com.educacionit.models;
 
+import java.util.List;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -7,6 +9,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
@@ -15,112 +18,115 @@ import jakarta.persistence.Table;
 @Table(name = "producto")
 public class Producto {
 
-	@Schema(description = "ID del Producto", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "ID")
-	private Integer id_producto;
+    @Schema(description = "ID del Producto", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ID")
+    private Integer id_producto;
 
-	@Schema(description = "Nombre del producto", requiredMode = Schema.RequiredMode.REQUIRED, example = "Fideos")
-	@Column(name = "NOMBRE")
-	private String nombre;
+    @Schema(description = "Nombre del producto", requiredMode = Schema.RequiredMode.REQUIRED, example = "Fideos")
+    @Column(name = "NOMBRE")
+    private String nombre;
 
-	@Schema(description = "Descripción del Producto", requiredMode = Schema.RequiredMode.REQUIRED, example = "Fideos de Sémola")
-	@Column(name = "DESCRIPCION")
-	private String descripcion;
+    @Schema(description = "Descripción del Producto", requiredMode = Schema.RequiredMode.REQUIRED, example = "Fideos de Sémola")
+    @Column(name = "DESCRIPCION")
+    private String descripcion;
 
-	@Schema(description = "Precio del Producto", requiredMode = Schema.RequiredMode.REQUIRED, example = "1050.50")
-	@Column(name = "PRECIO")
-	private double precio;
+    @Schema(description = "Precio del Producto", requiredMode = Schema.RequiredMode.REQUIRED, example = "1050.50")
+    @Column(name = "PRECIO")
+    private double precio;
 
-	@Schema(description = "Imagen del Producto", requiredMode = Schema.RequiredMode.REQUIRED, example = "1050.50")
-	@Column(name = "IMAGEN")
-	private String imagen;
+    @Schema(description = "Imagen del Producto", requiredMode = Schema.RequiredMode.REQUIRED, example = "imagen.png")
+    @Column(name = "IMAGEN")
+    private String imagen;
 
-	@Schema(description = "Stock del Producto", requiredMode = Schema.RequiredMode.REQUIRED, example = "1050.50")
-	@Column(name = "STOCK")
-	private Integer stock;
+    @Schema(description = "Stock del Producto", requiredMode = Schema.RequiredMode.REQUIRED, example = "100")
+    @Column(name = "STOCK")
+    private Integer stock;
 
-	@ManyToOne
-	@JoinColumn(name = "categoria_id")
-	private Categoria categoria;
+    @ManyToOne
+    @JoinColumn(name = "categoria_id")
+    private Categoria categoria;
 
-	public Producto() {
-		super();
-	}
+    @ManyToMany(mappedBy = "productosFav")
+    private List<Cliente> clientes;
 
-	public Producto(Integer id_producto, String nombre, String descripcion, double precio, String imagen, Integer stock,
-			Categoria categoria) {
-		super();
-		this.id_producto = id_producto;
-		this.nombre = nombre;
-		this.descripcion = descripcion;
-		this.precio = precio;
-		this.imagen = imagen;
-		this.stock = stock;
-		this.categoria = categoria;
-	}
+    public Producto() {
+        super();
+    }
 
-	public Integer getId_producto() {
-		return id_producto;
-	}
+    public Producto(Integer id_producto, String nombre, String descripcion, double precio, String imagen, Integer stock,
+                    Categoria categoria) {
+        super();
+        this.id_producto = id_producto;
+        this.nombre = nombre;
+        this.descripcion = descripcion;
+        this.precio = precio;
+        this.imagen = imagen;
+        this.stock = stock;
+        this.categoria = categoria;
+    }
 
-	public void setId_producto(Integer id_producto) {
-		this.id_producto = id_producto;
-	}
+    public Integer getId_producto() {
+        return id_producto;
+    }
 
-	public String getNombre() {
-		return nombre;
-	}
+    public void setId_producto(Integer id_producto) {
+        this.id_producto = id_producto;
+    }
 
-	public void setNombre(String nombre) {
-		this.nombre = nombre;
-	}
+    public String getNombre() {
+        return nombre;
+    }
 
-	public String getDescripcion() {
-		return descripcion;
-	}
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
 
-	public void setDescripcion(String descripcion) {
-		this.descripcion = descripcion;
-	}
+    public String getDescripcion() {
+        return descripcion;
+    }
 
-	public double getPrecio() {
-		return precio;
-	}
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
 
-	public void setPrecio(double precio) {
-		this.precio = precio;
-	}
+    public double getPrecio() {
+        return precio;
+    }
 
-	public String getImagen() {
-		return imagen;
-	}
+    public void setPrecio(double precio) {
+        this.precio = precio;
+    }
 
-	public void setImagen(String imagen) {
-		this.imagen = imagen;
-	}
+    public String getImagen() {
+        return imagen;
+    }
 
-	public Integer getStock() {
-		return stock;
-	}
+    public void setImagen(String imagen) {
+        this.imagen = imagen;
+    }
 
-	public void setStock(Integer stock) {
-		this.stock = stock;
-	}
+    public Integer getStock() {
+        return stock;
+    }
 
-	public Categoria getCategoria() {
-		return categoria;
-	}
+    public void setStock(Integer stock) {
+        this.stock = stock;
+    }
 
-	public void setCategoria(Categoria categoria) {
-		this.categoria = categoria;
-	}
+    public Categoria getCategoria() {
+        return categoria;
+    }
 
-	@Override
-	public String toString() {
-		return "Producto [id_producto=" + id_producto + ", nombre=" + nombre + ", descripcion=" + descripcion
-				+ ", precio=" + precio + ", imagen=" + imagen + ", stock=" + stock + ", categoria=" + categoria + "]";
-	}
+    public void setCategoria(Categoria categoria) {
+        this.categoria = categoria;
+    }
 
+    
+    @Override
+    public String toString() {
+        return "Producto [id_producto=" + id_producto + ", nombre=" + nombre + ", descripcion=" + descripcion
+                + ", precio=" + precio + ", imagen=" + imagen + ", stock=" + stock + ", categoria=" + categoria + "]";
+    }
 }
