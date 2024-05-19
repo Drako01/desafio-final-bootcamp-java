@@ -7,10 +7,9 @@
 			<div class="card" th:each="producto : ${productos}"
 				style="width: 18rem;">
 				<div class="foto-producto">
-					<img th:src="${producto.imagen}"
-						class="card-img-top imagen-producto" alt="${producto.nombre}"
-						id="imagen-producto">
-				</div>
+                    <img th:src="${producto.imagen}" class="card-img-top imagen-producto" 
+                    alt="${producto.nombre}" id="imagen-producto">
+                </div>
 				<div class='line'></div>
 				<div class="card-body">
 					<h5 class="card-title" th:text="${producto.nombre}"></h5>

@@ -79,6 +79,13 @@ function actualizarCarritoTable() {
 	carrito.forEach(producto => {
 		const row = document.createElement('tr');
 
+		const imagenCell = document.createElement('td');
+		const imgElement = document.createElement('img');
+		imgElement.src = producto.imagen;
+		imgElement.style.width = '40px';
+		imagenCell.appendChild(imgElement);
+		row.appendChild(imagenCell);
+
 		const nombreCell = document.createElement('td');
 		nombreCell.textContent = producto.nombre;
 		row.appendChild(nombreCell);
@@ -88,13 +95,13 @@ function actualizarCarritoTable() {
 		row.appendChild(cantidadCell);
 
 		const precioCell = document.createElement('td');
-		precioCell.textContent =  '$ ' + producto.precio;
+		precioCell.textContent = '$ ' + producto.precio;
 		row.appendChild(precioCell);
 
 		const subtotalCell = document.createElement('td');
 		subtotalCell.textContent = '$ ' + producto.subtotal;
 		row.appendChild(subtotalCell);
-		
+
 		const eliminarCell = document.createElement('td');
 		eliminarCell.innerHTML = `<td class="acciones-table"><a
 									href="#"
@@ -102,9 +109,9 @@ function actualizarCarritoTable() {
 									<i class="fa fa-trash"></i>
 								</a></td>`;
 		row.appendChild(eliminarCell);
-		
-		
-		
+
+
+
 
 		carritoTable.appendChild(row);
 
@@ -113,7 +120,7 @@ function actualizarCarritoTable() {
 	});
 
 	let totalAmount = document.getElementById('total-amount')
-	totalAmount.innerText =  '$ ' + precioTotal;
+	totalAmount.innerText = '$ ' + precioTotal;
 	totalAmount.style.color = 'green';
 	totalAmount.style.fontWeight = 'bold';
 	totalAmount.style.fontSize = '1.2rem';
@@ -128,7 +135,7 @@ fetch('/backend/productos/json')
 	})
 	.then(data => {
 		productos = data;
-		
+
 	})
 	.catch(error => {
 		console.error('Error en la solicitud AJAX:', error);
