@@ -4,8 +4,11 @@
 <body>
 	<div th:fragment="content">
 		<div class='d-flex inicio'>
-			<img th:src="@{${imagePath}}" alt="Spring Boot" class='imagen-init'>	
-			<!-- <img th:src="@{${imagePathEducaciontIt}}" alt="Educacion IT" width=500>	-->	
+			<div class='container'>
+				<h3 th:text="${subtitulo}"></h3>				
+			</div>
+			<img th:src="@{${imagePath}}" alt="Spring Boot" class='imagen-init'>
+			<!-- <img th:src="@{${imagePathEducaciontIt}}" alt="Educacion IT" width=500>	-->
 		</div>
 	</div>
 </body>

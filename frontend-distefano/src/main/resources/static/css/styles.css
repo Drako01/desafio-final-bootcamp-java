@@ -116,6 +116,11 @@ h1 {
 	margin-top: 8rem;
 	color: var(--first);
 }
+h3 {
+	text-align: center;
+	margin-top: 2rem;
+	color: var(--first);
+}
 
 .btn-guardar {
 	display: block;

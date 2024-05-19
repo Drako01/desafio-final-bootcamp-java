@@ -19,7 +19,8 @@ public class IndexController {
         model.addAttribute("imagePath", "/img/spring.png");
         model.addAttribute("imagePathEducaciontIt", "/img/educacionit.svg");
         model.addAttribute("pageTitle", "FrontEnd | App Spring Boot");
-        model.addAttribute("titulo", bienvenida + " | FrontEnd");
+        model.addAttribute("titulo", "Bienvenido " + bienvenida);
+        model.addAttribute("subtitulo", "FrontEnd");
         return "index";
     }
 }
