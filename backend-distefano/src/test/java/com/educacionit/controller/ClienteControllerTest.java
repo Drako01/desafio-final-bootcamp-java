@@ -44,8 +44,8 @@ class ClienteControllerTest {
     @Test
     void testGetAllClientesSuccess() {
         List<Cliente> clientes = new ArrayList<>();
-        clientes.add(new Cliente(1, "Juan", "juan@example.com", null, "123456789", null));
-        clientes.add(new Cliente(2, "María", "maria@example.com", null, "987654321", null));
+        clientes.add(new Cliente(1, "Juan", "juan@example.com", null, "123456789", null, null));
+        clientes.add(new Cliente(2, "María", "maria@example.com", null, "987654321", null, null));
 
         when(clienteService.getAll()).thenReturn(clientes);
 
@@ -58,7 +58,7 @@ class ClienteControllerTest {
 
     @Test
     void testGetClienteByIdSuccess() {
-        Cliente cliente = new Cliente(1, "Juan", "juan@example.com", null, "123456789", null);
+        Cliente cliente = new Cliente(1, "Juan", "juan@example.com", null, "123456789", null, null);
 
         when(clienteService.getById(1)).thenReturn(cliente);
 
@@ -82,7 +82,7 @@ class ClienteControllerTest {
 
     @Test
     void testAddClienteSuccess() {
-        Cliente cliente = new Cliente(1, "Juan", "juan@example.com", null, "123456789", null);
+        Cliente cliente = new Cliente(1, "Juan", "juan@example.com", null, "123456789", null, null);
 
         ResponseEntity<Void> response = clienteController.addCliente(cliente);
 
@@ -92,8 +92,8 @@ class ClienteControllerTest {
 
     @Test
     void testUpdateClienteSuccess() {
-        Cliente existingCliente = new Cliente(1, "Juan", "juan@example.com", null, "123456789", null);
-        Cliente updatedCliente = new Cliente(1, "Juan", "juan.perez@example.com", null, "123456789", null);
+        Cliente existingCliente = new Cliente(1, "Juan", "juan@example.com", null, "123456789", null, null);
+        Cliente updatedCliente = new Cliente(1, "Juan", "juan.perez@example.com", null, "123456789", null, null);
 
         when(clienteService.getById(1)).thenReturn(existingCliente);
 
@@ -105,7 +105,7 @@ class ClienteControllerTest {
 
     @Test
     void testUpdateClienteNotFound() {
-        Cliente updatedCliente = new Cliente(1, "Juan", "juan.perez@example.com", null, "123456789", null);
+        Cliente updatedCliente = new Cliente(1, "Juan", "juan.perez@example.com", null, "123456789", null, null);
 
         when(clienteService.getById(1)).thenReturn(null);
 
@@ -117,7 +117,7 @@ class ClienteControllerTest {
 
     @Test
     void testDeleteClienteSuccess() {
-        Cliente cliente = new Cliente(1, "Juan", "juan@example.com", null, "123456789", null);
+        Cliente cliente = new Cliente(1, "Juan", "juan@example.com", null, "123456789", null, null);
 
         when(clienteService.getById(1)).thenReturn(cliente);
         doNothing().when(clienteService).delete(1);

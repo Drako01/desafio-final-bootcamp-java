@@ -32,7 +32,7 @@ class ClienteServiceTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
 
-        cliente = new Cliente(1, "Juan Perez", "juan@example.com", null, "123456789", new ArrayList<>());
+        cliente = new Cliente(1, "Juan Perez", "juan@example.com", null, "123456789", null, null);
         clienteList = new ArrayList<>();
         clienteList.add(cliente);
     }
@@ -87,7 +87,7 @@ class ClienteServiceTest {
         when(clienteRepository.findById(1)).thenReturn(Optional.of(cliente));
         when(clienteRepository.save(any())).thenReturn(cliente);
 
-        Cliente updatedCliente = new Cliente(1, "Juan Perez", "juan@example.com", null, "987654321", new ArrayList<>());
+        Cliente updatedCliente = new Cliente(1, "Juan Perez", "juan@example.com", null, "987654321", null, null);
         Cliente resultCliente = clienteService.update(1, updatedCliente);
 
         assertNotNull(resultCliente);
