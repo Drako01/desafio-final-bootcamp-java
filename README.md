@@ -68,7 +68,7 @@ INSERT INTO producto (nombre, descripcion, precio, imagen, stock, categoria_id) 
 ('Pan', 'Pan Blanco', 1200.00, 'https://laroussecocina.mx/wp-content/uploads/2023/01/Pan-viene%E2%95%A0us-de-chipotle.jpg.webp', 80, 4),
 ('Huevos', 'Docena de Huevos', 1500.00, 'https://www.res.com.ar/media/catalog/product/cache/6c63de560a15562fe08de38c3c766637/h/u/huevos_blancos.jpg', 50, 5),
 ('Azúcar', 'Azúcar Blanca', 950.00, 'https://alberdisa.vteximg.com.br/arquivos/ids/174707-1000-1000/Azucar-Ledesma-x-1-Kg.png?v=638187109975370000', 120, 6),
-('Aceite', 'Aceite de Girasol', 1800.00, 'https://www.cocinista.es/download/bancorecursos/ingredientes/ingrediente-aceite-oliva-2.jpg', 90, 7),
+('Aceite', 'Aceite de Oliva', 1800.00, 'https://www.cocinista.es/download/bancorecursos/ingredientes/ingrediente-aceite-oliva-2.jpg', 90, 7),
 ('Harina', 'Harina 0000', 750.00, 'https://acdn.mitiendanube.com/stores/001/267/442/products/7792180139313_02-photoroom1-c91ec989b6b8ea789216894436656599-1024-1024.png', 180, 8);
 
 ```
