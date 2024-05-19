@@ -3,29 +3,29 @@ let botonDetalles = document.querySelectorAll('.detalles-btn');
 let productos = [];
 let stockProd;
 let productoId;
-
+let imagenUrl;
 
 function guardarCarritoEnLocalStorage() {
 	localStorage.setItem('carrito', JSON.stringify(carrito));
 }
 let parrafoStockCero = document.querySelectorAll('.stock-p');
-        parrafoStockCero.forEach(parrafo => {
-            let stockProducto = parseInt(parrafo.innerText.split(':')[1].trim());
-            if (stockProducto === 0) {
-                parrafo.style.color = 'red';
-                let btnComprar = parrafo.closest('.card').querySelector('.compar-btn');               
-                btnComprar.classList.add('disabled');
-                btnComprar.innerText = 'Sin Stock';
-                btnComprar.classList.remove('btn-success');
-                btnComprar.classList.add('btn-warning');
-            }
-        });
-        
+parrafoStockCero.forEach(parrafo => {
+	let stockProducto = parseInt(parrafo.innerText.split(':')[1].trim());
+	if (stockProducto === 0) {
+		parrafo.style.color = 'red';
+		let btnComprar = parrafo.closest('.card').querySelector('.compar-btn');
+		btnComprar.classList.add('disabled');
+		btnComprar.innerText = 'Sin Stock';
+		btnComprar.classList.remove('btn-success');
+		btnComprar.classList.add('btn-warning');
+	}
+});
+
 if (parseInt(stockProd) === 0) {
 	botonComprar.innerText = 'Sin Stock';
 	botonComprar.classList.remove('btn-success');
 	botonComprar.classList.add('btn-info');
-	botonComprar.disabled = true;	
+	botonComprar.disabled = true;
 } else {
 	botonComprar.forEach(btn => {
 		btn.addEventListener('click', () => {
@@ -34,7 +34,7 @@ if (parseInt(stockProd) === 0) {
 			let stockProducto = card.querySelector('.card-text:nth-child(3)').innerText.split(':')[1].trim();
 			let idProducto = card.querySelector('.detalles-btn').getAttribute('href').split('/')[3];
 			let precioProducto = parseFloat(card.querySelector('.card-text:nth-child(4)').innerText.split(':')[1].trim().replace('$', ''));
-
+			let imagenProducto = card.querySelector('.card-img-top').src;
 			let inputCantidad = document.createElement('input');
 			inputCantidad.setAttribute('type', 'number');
 			inputCantidad.setAttribute('min', '1');
@@ -71,7 +71,8 @@ if (parseInt(stockProd) === 0) {
 						cantidad: cantidad,
 						nombre: nombreProducto,
 						precio: precioProducto,
-						subtotal: subtotal
+						subtotal: subtotal,
+                        imagen: imagenProducto
 					});
 				}
 

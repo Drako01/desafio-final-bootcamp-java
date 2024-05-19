@@ -32,7 +32,7 @@ public class ProductoController {
 		model.addAttribute("imagePathEducaciontIt", "/img/educacionit.svg");
 		model.addAttribute("productos", productos);
 		model.addAttribute("pageTitle", "Productos | App Spring Boot");
-		model.addAttribute("titulo", "Productos");
+		model.addAttribute("titulo", "Nuestros Productos");
 		return "productos";
 	}
 

@@ -37,7 +37,7 @@ public class ClienteService implements DAOInterface<Cliente> {
             existeCliente.setNombre(cliente.getNombre());
             existeCliente.setEmail(cliente.getEmail());
             existeCliente.setTelefono(cliente.getTelefono());
-            existeCliente.setHistorialPedidos(cliente.getHistorialPedidos());
+            existeCliente.setProductosFav(cliente.getProductosFav());
             
             return clienteRepository.save(existeCliente);
         }
