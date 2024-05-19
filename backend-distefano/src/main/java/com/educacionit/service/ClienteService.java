@@ -48,4 +48,8 @@ public class ClienteService implements DAOInterface<Cliente> {
     public void delete(Integer id) {
         clienteRepository.deleteById(id);
     }
+    
+    public Cliente getByEmail(String email) {
+        return clienteRepository.findByEmail(email);
+    }
 }

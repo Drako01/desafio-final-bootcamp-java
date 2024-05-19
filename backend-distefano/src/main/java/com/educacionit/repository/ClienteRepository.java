@@ -7,5 +7,5 @@ import com.educacionit.models.Cliente;
 
 @Repository("clienteRepository")
 public interface ClienteRepository extends JpaRepository<Cliente, Integer> {
-
+	Cliente findByEmail(String email);
 }
