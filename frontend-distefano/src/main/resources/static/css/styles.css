@@ -222,8 +222,9 @@ footer p {
 	margin: auto;
 }
 .card img{
-	
+	padding: .5rem;
 	min-height: 240px;
+	border-radius: 1.5rem;
 }
 .card .line{
 	width: calc(100% - 1.5rem) !important;
