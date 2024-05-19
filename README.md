@@ -21,8 +21,7 @@ Estoy emocionado por ampliar mis habilidades al mundo de la programación Java.
 - 📧 **Correo Electrónico**: [addistefano@live.com.ar](mailto:addistefano@live.com.ar)
 - 💼 **LinkedIn**: [Alejandro Daniel Di Stefano](https://www.linkedin.com/in/alejandro-daniel-di-stefano/)
 
----- 
-
+---
 
 ## Explicación del Proyecto
 
@@ -46,12 +45,12 @@ Puerto: http://localhost:8080/
 
 #### Agrego Script SQL para cargar productos de Prueba:
 
-``` sql
+```sql
 CREATE DATABASE IF NOT EXISTS  educacionit;
 USE educacionit;
 
 -- Insertar las categorías
-INSERT INTO categoria (nombre, descripcion) VALUES 
+INSERT INTO categoria (nombre, descripcion) VALUES
 ('Pastas', 'Productos de pasta alimenticia'),
 ('Cereales', 'Productos derivados de granos'),
 ('Lácteos', 'Productos lácteos'),
@@ -62,7 +61,7 @@ INSERT INTO categoria (nombre, descripcion) VALUES
 ('Harinas', 'Productos derivados de harina');
 
 -- Insertar los productos
-INSERT INTO producto (nombre, descripcion, precio, imagen, stock, categoria_id) VALUES 
+INSERT INTO producto (nombre, descripcion, precio, imagen, stock, categoria_id) VALUES
 ('Fideos', 'Fideos de Sémola', 1050.50, 'https://statics.dinoonline.com.ar/imagenes/full_600x600_ma/2540661_f.jpg', 100, 1),
 ('Arroz', 'Arroz Blanco', 850.00, 'https://media.f2h.shop/media/catalog/product/cache/ab45d104292f1bb63d093e6be8310c97/a/r/arroz.png', 150, 2),
 ('Leche', 'Leche Entera', 650.00, 'https://acdn.mitiendanube.com/stores/093/780/products/serenisima-clasica-751-95fea92d1a27f8e9ab15710914346750-480-0.png', 200, 3),
@@ -74,8 +73,7 @@ INSERT INTO producto (nombre, descripcion, precio, imagen, stock, categoria_id) 
 
 ```
 
-----
-
+---
 
 #### Aplicación Web Cliente de Comercialización
 
@@ -97,7 +95,7 @@ Puerto: http://localhost:3000/
 
 En resumen, el proyecto consiste en dos partes principales: un sistema backoffice de gestión de productos para administradores y una aplicación web cliente de comercialización para usuarios finales. Ambas partes se integran para ofrecer una experiencia completa y satisfactoria tanto para los administradores como para los clientes.
 
-----
+---
 
 <br><p align="center">
 <img src="https://1000logos.net/wp-content/uploads/2020/09/Java-Logo.png" alt="Java" width=500></p>
