@@ -5,7 +5,10 @@
     <div th:fragment="content">
         <div class='d-flex inicio'>
             <img th:src="@{${imageError}}" alt="Error 404" class='imagen-error'>
-            <p class="parrafo-error" th:text=${mensaje}></p>
+            
+            <div class="alert alert-danger mt-3" role="alert">
+				<p th:text=${mensaje}></p>
+			</div>
             <a th:href="@{${lastVisitedUrl}}" class="btn btn-danger">VOLVER</a>
         </div>
     </div>
