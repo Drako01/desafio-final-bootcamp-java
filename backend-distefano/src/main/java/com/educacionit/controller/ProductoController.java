@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.educacionit.models.Producto;
+import com.educacionit.entity.Producto;
 import com.educacionit.service.ProductoService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -76,7 +76,7 @@ public class ProductoController {
 			@ApiResponse(responseCode = "500", description = "Error interno del servidor", content = @Content) })
 	@PutMapping(value = "/{id}", consumes = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<Void> updateProducto(@PathVariable("id") Integer id, 
-			@RequestBody Producto productoModificado) {
+			@RequestBody Producto productoModificado) throws Exception {
 	    Producto currentProducto = productoService.getById(id);
 	    if (currentProducto == null) {
 	        return new ResponseEntity<>(HttpStatus.NOT_FOUND);

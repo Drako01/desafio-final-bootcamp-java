@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 
-import com.educacionit.model.Categoria;
-import com.educacionit.model.Producto;
+import com.educacionit.entity.Categoria;
+import com.educacionit.entity.Producto;
 
 @Controller
 public class ProductoController {

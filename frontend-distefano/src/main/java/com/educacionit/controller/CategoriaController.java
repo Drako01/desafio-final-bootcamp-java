@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 
-import com.educacionit.model.Categoria;
+import com.educacionit.entity.Categoria;
 
 @Controller
 public class CategoriaController {

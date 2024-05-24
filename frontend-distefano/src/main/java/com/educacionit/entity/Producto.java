@@ -1,4 +1,4 @@
-package com.educacionit.model;
+package com.educacionit.entity;
 
 public class Producto {
 

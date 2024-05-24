@@ -1,4 +1,4 @@
-package com.educacionit.models;
+package com.educacionit.entity;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
@@ -31,9 +31,8 @@ public class Categoria {
 		super();
 	}
 
-	public Categoria(Integer id_categoria, String nombre, String descripcion) {
+	public Categoria(String nombre, String descripcion) {
 		super();
-		this.id_categoria = id_categoria;
 		this.nombre = nombre;
 		this.descripcion = descripcion;
 	}

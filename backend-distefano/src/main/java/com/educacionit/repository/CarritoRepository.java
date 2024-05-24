@@ -3,9 +3,9 @@ package com.educacionit.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.educacionit.models.Pedido;
+import com.educacionit.entity.Carrito;
 
-@Repository("pedidoRepository")
-public interface PedidoRepository extends JpaRepository<Pedido, Integer> {
+@Repository("carritoRepository")
+public interface CarritoRepository extends JpaRepository<Carrito, Integer> {
 
 }

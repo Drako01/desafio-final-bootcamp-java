@@ -26,8 +26,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import com.educacionit.models.Categoria;
-import com.educacionit.models.Producto;
+import com.educacionit.entity.Categoria;
+import com.educacionit.entity.Producto;
 import com.educacionit.service.ProductoService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -50,8 +50,8 @@ class ProductoControllerTest {
 		MockitoAnnotations.openMocks(this);
 		mockMvc = MockMvcBuilders.standaloneSetup(productoController).build();
 
-		Categoria categoria = new Categoria(1, "Alimentos", "Alimentos para comer");
-		producto = new Producto(1, "Fideos", "Fideos de Sémola", 100.0, null, null, categoria);
+		Categoria categoria = new Categoria("Alimentos", "Alimentos para comer");
+		producto = new Producto("Fideos", "Fideos de Sémola", 100.0, null, null, categoria);
 		productoList = new ArrayList<>();
 		productoList.add(producto);
 		
@@ -74,10 +74,8 @@ class ProductoControllerTest {
 		when(productoService.getById(1)).thenReturn(producto);
 
 		mockMvc.perform(get("/productos/1")).andExpect(status().isOk())
-				.andExpect(jsonPath("$.id_producto", is(1)))
 				.andExpect(jsonPath("$.nombre", is("Fideos")))
 				.andExpect(jsonPath("$.descripcion", is("Fideos de Sémola"))).andExpect(jsonPath("$.precio", is(100.0)))
-				.andExpect(jsonPath("$.categoria.id_categoria", is(1)))
 				.andExpect(jsonPath("$.categoria.nombre", is("Alimentos")))
 				.andExpect(jsonPath("$.categoria.descripcion", is("Alimentos para comer")));
 	}
@@ -91,7 +89,7 @@ class ProductoControllerTest {
 
 	@Test
 	void testAddProducto() throws Exception {
-		Producto newProducto = new Producto(2, "Arroz", "Arroz blanco", 80.0, null, null, null);
+		Producto newProducto = new Producto("Arroz", "Arroz blanco", 80.0, null, null, null);
 		when(productoService.getById(2)).thenReturn(null);
 
 		mockMvc.perform(post("/productos/").contentType(MediaType.APPLICATION_JSON).content(asJsonString(newProducto)))
@@ -102,7 +100,7 @@ class ProductoControllerTest {
 
 	@Test
 	void testUpdateProductoSuccess() throws Exception {
-	    Producto mockProducto = new Producto(1, "Fideos", "Fideos de Sémola", 100.0, null, null, null);   
+	    Producto mockProducto = new Producto("Fideos", "Fideos de Sémola", 100.0, null, null, null);   
 	   
 	    when(productoService.getById(1)).thenReturn(mockProducto);	    
 	    String updatedProductoJson = "{\"id_producto\":1,\"nombre\":\"Fideos\",\"descripcion\":\"Fideos de Sémola Actualizado\",\"precio\":120.0,\"categoria\":{\"id_categoria\":1,\"nombre\":\"Alimentos\",\"descripcion\":\"Alimentos para comer\"}}";
@@ -120,7 +118,7 @@ class ProductoControllerTest {
 
 	@Test
 	void testUpdateProductoNotFound() throws Exception {
-		Producto updatedProducto = new Producto(2, "Arroz", "Arroz blanco", 80.0, null, null, null);
+		Producto updatedProducto = new Producto("Arroz", "Arroz blanco", 80.0, null, null, null);
 		when(productoService.getById(2)).thenReturn(null);
 
 		mockMvc.perform(

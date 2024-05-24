@@ -17,10 +17,12 @@
 				</thead>
 				<tbody id="carrito-table"></tbody>
 			</table>
-			<p>
-				Total: <span id="total-amount"></span>
-			</p>
-			<a href="#" class="btn btn-success" id="btn-compar-carrito">Comprar</a>
+			<div class="d-flex botonera-carrito-pago">
+				<p>
+					Total: <span id="total-amount"></span>
+				</p>
+				<a href="#" class="btn btn-success" id="btn-compar-carrito">Comprar</a>
+			</div>
 		</div>
 		<div class="container">
 			<div class="payment-section">
@@ -50,6 +52,31 @@
 				</div>
 			</div>
 		</div>
+		<!-- Modal -->
+		<div class="modal fade" id="confirmDeleteModal" tabindex="-1"
+            role="dialog" aria-labelledby="confirmDeleteModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="confirmDeleteModalLabel">Confirmar
+                            eliminación</h5>
+                        <button type="button" class="close" data-dismiss="modal"
+                            aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">¿Estás seguro de que deseas eliminar
+                        este producto del carrito?</div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" id="cancelDeleteButton"
+                            data-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-danger"
+                            id="confirmDeleteButton">Eliminar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 	</div>
 </body>
 </html>

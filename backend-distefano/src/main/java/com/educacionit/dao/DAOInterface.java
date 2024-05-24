@@ -10,7 +10,7 @@ public interface DAOInterface<T> {
     
     List<T> getAll();
     
-    T update(Integer id, T object);
+    T update(Integer id, T object) throws Exception;
     
     void delete(Integer id);
 

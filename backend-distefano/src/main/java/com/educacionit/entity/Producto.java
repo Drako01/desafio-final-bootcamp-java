@@ -1,6 +1,4 @@
-package com.educacionit.models;
-
-import java.util.List;
+package com.educacionit.entity;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
@@ -9,7 +7,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
@@ -48,17 +45,14 @@ public class Producto {
     @JoinColumn(name = "categoria_id")
     private Categoria categoria;
 
-    @ManyToMany(mappedBy = "productosFav")
-    private List<Cliente> clientes;
 
     public Producto() {
         super();
     }
 
-    public Producto(Integer id_producto, String nombre, String descripcion, double precio, String imagen, Integer stock,
+    public Producto(String nombre, String descripcion, double precio, String imagen, Integer stock,
                     Categoria categoria) {
         super();
-        this.id_producto = id_producto;
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.precio = precio;

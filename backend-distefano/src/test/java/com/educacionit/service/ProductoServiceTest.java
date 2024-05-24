@@ -17,8 +17,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import com.educacionit.models.Categoria;
-import com.educacionit.models.Producto;
+import com.educacionit.entity.Categoria;
+import com.educacionit.entity.Producto;
 import com.educacionit.repository.ProductoRepository;
 
 class ProductoServiceTest {
@@ -36,9 +36,9 @@ class ProductoServiceTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
 
-        Categoria categoria = new Categoria(1, "NombreCategoria", "DescripcionCategoria");
+        Categoria categoria = new Categoria("NombreCategoria", "DescripcionCategoria");
 
-        producto = new Producto(1, "NombreProducto", "DescripcionProducto", 1050.50, null, null, categoria);
+        producto = new Producto("NombreProducto", "DescripcionProducto", 1050.50, null, null, categoria);
         productoList = new ArrayList<>();
         productoList.add(producto);
     }
@@ -91,11 +91,11 @@ class ProductoServiceTest {
     }
 
     @Test
-    void testUpdateProducto() {
+    void testUpdateProducto() throws Exception {
         when(productoRepository.findById(1)).thenReturn(Optional.of(producto));
         when(productoRepository.save(any())).thenReturn(producto);
 
-        Producto updatedProducto = new Producto(1, "NuevoNombreProducto", "NuevaDescripcionProducto", 1000.0, null, null, producto.getCategoria());
+        Producto updatedProducto = new Producto("NuevoNombreProducto", "NuevaDescripcionProducto", 1000.0, null, null, producto.getCategoria());
         Producto resultProducto = productoService.update(1, updatedProducto);
 
         assertNotNull(resultProducto);

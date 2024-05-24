@@ -6,15 +6,18 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import com.educacionit.models.Categoria;
+
+import com.educacionit.entity.Categoria;
 import com.educacionit.repository.CategoriaRepository;
 
 class CategoriaServiceTest {
@@ -32,7 +35,7 @@ class CategoriaServiceTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
 
-        categoria = new Categoria(1, "Electrónica", "Categoría de productos electrónicos");
+        categoria = new Categoria("Electrónica", "Categoría de productos electrónicos");
         categoriaList = new ArrayList<>();
         categoriaList.add(categoria);
     }
@@ -81,11 +84,11 @@ class CategoriaServiceTest {
     }
 
     @Test
-    void testUpdateCategoria() {
+    void testUpdateCategoria() throws Exception {
         when(categoriaRepository.findById(1)).thenReturn(Optional.of(categoria));
         when(categoriaRepository.save(any())).thenReturn(categoria);
 
-        Categoria updatedCategoria = new Categoria(1, "Electrodomésticos", "Categoría de productos para el hogar");
+        Categoria updatedCategoria = new Categoria("Electrodomésticos", "Categoría de productos para el hogar");
         Categoria resultCategoria = categoriaService.update(1, updatedCategoria);
 
         assertNotNull(resultCategoria);

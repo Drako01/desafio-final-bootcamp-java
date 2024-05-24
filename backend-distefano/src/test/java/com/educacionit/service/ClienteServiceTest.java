@@ -3,102 +3,136 @@ package com.educacionit.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import com.educacionit.models.Cliente;
+
+import com.educacionit.entity.Cliente;
+import com.educacionit.entity.Producto;
 import com.educacionit.repository.ClienteRepository;
 
 class ClienteServiceTest {
 
-    @Mock
-    private ClienteRepository clienteRepository;
+	@Mock
+	private ClienteRepository clienteRepository;
 
-    @InjectMocks
-    private ClienteService clienteService;
+	@InjectMocks
+	private ClienteService clienteService;
 
-    private Cliente cliente;
-    private List<Cliente> clienteList;
+	private List<Cliente> clienteList;
 
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
+	@BeforeEach
+	void setUp() {
+		MockitoAnnotations.openMocks(this);
+		clienteList = new ArrayList<>();
+		clienteList
+				.add(new Cliente("Juan Perez", "juan@example.com", "password1", "123456789", "seller", new Producto()));
+		clienteList.add(
+				new Cliente("Maria Gomez", "maria@example.com", "password2", "987654321", "seller", new Producto()));
+	}
 
-        cliente = new Cliente(1, "Juan Perez", "juan@example.com", null, "123456789", null, null);
-        clienteList = new ArrayList<>();
-        clienteList.add(cliente);
-    }
 
-    @Test
-    void testSaveCliente() {
-        when(clienteRepository.save(any())).thenReturn(cliente);
+	@Test
+	void testSave() {
+		Cliente cliente = new Cliente("Pedro Ramirez", "pedro@example.com", "password3", "111222333", "seller",
+				new Producto());
+		when(clienteRepository.save(any(Cliente.class))).thenReturn(cliente);
 
-        Cliente savedCliente = clienteService.save(cliente);
 
-        assertNotNull(savedCliente);
-        assertEquals(cliente.getId_cliente(), savedCliente.getId_cliente());
-        assertEquals(cliente.getNombre(), savedCliente.getNombre());
-        assertEquals(cliente.getEmail(), savedCliente.getEmail());
-        assertEquals(cliente.getTelefono(), savedCliente.getTelefono());
-    }
+		Cliente savedCliente = clienteService.save(cliente);
 
-    @Test
-    void testGetByIdCliente() {
-        when(clienteRepository.findById(1)).thenReturn(Optional.of(cliente));
+		assertNotNull(savedCliente);
+		assertEquals(cliente, savedCliente);
+	}
 
-        Cliente foundCliente = clienteService.getById(1);
+	@Test
+	void testGetById() {
+		int clienteId = 1;
+		Cliente cliente = clienteList.get(0);
+		when(clienteRepository.findById(clienteId)).thenReturn(Optional.of(cliente));
 
-        assertNotNull(foundCliente);
-        assertEquals(cliente.getId_cliente(), foundCliente.getId_cliente());
-        assertEquals(cliente.getNombre(), foundCliente.getNombre());
-        assertEquals(cliente.getEmail(), foundCliente.getEmail());
-        assertEquals(cliente.getTelefono(), foundCliente.getTelefono());
-    }
+		Cliente retrievedCliente = clienteService.getById(clienteId);
 
-    @Test
-    void testGetByIdClienteNotFound() {
-        when(clienteRepository.findById(2)).thenReturn(Optional.empty());
+		assertNotNull(retrievedCliente);
+		assertEquals(cliente, retrievedCliente);
+	}
 
-        Cliente foundCliente = clienteService.getById(2);
+	@Test
+	void testGetByIdNotFound() {
+		int clienteId = 3;
+		when(clienteRepository.findById(clienteId)).thenReturn(Optional.empty());
 
-        assertNull(foundCliente);
-    }
+		Cliente retrievedCliente = clienteService.getById(clienteId);
 
-    @Test
-    void testGetAllClientes() {
-        when(clienteRepository.findAll()).thenReturn(clienteList);
+		assertNull(retrievedCliente);
+	}
 
-        List<Cliente> foundClientes = clienteService.getAll();
+	@Test
+	void testGetAll() {
+		when(clienteRepository.findAll()).thenReturn(clienteList);
 
-        assertNotNull(foundClientes);
-        assertEquals(clienteList.size(), foundClientes.size());
-    }
+		List<Cliente> retrievedClientes = clienteService.getAll();
 
-    @Test
-    void testUpdateCliente() {
-        when(clienteRepository.findById(1)).thenReturn(Optional.of(cliente));
-        when(clienteRepository.save(any())).thenReturn(cliente);
+		assertNotNull(retrievedClientes);
+		assertEquals(clienteList, retrievedClientes);
+	}
 
-        Cliente updatedCliente = new Cliente(1, "Juan Perez", "juan@example.com", null, "987654321", null, null);
-        Cliente resultCliente = clienteService.update(1, updatedCliente);
+	@Test
+	void testUpdate() throws Exception {
+		int clienteId = 1;
+		Cliente clienteModificado = new Cliente("Juan Perez", "juan@example.com", "newpassword", "123456789", "buyer",
+				new Producto());
+		Cliente existingCliente = clienteList.get(0);
+		when(clienteRepository.findById(clienteId)).thenReturn(Optional.of(existingCliente));
+		when(clienteRepository.save(any(Cliente.class))).thenReturn(clienteModificado);
 
-        assertNotNull(resultCliente);
-        assertEquals(updatedCliente.getTelefono(), resultCliente.getTelefono());
-    }
+		Cliente updatedCliente = clienteService.update(clienteId, clienteModificado);
 
-    @Test
-    void testDeleteCliente() {
-        when(clienteRepository.findById(1)).thenReturn(Optional.of(cliente));
-        doNothing().when(clienteRepository).deleteById(1);
 
-        clienteService.delete(1);
-    }
+		assertNotNull(updatedCliente);
+		assertEquals(clienteModificado, updatedCliente);
+	}
+
+
+	@Test
+	void testUpdateNotFound() {
+		int clienteId = 3;
+		Cliente clienteModificado = new Cliente("Pedro Ramirez", "pedro@example.com", "newpassword", "111222333",
+				"buyer", new Producto());
+		when(clienteRepository.findById(clienteId)).thenReturn(Optional.empty());
+
+		assertThrows(Exception.class, () -> clienteService.update(clienteId, clienteModificado));
+	}
+
+	@Test
+	void testDelete() {
+		int clienteId = 1;
+		clienteService.delete(clienteId);
+
+		verify(clienteRepository, times(1)).deleteById(clienteId);
+	}
+
+	@Test
+	void testGetByEmail() {
+		String email = "juan@example.com";
+		Cliente cliente = clienteList.get(0);
+		when(clienteRepository.findByEmail(email)).thenReturn(cliente);
+
+		Cliente retrievedCliente = clienteService.getByEmail(email);
+
+		assertNotNull(retrievedCliente);
+		assertEquals(cliente, retrievedCliente);
+	}
 }

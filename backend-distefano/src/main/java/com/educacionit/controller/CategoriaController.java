@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.educacionit.models.Categoria;
+import com.educacionit.entity.Categoria;
 import com.educacionit.service.CategoriaService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -83,7 +83,7 @@ public class CategoriaController {
 
 	@PutMapping(value = "/{id}", consumes = { MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<Void> updateCategoria(@PathVariable("id") Integer id,
-			@RequestBody Categoria categoriaModificada) {
+			@RequestBody Categoria categoriaModificada) throws Exception {
 		Categoria currentCategoria = categoriaService.getById(id);
 		if (currentCategoria == null) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);

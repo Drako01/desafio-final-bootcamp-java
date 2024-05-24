@@ -1,15 +1,8 @@
 package com.educacionit.controller;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import org.junit.jupiter.api.AfterEach;
+import com.educacionit.entity.Cliente;
+import com.educacionit.entity.Producto;
+import com.educacionit.service.ClienteService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -18,8 +11,13 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import com.educacionit.models.Cliente;
-import com.educacionit.service.ClienteService;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.*;
 
 class ClienteControllerTest {
 
@@ -29,112 +27,104 @@ class ClienteControllerTest {
     @InjectMocks
     private ClienteController clienteController;
 
-    private AutoCloseable closeable;
+    private List<Cliente> clienteList;
 
     @BeforeEach
-    void setUp() throws Exception {
-        closeable = MockitoAnnotations.openMocks(this);
-    }
-
-    @AfterEach
-    void tearDown() throws Exception {
-        closeable.close();
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+        clienteList = new ArrayList<>();
+        clienteList.add(new Cliente("Juan Perez", "juan@example.com", "password1", "123456789", "seller", new Producto()));
+        clienteList.add(new Cliente("Maria Gomez", "maria@example.com", "password2", "987654321", "seller", new Producto()));
     }
 
     @Test
-    void testGetAllClientesSuccess() {
-        List<Cliente> clientes = new ArrayList<>();
-        clientes.add(new Cliente(1, "Juan", "juan@example.com", null, "123456789", null, null));
-        clientes.add(new Cliente(2, "María", "maria@example.com", null, "987654321", null, null));
-
-        when(clienteService.getAll()).thenReturn(clientes);
+    void testGetAllClientes() {
+        when(clienteService.getAll()).thenReturn(clienteList);
 
         ResponseEntity<List<Cliente>> response = clienteController.getAllClientes();
 
-        assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(2, response.getBody().size());
+        assertEquals(clienteList, response.getBody());
     }
 
     @Test
-    void testGetClienteByIdSuccess() {
-        Cliente cliente = new Cliente(1, "Juan", "juan@example.com", null, "123456789", null, null);
+    void testGetClienteById() {
+        int clienteId = 1;
+        Cliente cliente = clienteList.get(0);
+        when(clienteService.getById(clienteId)).thenReturn(cliente);
 
-        when(clienteService.getById(1)).thenReturn(cliente);
 
-        ResponseEntity<Cliente> response = clienteController.getClienteById(1);
+        ResponseEntity<Cliente> response = clienteController.getClienteById(clienteId);
 
-        assertNotNull(response);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(cliente, response.getBody());
     }
 
     @Test
     void testGetClienteByIdNotFound() {
-        when(clienteService.getById(1)).thenReturn(null);
+        int clienteId = 3;
+        when(clienteService.getById(clienteId)).thenReturn(null);
 
-        ResponseEntity<Cliente> response = clienteController.getClienteById(1);
+        ResponseEntity<Cliente> response = clienteController.getClienteById(clienteId);
 
-        assertNotNull(response);
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-        assertNull(response.getBody());
     }
 
     @Test
-    void testAddClienteSuccess() {
-        Cliente cliente = new Cliente(1, "Juan", "juan@example.com", null, "123456789", null, null);
+    void testAddCliente() {
+        Cliente cliente = new Cliente("Pedro Ramirez", "pedro@example.com", "password3", "111222333", "seller", new Producto());
+
 
         ResponseEntity<Void> response = clienteController.addCliente(cliente);
 
-        assertNotNull(response);
+        verify(clienteService, times(1)).save(cliente);
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
     }
 
     @Test
-    void testUpdateClienteSuccess() {
-        Cliente existingCliente = new Cliente(1, "Juan", "juan@example.com", null, "123456789", null, null);
-        Cliente updatedCliente = new Cliente(1, "Juan", "juan.perez@example.com", null, "123456789", null, null);
+    void testUpdateCliente() {
+        int clienteId = 1;
+        Cliente clienteModificado = new Cliente("Juan Perez", "juan@example.com", "newpassword", "123456789", "buyer", new Producto());
+        when(clienteService.getById(clienteId)).thenReturn(clienteList.get(0));
 
-        when(clienteService.getById(1)).thenReturn(existingCliente);
+        ResponseEntity<Void> response = clienteController.updateCliente(clienteId, clienteModificado);
 
-        ResponseEntity<Void> response = clienteController.updateCliente(1, updatedCliente);
-
-        assertNotNull(response);
+        verify(clienteService, times(1)).save(clienteModificado);
         assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
     @Test
     void testUpdateClienteNotFound() {
-        Cliente updatedCliente = new Cliente(1, "Juan", "juan.perez@example.com", null, "123456789", null, null);
+        int clienteId = 3;
+        Cliente clienteModificado = new Cliente("Pedro Ramirez", "pedro@example.com", "newpassword", "111222333", "buyer", new Producto());
+        when(clienteService.getById(clienteId)).thenReturn(null);
 
-        when(clienteService.getById(1)).thenReturn(null);
 
-        ResponseEntity<Void> response = clienteController.updateCliente(1, updatedCliente);
+        ResponseEntity<Void> response = clienteController.updateCliente(clienteId, clienteModificado);
 
-        assertNotNull(response);
+        verify(clienteService, never()).save(any(Cliente.class));
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
 
     @Test
-    void testDeleteClienteSuccess() {
-        Cliente cliente = new Cliente(1, "Juan", "juan@example.com", null, "123456789", null, null);
+    void testDeleteCliente() {
+        int clienteId = 1;
+        when(clienteService.getById(clienteId)).thenReturn(clienteList.get(0));
 
-        when(clienteService.getById(1)).thenReturn(cliente);
-        doNothing().when(clienteService).delete(1);
+        ResponseEntity<Void> response = clienteController.deleteCliente(clienteId);
 
-        ResponseEntity<Void> response = clienteController.deleteCliente(1);
-
-        assertNotNull(response);
+        verify(clienteService, times(1)).delete(clienteId);
         assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
     @Test
     void testDeleteClienteNotFound() {
-        when(clienteService.getById(1)).thenReturn(null);
+        int clienteId = 3;
+        when(clienteService.getById(clienteId)).thenReturn(null);
 
-        ResponseEntity<Void> response = clienteController.deleteCliente(1);
+        ResponseEntity<Void> response = clienteController.deleteCliente(clienteId);
 
-        assertNotNull(response);
+        verify(clienteService, never()).delete(anyInt());
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
 }

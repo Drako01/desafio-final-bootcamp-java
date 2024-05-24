@@ -211,7 +211,13 @@ footer p {
 .container {
 	margin-top: 2rem;
 }
-
+.botonera-carrito-pago{
+	flex-direction: column;
+    align-items: flex-end;
+}
+.right {
+	min-width: 10rem;
+}
 .products {
 	display: flex;
 	padding: 2rem;

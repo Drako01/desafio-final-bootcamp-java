@@ -12,16 +12,39 @@ window.onload = function() {
 let userId = 1;
 let cantidadTotal = 0;
 let precioTotal = 0;
-let carritoTable = document.querySelector('#carrito-table');
-let botonComprarCarrito = document.querySelector('#btn-compar-carrito');
+let carritoTable;
+let botonComprarCarrito;
 const fechaHoraElement = document.getElementById('fechaHora');
-
 let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
 
 $(document).ready(function() {
 	$('[data-toggle="modal"]').modal();
 	cargarCarritoDesdeLocalStorage();
 	actualizarCarrito();
+
+	carritoTable = document.querySelector('#carrito-table');
+	botonComprarCarrito = document.querySelector('#btn-compar-carrito');
+
+	if (botonComprarCarrito) {
+		botonComprarCarrito.addEventListener('click', () => {
+			localStorage.setItem('carrito', '[]');
+			location.reload();
+		});
+	}
+
+	document.querySelectorAll('.btn-eliminar-prod-carrito').forEach(button => {
+		button.addEventListener('click', mostrarModalConfirmacionEliminar);
+	});
+
+	document.getElementById('confirmDeleteButton').addEventListener('click', confirmarEliminarProducto);
+
+	document.getElementById('cancelDeleteButton').addEventListener('click', () => {
+		$('#confirmDeleteModal').modal('hide');
+	});
+
+	document.querySelector('.modal .close').addEventListener('click', () => {
+		$('#confirmDeleteModal').modal('hide');
+	});
 });
 
 function obtenerFechaYHora() {
@@ -70,18 +93,20 @@ function actualizarCarrito() {
 	document.querySelector('.item-carrito p span').innerText = precioTotal;
 }
 
-
 function actualizarCarritoTable() {
 	let cantidadTotal = 0;
 	let precioTotal = 0;
 	carritoTable.innerHTML = '';
-
-	carrito.forEach(producto => {
+	botonComprarCarrito.classList.add('right');
+	carrito.forEach((producto, index) => {
 		const row = document.createElement('tr');
 
 		const imagenCell = document.createElement('td');
 		const imgElement = document.createElement('img');
 		imgElement.src = producto.imagen;
+		imagenCell.classList.add('d-flex');
+		imagenCell.style.justifyContent = 'center';
+		imgElement.style.alignItems = 'center';
 		imgElement.style.width = '40px';
 		imagenCell.appendChild(imgElement);
 		row.appendChild(imagenCell);
@@ -104,14 +129,11 @@ function actualizarCarritoTable() {
 
 		const eliminarCell = document.createElement('td');
 		eliminarCell.innerHTML = `<td class="acciones-table"><a
-									href="#"
-									class="btn btn-danger btn-eliminar-prod-carrito"> 
-									<i class="fa fa-trash"></i>
-								</a></td>`;
+                                    href="#"
+                                    class="btn btn-danger btn-eliminar-prod-carrito" data-index="${index}" data-toggle="modal" data-target="#confirmDeleteModal"> 
+                                    <i class="fa fa-trash"></i>
+                                </a></td>`;
 		row.appendChild(eliminarCell);
-
-
-
 
 		carritoTable.appendChild(row);
 
@@ -119,11 +141,32 @@ function actualizarCarritoTable() {
 		precioTotal += producto.subtotal;
 	});
 
-	let totalAmount = document.getElementById('total-amount')
+	let totalAmount = document.getElementById('total-amount');
 	totalAmount.innerText = '$ ' + precioTotal;
 	totalAmount.style.color = 'green';
 	totalAmount.style.fontWeight = 'bold';
-	totalAmount.style.fontSize = '1.2rem';
+	totalAmount.style.fontSize = '1.3rem';
+	totalAmount.parentElement.style.color = 'green';
+
+	document.querySelectorAll('.btn-eliminar-prod-carrito').forEach(button => {
+		button.addEventListener('click', mostrarModalConfirmacionEliminar);
+	});
+}
+
+let productoAEliminarIndex;
+
+function mostrarModalConfirmacionEliminar(event) {
+	event.preventDefault();
+	productoAEliminarIndex = event.target.closest('a').getAttribute('data-index');
+	$('#confirmDeleteModal').modal('show');
+}
+
+function confirmarEliminarProducto() {
+	carrito.splice(productoAEliminarIndex, 1);
+	localStorage.setItem('carrito', JSON.stringify(carrito));
+	actualizarCarrito();
+	actualizarCarritoTable();
+	$('#confirmDeleteModal').modal('hide');
 }
 
 fetch('/backend/productos/json')
@@ -135,8 +178,9 @@ fetch('/backend/productos/json')
 	})
 	.then(data => {
 		productos = data;
-
 	})
 	.catch(error => {
 		console.error('Error en la solicitud AJAX:', error);
 	});
+
+
