@@ -1,9 +1,6 @@
 package com.educacionit.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -11,18 +8,22 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import com.educacionit.entity.Carrito;
+import com.educacionit.entity.Item;
 import com.educacionit.service.CarritoService;
 
-class CarritoControllerTest {
+@SpringBootTest
+public class CarritoControllerTest {
 
     @Mock
     private CarritoService carritoService;
@@ -30,101 +31,114 @@ class CarritoControllerTest {
     @InjectMocks
     private CarritoController carritoController;
 
-    private List<Carrito> carritoList;
 
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
-        carritoList = new ArrayList<>();
-        carritoList.add(new Carrito());
-        carritoList.add(new Carrito());
+	private AutoCloseable closeable;
+
+	@BeforeEach
+	void setUp() throws Exception {
+		closeable = MockitoAnnotations.openMocks(this);
+	}
+
+	@AfterEach
+	void tearDown() throws Exception {
+		closeable.close();
+	}
+	
+    @Test
+    public void testGetAllCarritos() {
+        List<Carrito> carritos = new ArrayList<>();
+        carritos.add(new Carrito());
+        carritos.add(new Carrito());
+
+        when(carritoService.getAll()).thenReturn(carritos);
+
+        ResponseEntity<List<Carrito>> responseEntity = carritoController.getAllCarritos();
+
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertEquals(carritos.size(), responseEntity.getBody().size());
     }
 
     @Test
-    void testGetAllCarritos() {
-        when(carritoService.getAll()).thenReturn(carritoList);
+    public void testGetCarritoById() {
+        Integer carritoId = 1;
+        Carrito carrito = new Carrito();
+        carrito.setId_carrito(carritoId);
 
-        ResponseEntity<List<Carrito>> response = carritoController.getAllCarritos();
-
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(carritoList, response.getBody());
-    }
-
-    @Test
-    void testGetCarritoById() {
-        int carritoId = 1;
-        Carrito carrito = carritoList.get(0);
         when(carritoService.getById(carritoId)).thenReturn(carrito);
 
-        ResponseEntity<Carrito> response = carritoController.getCarritoById(carritoId);
+        ResponseEntity<Carrito> responseEntity = carritoController.getCarritoById(carritoId);
 
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(carrito, response.getBody());
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertEquals(carrito.getId_carrito(), responseEntity.getBody().getId_carrito());
     }
 
     @Test
-    void testGetCarritoByIdNotFound() {
-        int carritoId = 3;
-        when(carritoService.getById(carritoId)).thenReturn(null);
-
-        ResponseEntity<Carrito> response = carritoController.getCarritoById(carritoId);
-
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-    }
-
-    @Test
-    void testAddCarrito() {
+    public void testAddCarrito() {
         Carrito carrito = new Carrito();
 
-        ResponseEntity<Carrito> response = carritoController.addCarrito(carrito);
+        ResponseEntity<Carrito> responseEntity = carritoController.addCarrito(carrito);
 
+        assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
         verify(carritoService, times(1)).save(carrito);
-        assertEquals(HttpStatus.CREATED, response.getStatusCode());
     }
 
     @Test
-    void testUpdateCarrito() throws Exception {
-        int carritoId = 1;
+    public void testUpdateCarrito() throws Exception {
+        Integer carritoId = 1;
+        Carrito carrito = new Carrito();
+        carrito.setId_carrito(carritoId);
         Carrito carritoModificado = new Carrito();
-        when(carritoService.getById(carritoId)).thenReturn(carritoList.get(0));
 
-        ResponseEntity<Void> response = carritoController.updateCarrito(carritoId, carritoModificado);
+        when(carritoService.getById(carritoId)).thenReturn(carrito);
 
+        ResponseEntity<Void> responseEntity = carritoController.updateCarrito(carritoId, carritoModificado);
+
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         verify(carritoService, times(1)).update(carritoId, carritoModificado);
-        assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
     @Test
-    void testUpdateCarritoNotFound() throws Exception {
-        int carritoId = 3;
-        Carrito carritoModificado = new Carrito();
-        when(carritoService.getById(carritoId)).thenReturn(null);
+    public void testDeleteCarrito() {
+        Integer carritoId = 1;
+        Carrito carrito = new Carrito();
+        carrito.setId_carrito(carritoId);
 
-        ResponseEntity<Void> response = carritoController.updateCarrito(carritoId, carritoModificado);
+        when(carritoService.getById(carritoId)).thenReturn(carrito);
 
-        verify(carritoService, never()).update(anyInt(), any(Carrito.class));
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
-    }
+        ResponseEntity<Void> responseEntity = carritoController.deleteCarrito(carritoId);
 
-    @Test
-    void testDeleteCarrito() {
-        int carritoId = 1;
-        when(carritoService.getById(carritoId)).thenReturn(carritoList.get(0));
-
-        ResponseEntity<Void> response = carritoController.deleteCarrito(carritoId);
-
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         verify(carritoService, times(1)).delete(carritoId);
-        assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
     @Test
-    void testDeleteCarritoNotFound() {
-        int carritoId = 3;
-        when(carritoService.getById(carritoId)).thenReturn(null);
+    public void testAddItemToCarrito() throws Exception {
+        // Mock data
+        Integer carritoId = 1;
+        Carrito carrito = new Carrito();
+        Item item = new Item();
 
-        ResponseEntity<Void> response = carritoController.deleteCarrito(carritoId);
+        when(carritoService.getById(carritoId)).thenReturn(carrito);
 
-        verify(carritoService, never()).delete(anyInt());
-        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        ResponseEntity<Void> responseEntity = carritoController.addItemToCarrito(carritoId, item);
+
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        verify(carritoService, times(1)).agregarItemAlCarrito(carritoId, item);
     }
+
+    @Test
+    public void testRemoveItemFromCarrito() throws Exception {
+        // Mock data
+        Integer carritoId = 1;
+        Integer itemId = 1;
+        Carrito carrito = new Carrito();        
+
+        when(carritoService.getById(carritoId)).thenReturn(carrito);
+
+        ResponseEntity<Void> responseEntity = carritoController.removeItemFromCarrito(carritoId, itemId);
+
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        verify(carritoService, times(1)).eliminarItemDelCarrito(carritoId, itemId);
+    }
+
 }

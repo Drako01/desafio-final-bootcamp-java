@@ -1,28 +1,31 @@
 package com.educacionit.controller;
 
-import com.educacionit.entity.Carrito;
-import com.educacionit.entity.Categoria;
-import com.educacionit.entity.Cliente;
-import com.educacionit.entity.HistorialCompras;
-import com.educacionit.service.HistorialComprasService;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.Mockito.*;
-
+import com.educacionit.entity.Carrito;
+import com.educacionit.entity.Cliente;
+import com.educacionit.entity.HistorialCompras;
+import com.educacionit.service.HistorialComprasService;
+@SpringBootTest
 class HistorialComprasControllerTest {
 
     @Mock

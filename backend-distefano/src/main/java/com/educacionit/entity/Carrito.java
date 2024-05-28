@@ -7,6 +7,8 @@ import java.util.List;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -18,95 +20,100 @@ import jakarta.persistence.Table;
 @Table(name = "carrito")
 public class Carrito {
 
-    @Schema(description = "ID del Carrito", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id_carrito;
+	public enum Estado {
+		PENDIENTE, COMPLETADO, CANCELADO
+	}
 
-    @Schema(description = "Fecha en que se realizó el pedido", example = "2024-04-23")
-    private Date fecha_pedido;
+	@Schema(description = "ID del Carrito", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer id_carrito;
 
-    @Schema(description = "Estado del pedido", example = "PENDIENTE")
-    private String estado;
+	@Schema(description = "Fecha en que se realizó el pedido", example = "2024-04-23")
+	private Date fecha_pedido;
 
-    @OneToMany(mappedBy = "carrito", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Item> items = new ArrayList<>(); 
+	@Schema(description = "Estado del pedido", example = "PENDIENTE")
+	@Enumerated(EnumType.STRING)
+	private Estado estado;
 
-    @Schema(description = "Precio total del detalle", example = "201.00")
-    private double precio_total;
+	@OneToMany(mappedBy = "carrito", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<Item> items = new ArrayList<>();
 
-    public Carrito() {
-        super();
-        this.estado = "PENDIENTE";
-        this.fecha_pedido = new Date();
-    }
+	@Schema(description = "Precio total del detalle", example = "201.00")
+	private double precio_total;
 
-    public Carrito(List<Item> items) {
-        super();
-        this.items = items != null ? items : new ArrayList<>();
-        this.estado = "PENDIENTE";
-        this.fecha_pedido = new Date();
-        calcularPrecioTotal();
-    }
+	public Carrito() {
+		super();
+		this.estado = Estado.PENDIENTE;
+		this.fecha_pedido = new Date();
+	}
 
-    public Integer getId_carrito() {
-        return id_carrito;
-    }
+	public Carrito(List<Item> items) {
+		super();
+		this.items = items != null ? items : new ArrayList<>();
+		this.estado = Estado.PENDIENTE;
+		this.fecha_pedido = new Date();
+		calcularPrecioTotal();
+	}
 
-    public void setId_carrito(Integer id_carrito) {
-        this.id_carrito = id_carrito;
-    }
+	public Integer getId_carrito() {
+		return id_carrito;
+	}
 
-    public Date getFecha_pedido() {
-        return fecha_pedido;
-    }
+	public void setId_carrito(Integer id_carrito) {
+		this.id_carrito = id_carrito;
+	}
 
-    public void setFecha_pedido(Date fecha_pedido) {
-        this.fecha_pedido = fecha_pedido;
-    }
+	public Date getFecha_pedido() {
+		return fecha_pedido;
+	}
 
-    public String getEstado() {
-        return estado;
-    }
+	public void setFecha_pedido(Date fecha_pedido) {
+		this.fecha_pedido = fecha_pedido;
+	}
 
-    public void setEstado(String estado) {
-        this.estado = estado;
-    }
+	public Estado getEstado() {
+		return estado;
+	}
 
-    public List<Item> getItems() {
-        return items;
-    }
+	public void setEstado(Estado estado) {
+		this.estado = estado;
+	}
 
-    public void setItems(List<Item> items) {
-        this.items = items != null ? items : new ArrayList<>();
-        calcularPrecioTotal();
-    }
+	public List<Item> getItems() {
+		return items;
+	}
 
-    public double getPrecio_total() {
-        return precio_total;
-    }
+	public void setItems(List<Item> items) {
+		this.items = items != null ? items : new ArrayList<>();
+		calcularPrecioTotal();
+	}
 
-    public void calcularPrecioTotal() {
-        this.precio_total = items != null ? items.stream()
-            .mapToDouble(item -> item.getCantidad() * item.getPrecio_unitario())
-            .sum() : 0.0;
-    }
+	public double getPrecio_total() {
+		return precio_total;
+	}
 
-    public void agregarItem(Item item) {
-        items.add(item);
-        item.setCarrito(this);
-        calcularPrecioTotal();
-    }
+	public void calcularPrecioTotal() {
+		this.precio_total = items != null
+				? items.stream().mapToDouble(item -> item.getCantidad() * item.getPrecio_unitario()).sum()
+				: 0.0;
+	}
 
-    public void removerItem(Item item) {
-        items.remove(item);
-        item.setCarrito(null);
-        calcularPrecioTotal();
-    }
+	public void agregarItem(Item item) {
+		items.add(item);
+		item.setCarrito(this);
+		calcularPrecioTotal();
+	}
 
-    @Override
-    public String toString() {
-        return "Carrito [id_carrito=" + id_carrito + ", fecha_pedido=" + fecha_pedido + ", estado=" + estado
-                + ", items=" + items + ", precio_total=" + precio_total + "]";
-    }
+	public void removerItem(Item item) {
+		items.remove(item);
+		item.setCarrito(null);
+		calcularPrecioTotal();
+	}
+
+	@Override
+	public String toString() {
+		return "Carrito [id_carrito=" + id_carrito + ", fecha_pedido=" + fecha_pedido + ", estado=" + estado
+				+ ", items=" + items + ", precio_total=" + precio_total + "]";
+	}
 }

@@ -18,12 +18,14 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import com.educacionit.entity.Carrito;
 import com.educacionit.entity.Cliente;
 import com.educacionit.entity.HistorialCompras;
 import com.educacionit.repository.HistorialComprasRepository;
 
+@SpringBootTest
 class HistorialComprasServiceTest {
 
 	@Mock
