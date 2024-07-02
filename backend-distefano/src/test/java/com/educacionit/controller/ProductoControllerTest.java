@@ -51,8 +51,8 @@ class ProductoControllerTest {
 		MockitoAnnotations.openMocks(this);
 		mockMvc = MockMvcBuilders.standaloneSetup(productoController).build();
 
-		Categoria categoria = new Categoria("Alimentos", "Alimentos para comer");
-		producto = new Producto("Fideos", "Fideos de Sémola", 100.0, null, null, categoria);
+		Categoria categoria = new Categoria(null, "Alimentos", "Alimentos para comer");
+		producto = new Producto(null, "Fideos", "Fideos de Sémola", 100.0, null, null, categoria, null);
 		productoList = new ArrayList<>();
 		productoList.add(producto);
 		
@@ -90,7 +90,7 @@ class ProductoControllerTest {
 
 	@Test
 	void testAddProducto() throws Exception {
-		Producto newProducto = new Producto("Arroz", "Arroz blanco", 80.0, null, null, null);
+		Producto newProducto = new Producto(null, "Arroz", "Arroz blanco", 80.0, null, null, null, null);
 		when(productoService.getById(2)).thenReturn(null);
 
 		mockMvc.perform(post("/productos/").contentType(MediaType.APPLICATION_JSON).content(asJsonString(newProducto)))
@@ -101,7 +101,7 @@ class ProductoControllerTest {
 
 	@Test
 	void testUpdateProductoSuccess() throws Exception {
-	    Producto mockProducto = new Producto("Fideos", "Fideos de Sémola", 100.0, null, null, null);   
+	    Producto mockProducto = new Producto(null, "Fideos", "Fideos de Sémola", 100.0, null, null, null, null);   
 	   
 	    when(productoService.getById(1)).thenReturn(mockProducto);	    
 	    String updatedProductoJson = "{\"id_producto\":1,\"nombre\":\"Fideos\",\"descripcion\":\"Fideos de Sémola Actualizado\",\"precio\":120.0,\"categoria\":{\"id_categoria\":1,\"nombre\":\"Alimentos\",\"descripcion\":\"Alimentos para comer\"}}";
@@ -119,7 +119,7 @@ class ProductoControllerTest {
 
 	@Test
 	void testUpdateProductoNotFound() throws Exception {
-		Producto updatedProducto = new Producto("Arroz", "Arroz blanco", 80.0, null, null, null);
+		Producto updatedProducto = new Producto(null, "Arroz", "Arroz blanco", 80.0, null, null, null, null);
 		when(productoService.getById(2)).thenReturn(null);
 
 		mockMvc.perform(

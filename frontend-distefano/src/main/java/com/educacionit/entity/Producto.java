@@ -1,5 +1,16 @@
 package com.educacionit.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+@Getter
+@Setter
+@ToString
+@NoArgsConstructor
+@AllArgsConstructor
 public class Producto {
 
 	private Integer id_producto;
@@ -16,81 +27,5 @@ public class Producto {
 
 	private Categoria categoria;
 
-	public Producto() {
-		super();
-	}
-
-	public Producto(Integer id_producto, String nombre, String descripcion, double precio, String imagen, Integer stock,
-			Categoria categoria) {
-		super();
-		this.id_producto = id_producto;
-		this.nombre = nombre;
-		this.descripcion = descripcion;
-		this.precio = precio;
-		this.imagen = imagen;
-		this.stock = stock;
-		this.categoria = categoria;
-	}
-
-	public Integer getId_producto() {
-		return id_producto;
-	}
-
-	public void setId_producto(Integer id_producto) {
-		this.id_producto = id_producto;
-	}
-
-	public String getNombre() {
-		return nombre;
-	}
-
-	public void setNombre(String nombre) {
-		this.nombre = nombre;
-	}
-
-	public String getDescripcion() {
-		return descripcion;
-	}
-
-	public void setDescripcion(String descripcion) {
-		this.descripcion = descripcion;
-	}
-
-	public double getPrecio() {
-		return precio;
-	}
-
-	public void setPrecio(double precio) {
-		this.precio = precio;
-	}
-
-	public String getImagen() {
-		return imagen;
-	}
-
-	public void setImagen(String imagen) {
-		this.imagen = imagen;
-	}
-
-	public Integer getStock() {
-		return stock;
-	}
-
-	public void setStock(Integer stock) {
-		this.stock = stock;
-	}
-
-	public Categoria getCategoria() {
-		return categoria;
-	}
-
-	public void setCategoria(Categoria categoria) {
-		this.categoria = categoria;
-	}
-
-	@Override
-	public String toString() {
-		return "Producto [id_producto=" + id_producto + ", nombre=" + nombre + ", descripcion=" + descripcion
-				+ ", precio=" + precio + ", imagen=" + imagen + ", stock=" + stock + ", categoria=" + categoria + "]";
-	}
+	
 }

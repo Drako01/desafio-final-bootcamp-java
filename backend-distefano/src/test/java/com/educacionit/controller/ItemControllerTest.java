@@ -41,7 +41,7 @@ class ItemControllerTest {
 
     @Test
     void testGetAllItems() {
-        List<Item> items = Arrays.asList(new Item(new Producto(), 2, 100.50), new Item(new Producto(), 3, 200.75));
+        List<Item> items = Arrays.asList(new Item(null, new Producto(), null, 2, 100.50), new Item(null, new Producto(), null, 3, 200.75));
         when(itemService.getAll()).thenReturn(items);
 
         ResponseEntity<List<Item>> response = itemController.getAllItems();
@@ -53,7 +53,7 @@ class ItemControllerTest {
 
     @Test
     void testGetItemById() {
-        Item item = new Item(new Producto(), 2, 100.50);
+        Item item = new Item(null, new Producto(), null, 2, 100.50);
         when(itemService.getById(anyInt())).thenReturn(item);
 
         ResponseEntity<Item> response = itemController.getItemById(1);
@@ -75,7 +75,7 @@ class ItemControllerTest {
 
     @Test
     void testAddItem() {
-        Item item = new Item(new Producto(), 2, 100.50);
+        Item item = new Item(null, new Producto(), null, 2, 100.50);
         when(itemService.save(any(Item.class))).thenReturn(item);
 
         ResponseEntity<Item> response = itemController.addItem(item);
@@ -86,7 +86,7 @@ class ItemControllerTest {
 
     @Test
     void testUpdateItem() throws Exception {
-        Item item = new Item(new Producto(), 2, 100.50);
+        Item item = new Item(null, new Producto(), null, 2, 100.50);
         when(itemService.getById(anyInt())).thenReturn(item);
         when(itemService.update(anyInt(), any(Item.class))).thenReturn(item);
 
@@ -109,7 +109,7 @@ class ItemControllerTest {
 
     @Test
     void testDeleteItem() {
-        Item item = new Item(new Producto(), 2, 100.50);
+        Item item = new Item(null, new Producto(), null, 2, 100.50);
         when(itemService.getById(anyInt())).thenReturn(item);
         doNothing().when(itemService).delete(anyInt());
 
