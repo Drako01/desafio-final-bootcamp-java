@@ -45,8 +45,8 @@ class CategoriaControllerTest {
 	@Test
 	void testGetAllCategoriasSuccess() {
 		List<Categoria> categorias = new ArrayList<>();
-		categorias.add(new Categoria("Categoría 1", "Descripción 1"));
-		categorias.add(new Categoria("Categoría 2", "Descripción 2"));
+		categorias.add(new Categoria(null, "Categoría 1", "Descripción 1"));
+		categorias.add(new Categoria(null, "Categoría 2", "Descripción 2"));
 
 		when(categoriaService.getAll()).thenReturn(categorias);
 
@@ -59,7 +59,7 @@ class CategoriaControllerTest {
 
 	@Test
 	void testGetCategoriaByIdSuccess() {
-		Categoria categoria = new Categoria("Categoría 1", "Descripción 1");
+		Categoria categoria = new Categoria(null, "Categoría 1", "Descripción 1");
 
 		when(categoriaService.getById(1)).thenReturn(categoria);
 
@@ -83,7 +83,7 @@ class CategoriaControllerTest {
 
 	@Test
 	void testAddCategoriaSuccess() {
-		Categoria categoria = new Categoria("Categoría 1", "Descripción 1");
+		Categoria categoria = new Categoria(null, "Categoría 1", "Descripción 1");
 
 		ResponseEntity<Categoria> response = categoriaController.addCategoria(categoria);
 
@@ -93,8 +93,8 @@ class CategoriaControllerTest {
 
 	@Test
 	void testUpdateCategoriaSuccess() throws Exception {
-		Categoria existingCategoria = new Categoria("Categoría 1", "Descripción 1");
-		Categoria updatedCategoria = new Categoria("Categoría 1 Actualizada", "Descripción 1 Actualizada");
+		Categoria existingCategoria = new Categoria(null, "Categoría 1", "Descripción 1");
+		Categoria updatedCategoria = new Categoria(null, "Categoría 1 Actualizada", "Descripción 1 Actualizada");
 
 		when(categoriaService.getById(1)).thenReturn(existingCategoria);
 
@@ -106,7 +106,7 @@ class CategoriaControllerTest {
 
 	@Test
 	void testUpdateCategoriaNotFound() throws Exception {
-		Categoria updatedCategoria = new Categoria("Categoría 1 Actualizada", "Descripción 1 Actualizada");
+		Categoria updatedCategoria = new Categoria(null, "Categoría 1 Actualizada", "Descripción 1 Actualizada");
 
 		when(categoriaService.getById(1)).thenReturn(null);
 
@@ -118,7 +118,7 @@ class CategoriaControllerTest {
 
 	@Test
 	void testDeleteCategoriaSuccess() {
-		Categoria categoria = new Categoria("Categoría 1", "Descripción 1");
+		Categoria categoria = new Categoria(null, "Categoría 1", "Descripción 1");
 
 		when(categoriaService.getById(1)).thenReturn(categoria);
 		doNothing().when(categoriaService).delete(1);

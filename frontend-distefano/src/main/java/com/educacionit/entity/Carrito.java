@@ -4,6 +4,15 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
+@Getter
+@Setter
+@ToString
+@AllArgsConstructor
 public class Carrito {
 
 	private Integer id_carrito;
@@ -30,33 +39,7 @@ public class Carrito {
 		calcularPrecioTotal();
 	}
 
-	public Integer getId_carrito() {
-		return id_carrito;
-	}
-
-	public void setId_carrito(Integer id_carrito) {
-		this.id_carrito = id_carrito;
-	}
-
-	public Date getFecha_pedido() {
-		return fecha_pedido;
-	}
-
-	public void setFecha_pedido(Date fecha_pedido) {
-		this.fecha_pedido = fecha_pedido;
-	}
-
-	public String getEstado() {
-		return estado;
-	}
-
-	public void setEstado(String estado) {
-		this.estado = estado;
-	}
-
-	public List<Item> getItems() {
-		return items;
-	}
+	
 
 	public void setItems(List<Item> items) {
 		this.items = items != null ? items : new ArrayList<>();
@@ -85,9 +68,4 @@ public class Carrito {
 		calcularPrecioTotal();
 	}
 
-	@Override
-	public String toString() {
-		return "Carrito [id_carrito=" + id_carrito + ", fecha_pedido=" + fecha_pedido + ", estado=" + estado
-				+ ", items=" + items + ", precio_total=" + precio_total + "]";
-	}
 }

@@ -105,7 +105,7 @@ public class CarritoServiceTest {
         Carrito carrito = new Carrito();
         carrito.setId_carrito(1);
         Producto producto = new Producto();
-        Item item = new Item(producto, 2, 50.0);
+        Item item = new Item(null, producto, carrito, 2, 50.0);
         when(carritoRepository.findById(1)).thenReturn(Optional.of(carrito));
         carritoService.agregarItemAlCarrito(1, item);
         verify(carritoRepository, times(1)).findById(1);
@@ -117,7 +117,7 @@ public class CarritoServiceTest {
     @Test
     public void testAgregarItemAlCarrito_CarritoNoEncontrado() {
         Producto producto = new Producto();
-        Item item = new Item(producto, 2, 50.0);
+        Item item = new Item(null, producto, null, 2, 50.0);
         when(carritoRepository.findById(1)).thenReturn(Optional.empty());
         Exception exception = assertThrows(Exception.class, () -> {
             carritoService.agregarItemAlCarrito(1, item);
@@ -130,7 +130,7 @@ public class CarritoServiceTest {
         Carrito carrito = new Carrito();
         carrito.setId_carrito(1);
         Producto producto = new Producto();
-        Item item = new Item(producto, 2, 50.0);
+        Item item = new Item(null, producto, carrito, 2, 50.0);
         item.setId_item(1);
         carrito.agregarItem(item);
         when(carritoRepository.findById(1)).thenReturn(Optional.of(carrito));

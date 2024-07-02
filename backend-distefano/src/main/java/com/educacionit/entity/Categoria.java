@@ -7,7 +7,17 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
+@Getter
+@Setter
+@ToString
+@NoArgsConstructor
+@AllArgsConstructor
 @Schema(description = "Modelo de Categoría")
 @Entity
 @Table(name = "categoria")
@@ -20,50 +30,11 @@ public class Categoria {
 	private Integer id_categoria;
 
 	@Schema(description = "Nombre de la categoría", requiredMode = Schema.RequiredMode.REQUIRED, example = "Almacen")
-	@Column(name = "NOMBRE")
+	@Column(name = "NOMBRE", nullable = false, length = 100)
 	private String nombre;
 
 	@Schema(description = "Descripción de la categoría", requiredMode = Schema.RequiredMode.REQUIRED, example = "Productos de almacen")
-	@Column(name = "DESCRIPCION")
+	@Column(name = "DESCRIPCION", nullable = false, length = 255)
 	private String descripcion;
-
-	public Categoria() {
-		super();
-	}
-
-	public Categoria(String nombre, String descripcion) {
-		super();
-		this.nombre = nombre;
-		this.descripcion = descripcion;
-	}
-
-	public Integer getId_categoria() {
-		return id_categoria;
-	}
-
-	public void setId_categoria(Integer id_categoria) {
-		this.id_categoria = id_categoria;
-	}
-
-	public String getNombre() {
-		return nombre;
-	}
-
-	public void setNombre(String nombre) {
-		this.nombre = nombre;
-	}
-
-	public String getDescripcion() {
-		return descripcion;
-	}
-
-	public void setDescripcion(String descripcion) {
-		this.descripcion = descripcion;
-	}
-
-	@Override
-	public String toString() {
-		return "Categoria [id_categoria=" + id_categoria + ", nombre=" + nombre + ", descripcion=" + descripcion + "]";
-	}
 
 }

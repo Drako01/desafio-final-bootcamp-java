@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.educacionit.entity.Categoria;
 
@@ -27,7 +28,6 @@ public class CategoriaController {
 	public String obtenerCategoriasBackend(Model model) {
 		String apiUrlCategorias = baseUrl + "/categorias/";
 		Categoria[] categorias = restTemplate.getForObject(apiUrlCategorias, Categoria[].class);
-
 		model.addAttribute("imagePath", "/img/spring.png");
 		model.addAttribute("imagePathEducaciontIt", "/img/educacionit.svg");
 		model.addAttribute("categorias", categorias);
@@ -106,11 +106,13 @@ public class CategoriaController {
 	}
 
 	@GetMapping("/backend/categorias/eliminar/{id}")
-	public String eliminarCategoriaBackend(@PathVariable Integer id, Model model) {
+	public String eliminarCategoriaBackend(@PathVariable Integer id, RedirectAttributes attributes) {
 		String apiUrl = baseUrl + "/categorias/" + id;
 
 		restTemplate.delete(apiUrl);
+
 		logger.info("Categoría eliminada con éxito. Redireccionando a la página de categorías.");
+		attributes.addFlashAttribute("mensajeSuccess", "Categoría eliminada con éxito");
 
 		return "redirect:/backend/categorias/";
 	}
@@ -124,7 +126,7 @@ public class CategoriaController {
 		model.addAttribute("imagePath", "/img/spring.png");
 		model.addAttribute("imageError403", "/img/error-403.jpg");
 		model.addAttribute("href", "/backend/categorias/");
-		
+
 		model.addAttribute("imagePathEducaciontIt", "/img/educacionit.svg");
 		return "backend/error403";
 	}

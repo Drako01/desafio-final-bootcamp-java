@@ -196,7 +196,7 @@ function eliminarCategoria(fila) {
             })
                 .then(response => {
                     if (response.ok) {
-                        window.location.href = '/backend/categorias/';
+                        window.location.href = '/backend/categorias/?success';
                     } else {
 						window.location.href = '/backend/eliminar/error-categoria/';
 					}

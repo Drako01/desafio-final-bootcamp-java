@@ -1,6 +1,4 @@
-package com.educacionit.entity;
-
-import java.util.List;
+package com.educacionit.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,24 +8,12 @@ import lombok.ToString;
 
 @Getter
 @Setter
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class Cliente {
-
-	private Integer id_cliente;
-
-	private String nombre;
+@ToString
+public class RegistracionDTO {
 
 	private String email;
-
 	private String password;
-
-	private String telefono;
-	
-	private String level;
-
-	private List<Producto> productosFav;
-
-	
+	private String fullName;
 }
