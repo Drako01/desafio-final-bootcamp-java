@@ -38,7 +38,7 @@ public class UserService implements DAOInterface<User> {
         if (existinguUserOptional.isPresent()) {
             User existingUser = existinguUserOptional.get();
             existingUser.setNombre(userModificado.getNombre());
-            existingUser.setEmail(userModificado.getEmail());
+            existingUser.setUsername(userModificado.getUsername());
             existingUser.setPassword(userModificado.getPassword());
             existingUser.setTelefono(userModificado.getTelefono());
             
@@ -54,7 +54,7 @@ public class UserService implements DAOInterface<User> {
     	userRepository.deleteById(id);
     }
     
-    public Optional<User> getByEmail(String email) {
-        return userRepository.findByEmail(email);
+    public Optional<User> getByUsername(String username) {
+        return userRepository.findByUsername(username);
     }
 }

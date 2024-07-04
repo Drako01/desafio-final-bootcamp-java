@@ -29,7 +29,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
-@RequestMapping("/categorias")
+@RequestMapping("/categorias-listar/")
 @Tag(name = "Gestión de Categorias", description = "Endpoints para gestionar categorias")
 public class CategoriaController {
 

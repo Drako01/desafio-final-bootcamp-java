@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import com.educacionit.entity.User;
 
-@Repository("clienteRepository")
+@Repository("userRepository")
 public interface UserRepository extends JpaRepository<User, Integer> {	
-	Optional<User> findByEmail(String email);
+	Optional<User> findByUsername(String username);
 }

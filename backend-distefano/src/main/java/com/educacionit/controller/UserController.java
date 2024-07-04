@@ -75,7 +75,8 @@ public class UserController {
 			@ApiResponse(responseCode = "404", description = "Cliente no encontrado", content = @Content),
 			@ApiResponse(responseCode = "500", description = "Error interno del servidor", content = @Content) })
 	@PutMapping(value = "/{id}", consumes = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<Void> updateUsuario(@PathVariable("id") Integer id, @RequestBody User cliente) {
+	public ResponseEntity<Void> updateUsuario(@PathVariable("id") Integer id, 
+			@RequestBody User cliente) {
 		User currentUser = userService.getById(id);
 		if (currentUser == null) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);

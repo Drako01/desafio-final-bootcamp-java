@@ -127,6 +127,7 @@ h3 {
 	width: 100%;
 }
 
+.card-header-img,
 .product-details, .inicio {
 	display: flex;
 	flex-direction: column;
@@ -137,7 +138,22 @@ h3 {
 .imagen-error, .imagen-init {
 	max-width: 680px;
 }
-
+.card-header-img {
+	width: 480px;
+	height: 100px;
+	margin-left: auto;
+	margin-right: auto;
+}
+img.imagen-login{
+	width: calc(100% - 10rem);
+	height: 100px !important;
+}
+.h1_login{
+	margin: 1rem;
+}
+.mensajes_de_signup{
+	margin-top: 1rem;
+}
 .imagen-error {
 	margin: 3rem 0;
 	border-radius: 1.5rem;

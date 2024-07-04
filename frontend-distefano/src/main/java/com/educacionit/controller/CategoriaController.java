@@ -3,6 +3,7 @@ package com.educacionit.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,16 +19,18 @@ import com.educacionit.entity.Categoria;
 @Controller
 public class CategoriaController {
 	final Logger logger = LoggerFactory.getLogger(CategoriaController.class);
+	
 	@Autowired
-	private RestTemplate restTemplate;
+	@Qualifier("restTemplateFront")
+	private RestTemplate restTemplateFront;
 
 	@Autowired
 	private String baseUrl;
 
 	@GetMapping("/backend/categorias/")
 	public String obtenerCategoriasBackend(Model model) {
-		String apiUrlCategorias = baseUrl + "/categorias/";
-		Categoria[] categorias = restTemplate.getForObject(apiUrlCategorias, Categoria[].class);
+		String apiUrlCategorias = baseUrl + "/categorias-listar/";
+		Categoria[] categorias = restTemplateFront.getForObject(apiUrlCategorias, Categoria[].class);
 		model.addAttribute("imagePath", "/img/spring.png");
 		model.addAttribute("imagePathEducaciontIt", "/img/educacionit.svg");
 		model.addAttribute("categorias", categorias);
@@ -38,8 +41,8 @@ public class CategoriaController {
 
 	@GetMapping("/backend/categorias/{id}")
 	public String detallesCategoriaPorIDBackend(@PathVariable Integer id, Model model) {
-		String apiUrl = baseUrl + "/categorias/" + id;
-		Categoria categoria = restTemplate.getForObject(apiUrl, Categoria.class);
+		String apiUrl = baseUrl + "/categorias-listar/" + id;
+		Categoria categoria = restTemplateFront.getForObject(apiUrl, Categoria.class);
 
 		if (categoria != null) {
 			model.addAttribute("categoria", categoria);
@@ -59,15 +62,15 @@ public class CategoriaController {
 
 	@PostMapping("/backend/categorias/agregar/")
 	public String agregarCategoriaBackend(@ModelAttribute Categoria nuevaCategoria, Model model) {
-		String apiUrl = baseUrl + "/categorias/";
-		restTemplate.postForObject(apiUrl, nuevaCategoria, Categoria.class);
+		String apiUrl = baseUrl + "/categorias-listar/";
+		restTemplateFront.postForObject(apiUrl, nuevaCategoria, Categoria.class);
 		return "redirect:/backend/categorias/";
 	}
 
 	@GetMapping("/backend/categorias/modificar/{id}")
 	public String mostrarFormularioModificarCategoria(@PathVariable Integer id, Model model) {
-		String apiUrl = baseUrl + "/categorias/" + id;
-		Categoria categoria = restTemplate.getForObject(apiUrl, Categoria.class);
+		String apiUrl = baseUrl + "/categorias-listar/" + id;
+		Categoria categoria = restTemplateFront.getForObject(apiUrl, Categoria.class);
 
 		if (categoria != null) {
 			model.addAttribute("categoria", categoria);
@@ -86,14 +89,14 @@ public class CategoriaController {
 	@PostMapping("/backend/categorias/modificar/{id}")
 	public String modificarCategoriaPorIdBackend(@PathVariable Integer id,
 			@ModelAttribute Categoria categoriaModificada, Model model) {
-		String apiUrl = baseUrl + "/categorias/" + id;
-		Categoria categoriaExistente = restTemplate.getForObject(apiUrl, Categoria.class);
+		String apiUrl = baseUrl + "/categorias-listar/" + id;
+		Categoria categoriaExistente = restTemplateFront.getForObject(apiUrl, Categoria.class);
 
 		if (categoriaExistente != null) {
 			categoriaExistente.setNombre(categoriaModificada.getNombre());
 			categoriaExistente.setDescripcion(categoriaModificada.getDescripcion());
 
-			restTemplate.put(apiUrl, categoriaExistente);
+			restTemplateFront.put(apiUrl, categoriaExistente);
 
 			return "redirect:/backend/categorias/";
 		} else {
@@ -107,9 +110,9 @@ public class CategoriaController {
 
 	@GetMapping("/backend/categorias/eliminar/{id}")
 	public String eliminarCategoriaBackend(@PathVariable Integer id, RedirectAttributes attributes) {
-		String apiUrl = baseUrl + "/categorias/" + id;
+		String apiUrl = baseUrl + "/categorias-listar/" + id;
 
-		restTemplate.delete(apiUrl);
+		restTemplateFront.delete(apiUrl);
 
 		logger.info("Categoría eliminada con éxito. Redireccionando a la página de categorías.");
 		attributes.addFlashAttribute("mensajeSuccess", "Categoría eliminada con éxito");
@@ -134,8 +137,8 @@ public class CategoriaController {
 	@GetMapping("/backend/categorias/json")
 	@ResponseBody
 	public Categoria[] obtenerCategoriasJson() {
-		String apiUrlCategorias = baseUrl + "/categorias/";
-		return restTemplate.getForObject(apiUrlCategorias, Categoria[].class);
+		String apiUrlCategorias = baseUrl + "/categorias-listar/";
+		return restTemplateFront.getForObject(apiUrlCategorias, Categoria[].class);
 	}
 
 }

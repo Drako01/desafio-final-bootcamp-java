@@ -1,6 +1,7 @@
 package com.educacionit.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -16,35 +17,40 @@ import com.educacionit.repository.UserRepository;
 
 @Configuration
 public class ApplicationConfig {
-	
+
 	@Autowired
-	private  UserRepository userRepository;
-
+	private UserRepository userRepository;
 	
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception
-    {
-        return config.getAuthenticationManager();
-    }
+	@Value("${security.jwt.secret-key}")
+	private String jwtSecret;
 
-    @Bean
-    public AuthenticationProvider authenticationProvider()
-    {
-        DaoAuthenticationProvider authenticationProvider= new DaoAuthenticationProvider();
-        authenticationProvider.setUserDetailsService(userDetailService());
-        authenticationProvider.setPasswordEncoder(passwordEncoder());
-        return authenticationProvider;
-    }
+	@Bean
+	public String jwtSecret() {
+		return jwtSecret;
+	}
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+	@Bean
+	public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+		return config.getAuthenticationManager();
+	}
 
-    @Bean
-    public UserDetailsService userDetailService() {
-        return email -> userRepository.findByEmail(email)
-        .orElseThrow(()-> new UsernameNotFoundException("User not fournd"));
-    }
+	@Bean
+	public AuthenticationProvider authenticationProvider() {
+		DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
+		authenticationProvider.setUserDetailsService(userDetailService());
+		authenticationProvider.setPasswordEncoder(passwordEncoder());
+		return authenticationProvider;
+	}
+
+	@Bean
+	public PasswordEncoder passwordEncoder() {
+		return new BCryptPasswordEncoder();
+	}
+
+	@Bean
+	public UserDetailsService userDetailService() {
+		return username -> userRepository.findByUsername(username)
+				.orElseThrow(() -> new UsernameNotFoundException("User not fournd"));
+	}
 
 }

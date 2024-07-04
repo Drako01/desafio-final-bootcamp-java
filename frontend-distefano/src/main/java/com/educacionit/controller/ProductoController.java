@@ -1,6 +1,7 @@
 package com.educacionit.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,15 +19,16 @@ import com.educacionit.entity.Producto;
 public class ProductoController {
 
 	@Autowired
-	private RestTemplate restTemplate;
+	@Qualifier("restTemplateFront")
+	private RestTemplate restTemplateFront;
 
 	@Autowired
 	private String baseUrl;
 
 	@GetMapping("/productos/")
 	public String obtenerProductos(Model model) {
-		String apiUrl = baseUrl + "/productos/";
-		Producto[] productos = restTemplate.getForObject(apiUrl, Producto[].class);
+		String apiUrl = baseUrl + "/productos-listar/";
+		Producto[] productos = restTemplateFront.getForObject(apiUrl, Producto[].class);
 
 		model.addAttribute("imagePath", "/img/spring.png");
 		model.addAttribute("imagePathEducaciontIt", "/img/educacionit.svg");
@@ -38,11 +40,11 @@ public class ProductoController {
 
 	@GetMapping("/productos/detalles/{id}")
 	public String obtenerDetallesProducto(@PathVariable Integer id, Model model) {
-		String apiUrl = baseUrl + "/productos/" + id;
-		String apiUrlCategorias = baseUrl + "/categorias/";
+		String apiUrl = baseUrl + "/productos-listar/" + id;
+		String apiUrlCategorias = baseUrl + "/categorias-listar/";
 
-		Producto producto = restTemplate.getForObject(apiUrl, Producto.class);
-		Categoria[] categorias = restTemplate.getForObject(apiUrlCategorias, Categoria[].class);
+		Producto producto = restTemplateFront.getForObject(apiUrl, Producto.class);
+		Categoria[] categorias = restTemplateFront.getForObject(apiUrlCategorias, Categoria[].class);
 
 		if (producto != null) {
 			model.addAttribute("producto", producto);
@@ -68,11 +70,11 @@ public class ProductoController {
 	// Backend
 	@GetMapping("/backend/productos/")
 	public String obtenerProductosBackend(Model model) {
-		String apiUrl = baseUrl + "/productos/";
-		String apiUrlCategorias = baseUrl + "/categorias/";
+		String apiUrl = baseUrl + "/productos-listar/";
+		String apiUrlCategorias = baseUrl + "/categorias-listar/";
 
-		Producto[] productos = restTemplate.getForObject(apiUrl, Producto[].class);
-		Categoria[] categorias = restTemplate.getForObject(apiUrlCategorias, Categoria[].class);
+		Producto[] productos = restTemplateFront.getForObject(apiUrl, Producto[].class);
+		Categoria[] categorias = restTemplateFront.getForObject(apiUrlCategorias, Categoria[].class);
 
 		model.addAttribute("imagePath", "/img/spring.png");
 		model.addAttribute("imagePathEducaciontIt", "/img/educacionit.svg");
@@ -85,10 +87,10 @@ public class ProductoController {
 
 	@GetMapping("/backend/productos/modificar/{id}")
 	public String mostrarFormularioModificarProducto(@PathVariable Integer id, Model model) {
-		String apiUrl = baseUrl + "/productos/";
-		String apiUrlCategorias = baseUrl + "/categorias/";
-		Producto producto = restTemplate.getForObject(apiUrl + id, Producto.class);
-		Categoria[] categorias = restTemplate.getForObject(apiUrlCategorias, Categoria[].class);
+		String apiUrl = baseUrl + "/productos-listar/";
+		String apiUrlCategorias = baseUrl + "/categorias-listar/";
+		Producto producto = restTemplateFront.getForObject(apiUrl + id, Producto.class);
+		Categoria[] categorias = restTemplateFront.getForObject(apiUrlCategorias, Categoria[].class);
 
 		model.addAttribute("imagePath", "/img/spring.png");
 		model.addAttribute("imagePathEducaciontIt", "/img/educacionit.svg");
@@ -101,11 +103,12 @@ public class ProductoController {
 	}
 
 	@PostMapping("/backend/productos/modificar/{id}")
-	public String actualizarProducto(@PathVariable("id") Integer id, @ModelAttribute Producto productoModificado,
+	public String actualizarProducto(@PathVariable("id") Integer id, 
+			@ModelAttribute Producto productoModificado,
 			@RequestParam("categoriaId") Integer categoriaId, Model model) {
 
-		String apiUrl = baseUrl + "/productos/" + id;
-		Producto productoExistente = restTemplate.getForObject(apiUrl, Producto.class);
+		String apiUrl = baseUrl + "/productos-listar/" + id;
+		Producto productoExistente = restTemplateFront.getForObject(apiUrl, Producto.class);
 
 		if (productoExistente != null) {
 			productoExistente.setNombre(productoModificado.getNombre());
@@ -118,7 +121,7 @@ public class ProductoController {
 			categoria.setId_categoria(categoriaId);
 			productoExistente.setCategoria(categoria);
 
-			restTemplate.put(apiUrl, productoExistente);
+			restTemplateFront.put(apiUrl, productoExistente);
 
 			return "redirect:/backend/productos/";
 		} else {
@@ -131,8 +134,8 @@ public class ProductoController {
 
 	@GetMapping("/backend/productos/eliminar/{id}")
 	public String eliminarProducto(@PathVariable Integer id, Model model) {
-		String apiUrl = baseUrl + "/productos/" + id;
-		restTemplate.delete(apiUrl);
+		String apiUrl = baseUrl + "/productos-listar/" + id;
+		restTemplateFront.delete(apiUrl);
 		return "redirect:/backend/productos/";
 	}
 
@@ -140,11 +143,11 @@ public class ProductoController {
 	public String agregarProductoBackend(@ModelAttribute Producto nuevoProducto,
 			@RequestParam("categoriaId") Integer categoriaId, Model model) {		
 
-		String apiUrl = baseUrl + "/productos/";
-		String apiUrlCategorias = baseUrl + "/categorias/";
-		Categoria categoria = restTemplate.getForObject(apiUrlCategorias + categoriaId, Categoria.class);
+		String apiUrl = baseUrl + "/productos-listar/";
+		String apiUrlCategorias = baseUrl + "/categorias-listar/";
+		Categoria categoria = restTemplateFront.getForObject(apiUrlCategorias + categoriaId, Categoria.class);
 		nuevoProducto.setCategoria(categoria);		
-		restTemplate.postForObject(apiUrl, nuevoProducto, Producto.class);
+		restTemplateFront.postForObject(apiUrl, nuevoProducto, Producto.class);
 
 		return "redirect:/backend/productos/";
 	}
@@ -152,8 +155,8 @@ public class ProductoController {
 	@GetMapping("/backend/productos/json")
 	@ResponseBody
 	public Producto[] obtenerProductosJson() {
-	    String apiUrl = baseUrl + "/productos/";
-	    return restTemplate.getForObject(apiUrl, Producto[].class);
+	    String apiUrl = baseUrl + "/productos-listar/";
+	    return restTemplateFront.getForObject(apiUrl, Producto[].class);
 	}
 
 }

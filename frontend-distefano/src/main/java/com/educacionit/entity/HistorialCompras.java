@@ -18,7 +18,7 @@ public class HistorialCompras {
 	
 	private Carrito carrito;
 	
-	private Cliente cliente;
+	private User cliente;
 
 	
 }

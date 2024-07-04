@@ -20,7 +20,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -48,8 +47,8 @@ public class User implements UserDetails {
 	private String nombre;
 
 	@Schema(description = "Correo electrónico del Usuario", requiredMode = Schema.RequiredMode.REQUIRED, example = "juan@example.com")
-	@Column(name = "email", nullable = false, unique = true, length = 100)
-	private String email;
+	@Column(name = "username", nullable = false, unique = true, length = 100)
+	private String username;
 
 	@Schema(description = "Password del Usuario", requiredMode = Schema.RequiredMode.REQUIRED, example = "**********")
 	@Column(name = "password", nullable = false, length = 256)
@@ -68,6 +67,10 @@ public class User implements UserDetails {
 				inverseJoinColumns = @JoinColumn(name = "role_id")
 			)
 	private Set<Role> roles = new HashSet<>();
+	
+	public void addRole(Role role) {
+		this.roles.add(role);
+	}
 	
 	@Schema(description = "Modelo de Historial de Compras")	
 	@ManyToMany(fetch = FetchType.EAGER)
@@ -108,7 +111,7 @@ public class User implements UserDetails {
 
 	@Override
 	public String getUsername() {
-		return this.email;
+		return this.username;
 	}
 
 	@Override

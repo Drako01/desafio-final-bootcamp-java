@@ -1,12 +1,47 @@
+const token = localStorage.getItem('token');
+function getToken() {
+	return token;
+}
+
+function appendLink() {
+	const logLink = document.getElementById('li-sesion');
+	if (!token) {
+		window.location.href = '/login';
+	} else {
+		logLink.innerHTML = `<a class="nav-link" aria-current="page" 
+								href="#" onClick="reenviarLogin(event)">Logout</a>`
+	}
+}
+
+function reenviarLogin(event) {
+	event.preventDefault();
+
+	fetch('http://localhost:8080/auth/logout')
+		.then(() => {
+			localStorage.removeItem('token');
+			window.location.href = '/login';
+		})
+		.catch(error => {
+			console.error('Error during logout:', error);
+		});
+}
+
+
 window.onload = function() {
+	appendLink();
+	getToken();
+	obtenerFechaYHora();
 	if (window.location.pathname === '/backend/categorias/') {
 		inicializarEventoCategoria();
+
 	} else if (window.location.pathname === '/backend/productos/') {
 		inicializarEventoProducto();
+
 	} else if (window.location.pathname === '/carrito/') {
 		actualizarCarritoTable();
+		appendLink();
 	}
-	obtenerFechaYHora();
+
 };
 
 let userId = 1;
@@ -25,10 +60,56 @@ $(document).ready(function() {
 	carritoTable = document.querySelector('#carrito-table');
 	botonComprarCarrito = document.querySelector('#btn-compar-carrito');
 
+	function crearFormDataCart() {
+		const carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+		const fecha_pedido = new Date().toISOString();
+		const estado = "PENDIENTE";
+		let precioTotalCart = 0;
+
+		const items = carrito.map(item => ({
+			productoId: item.producto_id,
+			cantidad: item.cantidad,
+			nombre: item.nombre,
+			precio: item.precio,
+			subtotal: item.subtotal,
+			imagen: item.imagen
+		}));
+
+		precioTotalCart = carrito.reduce((total, item) => total + item.subtotal, 0);
+
+		const formDataCart = {
+			fecha_pedido: fecha_pedido,
+			estado: estado,
+			items: items,
+			precio_total: precioTotalCart
+		};
+
+		return JSON.stringify(formDataCart);
+	}
+
 	if (botonComprarCarrito) {
 		botonComprarCarrito.addEventListener('click', () => {
-			localStorage.setItem('carrito', '[]');
-			location.reload();
+			const formDataCart = crearFormDataCart();
+			if (formDataCart) {
+				fetch('/carritos/', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json'
+					},
+					body: formDataCart
+				})
+					.then(response => {
+						if (response.ok) {
+							window.location.href = '/carrito/';
+						} else {
+							throw new Error('Error en la respuesta del servidor');
+						}
+					})
+					.catch(error => {
+						console.error('Error al guardar el carrito:', error);
+					});
+				localStorage.setItem('carrito', JSON.stringify([]));
+			}
 		});
 	}
 
@@ -178,9 +259,23 @@ fetch('/backend/productos/json')
 	})
 	.then(data => {
 		productos = data;
+		return data;
+	})	
+	.catch(error => {
+		console.error('Error en la solicitud AJAX:', error);
+	})
+
+fetch('/backend/categorias/json')
+	.then(response => {
+		if (!response.ok) {
+			throw new Error('Error en la solicitud AJAX');
+		}
+		return response.json();
+	})
+	.then(data => {
+		categorias = data;
+		return data;
 	})
 	.catch(error => {
 		console.error('Error en la solicitud AJAX:', error);
 	});
-
-
