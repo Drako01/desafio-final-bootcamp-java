@@ -16,6 +16,10 @@ public class AppConfig {
 	@Value("${jwt.secret}")
 	private String jwtSecret;
 
+	@Value("${jwt.expiration}")
+    private Long jwtExpiration;
+	
+	
 	@Bean
 	String baseUrl() {
 		return baseUrl;
@@ -29,6 +33,11 @@ public class AppConfig {
 	@Bean
 	public String jwtSecret() {
 		return jwtSecret;
+	}
+	
+	@Bean
+	public Long jwtExpiration() {
+		return jwtExpiration;
 	}
 
 }

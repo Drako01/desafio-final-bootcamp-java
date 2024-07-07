@@ -9,9 +9,10 @@ function appendLink() {
 		window.location.href = '/login';
 	} else {
 		logLink.innerHTML = `<a class="nav-link" aria-current="page" 
-								href="#" onClick="reenviarLogin(event)">Logout</a>`
+						href="#" onClick="reenviarLogin(event)">Logout</a>`
+		
 	}
-}
+}    
 
 function reenviarLogin(event) {
 	event.preventDefault();
@@ -260,7 +261,7 @@ fetch('/backend/productos/json')
 	.then(data => {
 		productos = data;
 		return data;
-	})	
+	})
 	.catch(error => {
 		console.error('Error en la solicitud AJAX:', error);
 	})

@@ -14,6 +14,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.educacionit.jwt.JwtAuthenticationFilter;
 
+
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig { // Back
@@ -32,7 +34,13 @@ public class SecurityConfig { // Back
 	            authRequest
 	                .requestMatchers("/auth/**", "/swagger-ui/**")
 	                .permitAll()
-	                
+	                .requestMatchers("/css/**", "/js/**", "/login",
+                   		 "/img/**", "/favicon.ico", "/fecha/*", "/signup",
+                   		 "/**","/productos/**", "/backend/**"
+	                		, "/categorias/**", "/carritos/**",
+	                		"/backend/productos/json", "/backend/categorias/json")
+                   
+                   .permitAll()
 	                .requestMatchers("/productos-listar/**", "/categorias-listar/**"
 	                     )
 	                .hasAnyRole("USER", "ADMIN")

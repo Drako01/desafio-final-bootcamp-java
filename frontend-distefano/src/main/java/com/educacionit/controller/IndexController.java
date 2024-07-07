@@ -17,39 +17,31 @@ import io.jsonwebtoken.security.Keys;
 @Controller
 public class IndexController {
 
-    @Autowired
-    private AppConfig appConfig;
+	@Autowired
+	private AppConfig appConfig;
 
-    @GetMapping("/")
-    public String index(@RequestHeader(name = "Authorization", required = false) 
-                        String authHeader,
-                        Model model) {
-        String username = "Invitado";
-        String token;
+	@GetMapping("/")
+	public String index(@RequestHeader(name = "Authorization", required = false) 
+		String authHeader, Model model) {
+		String username = appConfig.bienvenida();
+		String token;
 
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            token = authHeader.substring(7);
-            System.out.println("Token obtenido del encabezado de autorización: " + token);
+		if (authHeader != null && authHeader.startsWith("Bearer ")) {
+			token = authHeader.substring(7);
 
-            try {
-                Key key = Keys.hmacShaKeyFor(appConfig.jwtSecret().getBytes());
-                Claims claims = Jwts.parserBuilder()
-                                    .setSigningKey(key)
-                                    .build()
-                                    .parseClaimsJws(token)
-                                    .getBody();
+			Key key = Keys.hmacShaKeyFor(appConfig.jwtSecret().getBytes());
+			Claims claims = Jwts.parserBuilder().setSigningKey(key).build()
+					.parseClaimsJws(token).getBody();
 
-                username = claims.getSubject();  // Obtén el campo 'sub' del token
-            } catch (Exception e) {
-                System.out.println("Token inválido: " + e.getMessage());
-            }
-        }
+			username = claims.get("nombre", String.class);
 
-        model.addAttribute("imagePath", "/img/spring.png");
-        model.addAttribute("imagePathEducaciontIt", "/img/educacionit.svg");
-        model.addAttribute("pageTitle", "FrontEnd | App Spring Boot");
-        model.addAttribute("titulo", "Bienvenido " + username);
-        model.addAttribute("subtitulo", "FrontEnd");
-        return "index";
-    }
+		}
+
+		model.addAttribute("imagePath", "/img/spring.png");
+		model.addAttribute("imagePathEducaciontIt", "/img/educacionit.svg");
+		model.addAttribute("pageTitle", "FrontEnd | App Spring Boot");
+		model.addAttribute("titulo", "Bienvenido " + username);
+		model.addAttribute("subtitulo", "FrontEnd");
+		return "index";
+	}
 }

@@ -21,6 +21,7 @@ public class FrontendDistefanoApplication {
 		logger.info("http://localhost:" + port);
 
 	}
+	
 
 	@Bean
 	@Qualifier("restTemplateFront")

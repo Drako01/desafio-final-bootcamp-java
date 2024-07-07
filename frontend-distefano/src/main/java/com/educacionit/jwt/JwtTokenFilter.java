@@ -1,4 +1,4 @@
-package com.educacionit.config;
+package com.educacionit.jwt;
 
 import java.io.IOException;
 

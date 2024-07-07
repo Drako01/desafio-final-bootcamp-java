@@ -1,5 +1,7 @@
 package com.educacionit.controller;
 
+import java.security.Key;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -8,12 +10,18 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 
+import com.educacionit.config.AppConfig;
 import com.educacionit.entity.Categoria;
 import com.educacionit.entity.Producto;
+
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
 
 @Controller
 public class ProductoController {
@@ -25,8 +33,14 @@ public class ProductoController {
 	@Autowired
 	private String baseUrl;
 
+	@Autowired
+	private AppConfig appConfig;
+
 	@GetMapping("/productos/")
-	public String obtenerProductos(Model model) {
+	public String obtenerProductos(@RequestHeader(name = "Authorization", required = false) String authHeader,
+			Model model) {
+		String username = verificarToken(authHeader);
+
 		String apiUrl = baseUrl + "/productos-listar/";
 		Producto[] productos = restTemplateFront.getForObject(apiUrl, Producto[].class);
 
@@ -35,11 +49,15 @@ public class ProductoController {
 		model.addAttribute("productos", productos);
 		model.addAttribute("pageTitle", "Productos | App Spring Boot");
 		model.addAttribute("titulo", "Nuestros Productos");
+		model.addAttribute("username", username);
 		return "productos";
 	}
 
 	@GetMapping("/productos/detalles/{id}")
-	public String obtenerDetallesProducto(@PathVariable Integer id, Model model) {
+	public String obtenerDetallesProducto(@RequestHeader(name = "Authorization", required = false) String authHeader,
+			@PathVariable Integer id, Model model) {
+		String username = verificarToken(authHeader);
+
 		String apiUrl = baseUrl + "/productos-listar/" + id;
 		String apiUrlCategorias = baseUrl + "/categorias-listar/";
 
@@ -53,13 +71,13 @@ public class ProductoController {
 			model.addAttribute("imagePathEducaciontIt", "/img/educacionit.svg");
 			model.addAttribute("pageTitle", "Detalles del Producto");
 			model.addAttribute("titulo", "Detalles del Producto");
-			// Atributos
 			model.addAttribute("nombre", producto.getNombre());
 			model.addAttribute("descripcion", producto.getDescripcion());
 			model.addAttribute("precio", producto.getPrecio());
 			model.addAttribute("imagen", producto.getImagen());
 			model.addAttribute("stock", producto.getStock());
 			model.addAttribute("categoria_id", producto.getCategoria().getId_categoria());
+			model.addAttribute("username", username);
 
 			return "products_detail";
 		} else {
@@ -67,9 +85,11 @@ public class ProductoController {
 		}
 	}
 
-	// Backend
 	@GetMapping("/backend/productos/")
-	public String obtenerProductosBackend(Model model) {
+	public String obtenerProductosBackend(@RequestHeader(name = "Authorization", required = false) String authHeader,
+			Model model) {
+		String username = verificarToken(authHeader);
+
 		String apiUrl = baseUrl + "/productos-listar/";
 		String apiUrlCategorias = baseUrl + "/categorias-listar/";
 
@@ -82,14 +102,19 @@ public class ProductoController {
 		model.addAttribute("categorias", categorias);
 		model.addAttribute("pageTitle", "Productos | App Spring Boot");
 		model.addAttribute("titulo", "Productos");
+		model.addAttribute("username", username);
 		return "backend/productos-table";
 	}
 
 	@GetMapping("/backend/productos/modificar/{id}")
-	public String mostrarFormularioModificarProducto(@PathVariable Integer id, Model model) {
-		String apiUrl = baseUrl + "/productos-listar/";
+	public String mostrarFormularioModificarProducto(
+			@RequestHeader(name = "Authorization", required = false) String authHeader, @PathVariable Integer id,
+			Model model) {
+		String username = verificarToken(authHeader);
+
+		String apiUrl = baseUrl + "/productos-listar/" + id;
 		String apiUrlCategorias = baseUrl + "/categorias-listar/";
-		Producto producto = restTemplateFront.getForObject(apiUrl + id, Producto.class);
+		Producto producto = restTemplateFront.getForObject(apiUrl, Producto.class);
 		Categoria[] categorias = restTemplateFront.getForObject(apiUrlCategorias, Categoria[].class);
 
 		model.addAttribute("imagePath", "/img/spring.png");
@@ -98,14 +123,17 @@ public class ProductoController {
 		model.addAttribute("categorias", categorias);
 		model.addAttribute("pageTitle", "Modificar Producto | App Spring Boot");
 		model.addAttribute("titulo", "Modificar Producto");
+		model.addAttribute("username", username);
 
 		return "backend/productos-modificar";
 	}
 
 	@PostMapping("/backend/productos/modificar/{id}")
-	public String actualizarProducto(@PathVariable("id") Integer id, 
-			@ModelAttribute Producto productoModificado,
+	public String actualizarProducto(@RequestHeader(name = "Authorization", required = false) String authHeader,
+			@PathVariable("id") Integer id, @ModelAttribute Producto productoModificado,
 			@RequestParam("categoriaId") Integer categoriaId, Model model) {
+
+		String username = verificarToken(authHeader);
 
 		String apiUrl = baseUrl + "/productos-listar/" + id;
 		Producto productoExistente = restTemplateFront.getForObject(apiUrl, Producto.class);
@@ -127,36 +155,61 @@ public class ProductoController {
 		} else {
 			model.addAttribute("pageTitle", "Error - Producto no encontrado");
 			model.addAttribute("mensajeError", "El producto con ID " + id + " no existe.");
+			model.addAttribute("username", username);
 			return "error";
 		}
 
 	}
 
 	@GetMapping("/backend/productos/eliminar/{id}")
-	public String eliminarProducto(@PathVariable Integer id, Model model) {
+	public String eliminarProducto(@RequestHeader(name = "Authorization", required = false) String authHeader,
+			@PathVariable Integer id, Model model) {
+		String username = verificarToken(authHeader);
+
 		String apiUrl = baseUrl + "/productos-listar/" + id;
 		restTemplateFront.delete(apiUrl);
+		model.addAttribute("username", username);
 		return "redirect:/backend/productos/";
 	}
 
 	@PostMapping("/backend/productos/agregar/")
-	public String agregarProductoBackend(@ModelAttribute Producto nuevoProducto,
-			@RequestParam("categoriaId") Integer categoriaId, Model model) {		
+	public String agregarProductoBackend(@RequestHeader(name = "Authorization", required = false) String authHeader,
+			@ModelAttribute Producto nuevoProducto, @RequestParam("categoriaId") Integer categoriaId, Model model) {
+
+		String username = verificarToken(authHeader);
 
 		String apiUrl = baseUrl + "/productos-listar/";
 		String apiUrlCategorias = baseUrl + "/categorias-listar/";
 		Categoria categoria = restTemplateFront.getForObject(apiUrlCategorias + categoriaId, Categoria.class);
-		nuevoProducto.setCategoria(categoria);		
+		nuevoProducto.setCategoria(categoria);
 		restTemplateFront.postForObject(apiUrl, nuevoProducto, Producto.class);
 
+		model.addAttribute("username", username);
 		return "redirect:/backend/productos/";
 	}
-	
+
 	@GetMapping("/backend/productos/json")
 	@ResponseBody
 	public Producto[] obtenerProductosJson() {
-	    String apiUrl = baseUrl + "/productos-listar/";
-	    return restTemplateFront.getForObject(apiUrl, Producto[].class);
+		String apiUrl = baseUrl + "/productos-listar/";
+		return restTemplateFront.getForObject(apiUrl, Producto[].class);
 	}
 
+	public String verificarToken(String authHeader) {
+		String username = "Invitado";
+		String token;
+
+		if (authHeader != null && authHeader.startsWith("Bearer ")) {
+			token = authHeader.substring(7);
+
+			Key key = Keys.hmacShaKeyFor(appConfig.jwtSecret().getBytes());
+			Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
+
+			username = claims.getSubject();
+			System.out.println("username: " + username);
+
+		}
+
+		return username;
+	}
 }
