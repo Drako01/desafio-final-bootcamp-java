@@ -53,4 +53,5 @@ public class ApplicationConfig {
 				.orElseThrow(() -> new UsernameNotFoundException("User not fournd"));
 	}
 
+	
 }

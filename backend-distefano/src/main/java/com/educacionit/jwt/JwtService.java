@@ -25,24 +25,23 @@ public class JwtService {
     @Autowired
     private ApplicationConfig appConfig;
 
-	public String getToken(UserDetails user) {
-		Map<String, Object> extraClaims = new HashMap<>();
-        extraClaims.put("nombre", user.getUsername());  
-        return getToken(extraClaims, user);
+    public String getToken(UserDetails user) {
+		return getToken(new HashMap<>(), user);
 	}
 
 	private String getToken(Map<String, Object> extraClaims, UserDetails user) {
 		
 		extraClaims.put("roles", user.getAuthorities().stream()
-				.map(GrantedAuthority::getAuthority).toList());
+                .map(GrantedAuthority::getAuthority)
+                .toList());
 
-		return Jwts.builder().setClaims(extraClaims)
-				.setSubject(user.getUsername())
-				.setIssuedAt(new Date(System.currentTimeMillis()))
-				.setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24))
-				.signWith(getKey(), SignatureAlgorithm.HS256)
-				.compact();
-	}
+		 return Jwts.builder()
+	                .setClaims(extraClaims)
+	                .setSubject(user.getUsername())
+	                .setIssuedAt(new Date(System.currentTimeMillis()))
+	                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24)) // fecha expirtacion
+	                .signWith(getKey(), SignatureAlgorithm.HS256).compact(); // para que lo serialize
+	    }	
 
 	private Key getKey() {
 		byte[] keyBytes = Decoders.BASE64.decode(appConfig.jwtSecret());
@@ -50,8 +49,12 @@ public class JwtService {
 	}
 
 	private Claims getAllClaims(String token) {
-		return Jwts.parserBuilder().setSigningKey(getKey()).build().parseClaimsJws(token).getBody();
-	}
+        return Jwts.parserBuilder()
+        		.setSigningKey(getKey())
+        		.build()
+        		.parseClaimsJws(token)
+        		.getBody();
+    }
 
 	public <T> T getClaim(String token, Function<Claims, T> claimsResolver) {
 		final Claims claims = getAllClaims(token);
@@ -84,8 +87,6 @@ public class JwtService {
 		return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
 	}
 	
-	public String extractNombre(String token) {
-        return getClaim(token, claims -> claims.get("nombre", String.class));
-    }
+	
 
 }

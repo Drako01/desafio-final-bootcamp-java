@@ -105,7 +105,8 @@ function agregarNuevaCategoria() {
 				fetch('/backend/categorias/agregar/', {
 					method: 'POST',
 					headers: {
-						'Content-Type': 'application/x-www-form-urlencoded'
+						'Content-Type': 'application/x-www-form-urlencoded',
+						'Authorization': 'Bearer ' + token
 					},
 					body: formData.toString()
 				})
@@ -160,7 +161,8 @@ function modificarCategoria(fila) {
 				fetch(`/backend/categorias/modificar/${idCategoria}`, {
 					method: 'POST',
 					headers: {
-						'Content-Type': 'application/x-www-form-urlencoded'
+						'Content-Type': 'application/x-www-form-urlencoded',
+						'Authorization': 'Bearer ' + token
 					},
 					body: formData.toString()
 				})
@@ -191,7 +193,13 @@ function eliminarCategoria(fila) {
 	
 	 if (modal && confirmarEliminacionBtn) {
         confirmarEliminacionBtn.addEventListener('click', () => {
-            fetch(`/backend/categorias/eliminar/${idCategoria}`)
+            fetch(`/backend/categorias/eliminar/${idCategoria}`, {
+					method: 'DELETE',
+					headers: {
+						'Authorization': 'Bearer ' + token
+					},
+					
+				})
                 .then(response => {
                     if (response.ok) {
                         window.location.href = '/backend/categorias/?success';

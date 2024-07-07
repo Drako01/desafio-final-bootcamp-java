@@ -27,38 +27,48 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 	private UserDetailsService userDetailsService;
 
 	@Override
-	protected void doFilterInternal(HttpServletRequest request, 
-			HttpServletResponse response, FilterChain filterChain)
-	        throws ServletException, IOException {
+	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+			throws ServletException, IOException {
+
+		final String token = getTokenFromRequest(request);
+		final String username;
+		logger.debug("JwtAuthenticationFilter: Checking request for JWT token");
 		
-	    String header = request.getHeader(HttpHeaders.AUTHORIZATION);
-	    if (StringUtils.hasText(header) && header.startsWith("Bearer ")) {
-	        String token = header.substring(7);
-	        try {
-	            String username = jwtService.extractUsername(token);
-	            if (username != null && SecurityContextHolder.getContext()
-	            		.getAuthentication() == null) {
-	                UserDetails userDetails = userDetailsService
-	                		.loadUserByUsername(username);
-	                if (jwtService.validateToken(token, userDetails)) {
-	                    UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-	                    authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-	                    SecurityContextHolder.getContext().setAuthentication(authToken);
-	                          
-	                    
-	                }
-	            }
-	        } catch (Exception e) {
-	            logger.error("Cannot set user authentication: {}", e);
+		if (token == null) {
+			logger.debug("JwtAuthenticationFilter: No JWT token found in request headers");
+			filterChain.doFilter(request, response);
+			return;
+		}
+
+		username = jwtService.getUsernameFromToken(token);
+	    logger.debug("JwtAuthenticationFilter: JWT token found, username extracted: " + username);
+
+		if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+			
+			UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+
+			if (jwtService.isTokenValid(token, userDetails)) {
+	            logger.debug("JwtAuthenticationFilter: JWT token is valid");
+
+				UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails,
+						null, userDetails.getAuthorities());
+
+				authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+
+				SecurityContextHolder.getContext().setAuthentication(authToken);
+			}
+
+			else {
+	            logger.error("Token no válido para el usuario: " + username);
 	        }
+	    } else {
+	        logger.error("No se pudo autenticar al usuario: " + username);
 	    }
-	    filterChain.doFilter(request, response);
+		filterChain.doFilter(request, response);
 	}
 
-
 	
 	
-	@SuppressWarnings("unused")
 	private String getTokenFromRequest(HttpServletRequest request) {
 		
 		final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);

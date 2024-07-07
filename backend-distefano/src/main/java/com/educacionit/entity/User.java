@@ -11,6 +11,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -20,7 +21,9 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -54,46 +57,36 @@ public class User implements UserDetails {
 	@Column(name = "telefono", length = 20)
 	private String telefono;
 
-	@Schema(description = "Nivel de Autenticación del cliente", example = "ROLE_SELLER")	
+	@Schema(description = "Nivel de Autenticación del cliente", example = "ROLE_SELLER")
 	@ManyToMany(fetch = FetchType.EAGER)
-	@JoinTable
-			(
-				name= "users_roles",
-				joinColumns = @JoinColumn(name = "user_id"),
-				inverseJoinColumns = @JoinColumn(name = "role_id")
-			)
+	@JoinTable(name = "users_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
 	private Set<Role> roles = new HashSet<>();
-	
+
 	public void addRole(Role role) {
 		this.roles.add(role);
 	}
-	
-	@Schema(description = "Modelo de Historial de Compras")	
-	@ManyToMany(fetch = FetchType.EAGER)
-	@JoinTable
-			(
-				name= "historial_compras",
-				joinColumns = @JoinColumn(name = "user_id"),
-				inverseJoinColumns = @JoinColumn(name = "carrito_id")
-			)
-	private Set<Carrito> carrito = new HashSet<>();
 
-	@Schema(description = "Historial de productos favoritos", 
-            requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "favoritos",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "producto_id")
-    )
-    private Set<Producto> productosFav = new HashSet<>();
+	@Schema(description = "Modelo de Historial de Compras")
+	@OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	private Set<Carrito> carritos ;
+
+	@Schema(description = "Historial de productos favoritos", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(name = "favoritos", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "producto_id"))
+	private Set<Producto> productosFav = new HashSet<>();
+
+	@Transactional
+	public void addCarrito(Carrito carrito) {
+		this.carritos.add(carrito);
+		carrito.setUser(this);
+	}
 
 	@Override
-	public Collection<? extends GrantedAuthority> getAuthorities(){
+	public Collection<? extends GrantedAuthority> getAuthorities() {
 		List<SimpleGrantedAuthority> authoritiest = new ArrayList<>();
-		
-		for( Role unRole: roles ) {
-			if(unRole.getName() != null) {				
+
+		for (Role unRole : roles) {
+			if (unRole.getName() != null) {
 				authoritiest.add(new SimpleGrantedAuthority(unRole.getName()));
 			}
 		}

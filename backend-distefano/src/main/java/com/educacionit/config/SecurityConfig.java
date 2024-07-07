@@ -14,8 +14,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.educacionit.jwt.JwtAuthenticationFilter;
 
-
-
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig { // Back
@@ -28,30 +26,24 @@ public class SecurityConfig { // Back
 
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-	    return http
-	        .csrf(csrf -> csrf.disable())
-	        .authorizeHttpRequests(authRequest ->
-	            authRequest
-	                .requestMatchers("/auth/**", "/swagger-ui/**",
-		                		"/css/**", "/js/**", "/login",
-		                   		 "/img/**", "/favicon.ico", "/fecha/*", "/signup",
-		                   		 "/**","/productos/**", "/backend/**"
-		                		, "/categorias/**", "/carritos/**",
-		                		"/backend/productos/json", "/backend/categorias/json")                   
-                   .permitAll()
-	                .requestMatchers("/productos-listar/**", "/categorias-listar/**"
-	                     )
-	                .hasAnyRole("USER", "ADMIN")
-	                
-	                .anyRequest().authenticated()
-	        )
-	        .sessionManagement(sessionManager ->
-	            sessionManager
-	                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-	        )
-	        .authenticationProvider(authProvider)
-	        .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-	        .build();
+		return http.csrf(csrf -> csrf.disable())
+				.authorizeHttpRequests(authRequest -> authRequest
+						.requestMatchers("/auth/**", "/swagger-ui/**", "/css/**", "/js/**", "/login", "/img/**",
+								"/favicon.ico", "/fecha/*", "/signup")
+						.permitAll()
+						.requestMatchers("/productos-listar/**", "/categorias-listar/**", "/item/**", "/items/**",
+								"/productos/**", "/backend/**", "/categorias/**", "/carritos/**", "/carritos*",
+								"/carrito*/**", "/backend/productos/json", "/backend/categorias/json")
+						.hasAnyRole("USER", "ADMIN", "SELLER")
+						.anyRequest()
+						.authenticated())
+				.sessionManagement(
+						sessionManager -> sessionManager
+							.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+				)
+				.authenticationProvider(authProvider)
+				.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+				.build();
 	}
 
 	@Bean
@@ -67,5 +59,6 @@ public class SecurityConfig { // Back
 	        }
 	    };
 	}
+
 
 }
