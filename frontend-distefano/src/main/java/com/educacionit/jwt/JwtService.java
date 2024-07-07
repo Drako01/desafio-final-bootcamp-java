@@ -29,15 +29,15 @@ public class JwtService {
     public String getToken(User user) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("roles", ((UserDetails) user).getAuthorities().stream()
-        		.map(GrantedAuthority::getAuthority).toList());
-        claims.put("nombre", user.getNombre()); 
-
+                .map(GrantedAuthority::getAuthority).toList());
+        claims.put("nombre", user.getNombre());
+        
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(user.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 
-                		appConfig.jwtExpiration()))
+                        appConfig.jwtExpiration()))
                 .signWith(getKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
@@ -49,7 +49,7 @@ public class JwtService {
 
     private Claims getAllClaims(String token) {
         return Jwts.parserBuilder().setSigningKey(getKey()).build()
-        		.parseClaimsJws(token).getBody();
+                .parseClaimsJws(token).getBody();
     }
 
     public <T> T getClaim(String token, Function<Claims, T> claimsResolver) {
@@ -81,5 +81,9 @@ public class JwtService {
     public boolean isTokenValid(String token, UserDetails userDetails) {
         final String username = getUsernameFromToken(token);
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+    }
+    
+    public String extractNombre(String token) {
+        return getClaim(token, claims -> claims.get("nombre", String.class));
     }
 }

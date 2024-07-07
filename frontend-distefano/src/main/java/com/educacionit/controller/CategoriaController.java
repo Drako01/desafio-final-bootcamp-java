@@ -1,7 +1,5 @@
 package com.educacionit.controller;
 
-import java.security.Key;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,12 +15,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.educacionit.config.AppConfig;
 import com.educacionit.entity.Categoria;
-
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.security.Keys;
+import com.educacionit.service.VerificarTokenService;
 
 @Controller
 public class CategoriaController {
@@ -36,26 +30,9 @@ public class CategoriaController {
 	private String baseUrl;
 
 	@Autowired
-	private AppConfig appConfig;
+	private VerificarTokenService verificarToken;
 
-	private String getUsernameFromToken(String authHeader) {
-		String username = "Invitado";
-		String token;
-
-		if (authHeader != null && authHeader.startsWith("Bearer ")) {
-			token = authHeader.substring(7);
-
-			Key key = Keys.hmacShaKeyFor(appConfig.jwtSecret().getBytes());
-			Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
-
-			username = claims.getSubject();
-			System.out.println("username: " + username);
-
-		}
-
-		return username;
-
-	}
+	
 
 	@GetMapping("/backend/categorias/")
 	public String obtenerCategoriasBackend(@RequestHeader(name = "Authorization", required = false) String authHeader,
@@ -64,7 +41,7 @@ public class CategoriaController {
 
 		if (authHeader != null && authHeader.startsWith("Bearer ")) {
 			String token = authHeader.substring(7);
-			username = getUsernameFromToken(token);
+			username = verificarToken.verificarToken(token);
 		}
 
 		String apiUrlCategorias = baseUrl + "/categorias-listar/";
@@ -86,7 +63,7 @@ public class CategoriaController {
 
 		if (authHeader != null && authHeader.startsWith("Bearer ")) {
 			String token = authHeader.substring(7);
-			username = getUsernameFromToken(token);
+			username = verificarToken.verificarToken(token);
 		}
 
 		String apiUrl = baseUrl + "/categorias-listar/" + id;
@@ -116,7 +93,7 @@ public class CategoriaController {
 
 		if (authHeader != null && authHeader.startsWith("Bearer ")) {
 			String token = authHeader.substring(7);
-			username = getUsernameFromToken(token);
+			username = verificarToken.verificarToken(token);
 		}
 
 		String apiUrl = baseUrl + "/categorias-listar/";
@@ -132,7 +109,7 @@ public class CategoriaController {
 
 		if (authHeader != null && authHeader.startsWith("Bearer ")) {
 			String token = authHeader.substring(7);
-			username = getUsernameFromToken(token);
+			username = verificarToken.verificarToken(token);
 		}
 
 		String apiUrl = baseUrl + "/categorias-listar/" + id;
@@ -161,7 +138,7 @@ public class CategoriaController {
 
 		if (authHeader != null && authHeader.startsWith("Bearer ")) {
 			String token = authHeader.substring(7);
-			username = getUsernameFromToken(token);
+			username = verificarToken.verificarToken(token);
 		}
 
 		String apiUrl = baseUrl + "/categorias-listar/" + id;
@@ -191,7 +168,7 @@ public class CategoriaController {
 
 		if (authHeader != null && authHeader.startsWith("Bearer ")) {
 			String token = authHeader.substring(7);
-			username = getUsernameFromToken(token);
+			username = verificarToken.verificarToken(token);
 		}
 
 		String apiUrl = baseUrl + "/categorias-listar/" + id;
@@ -210,7 +187,7 @@ public class CategoriaController {
 
 		if (authHeader != null && authHeader.startsWith("Bearer ")) {
 			String token = authHeader.substring(7);
-			username = getUsernameFromToken(token);
+			username = verificarToken.verificarToken(token);
 		}
 
 		model.addAttribute("pageTitle", "Error al eliminar categoría");
@@ -233,7 +210,7 @@ public class CategoriaController {
 
 		if (authHeader != null && authHeader.startsWith("Bearer ")) {
 			String token = authHeader.substring(7);
-			username = getUsernameFromToken(token);
+			username = verificarToken.verificarToken(token);
 		}
 
 		String apiUrlCategorias = baseUrl + "/categorias-listar/";

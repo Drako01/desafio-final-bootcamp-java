@@ -1,7 +1,5 @@
 package com.educacionit.controller;
 
-import java.security.Key;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
@@ -15,13 +13,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 
-import com.educacionit.config.AppConfig;
 import com.educacionit.entity.Categoria;
 import com.educacionit.entity.Producto;
-
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.security.Keys;
+import com.educacionit.service.VerificarTokenService;
 
 @Controller
 public class ProductoController {
@@ -32,14 +26,14 @@ public class ProductoController {
 
 	@Autowired
 	private String baseUrl;
-
+	
 	@Autowired
-	private AppConfig appConfig;
+	private VerificarTokenService verificarToken;
 
 	@GetMapping("/productos/")
 	public String obtenerProductos(@RequestHeader(name = "Authorization", required = false) String authHeader,
 			Model model) {
-		String username = verificarToken(authHeader);
+		String username = verificarToken.verificarToken(authHeader);
 
 		String apiUrl = baseUrl + "/productos-listar/";
 		Producto[] productos = restTemplateFront.getForObject(apiUrl, Producto[].class);
@@ -56,7 +50,7 @@ public class ProductoController {
 	@GetMapping("/productos/detalles/{id}")
 	public String obtenerDetallesProducto(@RequestHeader(name = "Authorization", required = false) String authHeader,
 			@PathVariable Integer id, Model model) {
-		String username = verificarToken(authHeader);
+		String username = verificarToken.verificarToken(authHeader);
 
 		String apiUrl = baseUrl + "/productos-listar/" + id;
 		String apiUrlCategorias = baseUrl + "/categorias-listar/";
@@ -88,7 +82,7 @@ public class ProductoController {
 	@GetMapping("/backend/productos/")
 	public String obtenerProductosBackend(@RequestHeader(name = "Authorization", required = false) String authHeader,
 			Model model) {
-		String username = verificarToken(authHeader);
+		String username = verificarToken.verificarToken(authHeader);
 
 		String apiUrl = baseUrl + "/productos-listar/";
 		String apiUrlCategorias = baseUrl + "/categorias-listar/";
@@ -110,7 +104,7 @@ public class ProductoController {
 	public String mostrarFormularioModificarProducto(
 			@RequestHeader(name = "Authorization", required = false) String authHeader, @PathVariable Integer id,
 			Model model) {
-		String username = verificarToken(authHeader);
+		String username = verificarToken.verificarToken(authHeader);
 
 		String apiUrl = baseUrl + "/productos-listar/" + id;
 		String apiUrlCategorias = baseUrl + "/categorias-listar/";
@@ -133,7 +127,7 @@ public class ProductoController {
 			@PathVariable("id") Integer id, @ModelAttribute Producto productoModificado,
 			@RequestParam("categoriaId") Integer categoriaId, Model model) {
 
-		String username = verificarToken(authHeader);
+		String username = verificarToken.verificarToken(authHeader);
 
 		String apiUrl = baseUrl + "/productos-listar/" + id;
 		Producto productoExistente = restTemplateFront.getForObject(apiUrl, Producto.class);
@@ -164,7 +158,7 @@ public class ProductoController {
 	@GetMapping("/backend/productos/eliminar/{id}")
 	public String eliminarProducto(@RequestHeader(name = "Authorization", required = false) String authHeader,
 			@PathVariable Integer id, Model model) {
-		String username = verificarToken(authHeader);
+		String username = verificarToken.verificarToken(authHeader);
 
 		String apiUrl = baseUrl + "/productos-listar/" + id;
 		restTemplateFront.delete(apiUrl);
@@ -176,7 +170,7 @@ public class ProductoController {
 	public String agregarProductoBackend(@RequestHeader(name = "Authorization", required = false) String authHeader,
 			@ModelAttribute Producto nuevoProducto, @RequestParam("categoriaId") Integer categoriaId, Model model) {
 
-		String username = verificarToken(authHeader);
+		String username = verificarToken.verificarToken(authHeader);
 
 		String apiUrl = baseUrl + "/productos-listar/";
 		String apiUrlCategorias = baseUrl + "/categorias-listar/";
@@ -195,21 +189,5 @@ public class ProductoController {
 		return restTemplateFront.getForObject(apiUrl, Producto[].class);
 	}
 
-	public String verificarToken(String authHeader) {
-		String username = "Invitado";
-		String token;
-
-		if (authHeader != null && authHeader.startsWith("Bearer ")) {
-			token = authHeader.substring(7);
-
-			Key key = Keys.hmacShaKeyFor(appConfig.jwtSecret().getBytes());
-			Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
-
-			username = claims.getSubject();
-			System.out.println("username: " + username);
-
-		}
-
-		return username;
-	}
+	
 }

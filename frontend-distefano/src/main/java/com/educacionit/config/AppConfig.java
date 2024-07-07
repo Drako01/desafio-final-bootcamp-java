@@ -39,5 +39,7 @@ public class AppConfig {
 	public Long jwtExpiration() {
 		return jwtExpiration;
 	}
+	
+	
 
 }

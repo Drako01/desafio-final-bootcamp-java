@@ -26,12 +26,15 @@ public class JwtService {
     private ApplicationConfig appConfig;
 
 	public String getToken(UserDetails user) {
-		return getToken(new HashMap<>(), user);
+		Map<String, Object> extraClaims = new HashMap<>();
+        extraClaims.put("nombre", user.getUsername());  
+        return getToken(extraClaims, user);
 	}
 
 	private String getToken(Map<String, Object> extraClaims, UserDetails user) {
 		
-		extraClaims.put("roles", user.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList());
+		extraClaims.put("roles", user.getAuthorities().stream()
+				.map(GrantedAuthority::getAuthority).toList());
 
 		return Jwts.builder().setClaims(extraClaims)
 				.setSubject(user.getUsername())
@@ -80,5 +83,9 @@ public class JwtService {
 		final String username = getUsernameFromToken(token);
 		return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
 	}
+	
+	public String extractNombre(String token) {
+        return getClaim(token, claims -> claims.get("nombre", String.class));
+    }
 
 }
