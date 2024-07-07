@@ -16,9 +16,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletRequestWrapper;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
@@ -29,7 +27,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 	private UserDetailsService userDetailsService;
 
 	@Override
-	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+	protected void doFilterInternal(HttpServletRequest request, 
+			HttpServletResponse response, FilterChain filterChain)
 	        throws ServletException, IOException {
 		
 	    String header = request.getHeader(HttpHeaders.AUTHORIZATION);
@@ -37,28 +36,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 	        String token = header.substring(7);
 	        try {
 	            String username = jwtService.extractUsername(token);
-	            if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-	                UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+	            if (username != null && SecurityContextHolder.getContext()
+	            		.getAuthentication() == null) {
+	                UserDetails userDetails = userDetailsService
+	                		.loadUserByUsername(username);
 	                if (jwtService.validateToken(token, userDetails)) {
 	                    UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
 	                    authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 	                    SecurityContextHolder.getContext().setAuthentication(authToken);
 	                          
-	                    HttpSession session = request.getSession();
-                        session.setAttribute("token", token);
-                        if (session != null) {
-                            if (token != null) {
-                                request = new HttpServletRequestWrapper(request) {
-                                    @Override
-                                    public String getHeader(String name) {
-                                        if (HttpHeaders.AUTHORIZATION.equals(name)) {
-                                            return "Bearer " + token;
-                                        }
-                                        return super.getHeader(name);
-                                    }
-                                };
-                            }
-                        }
+	                    
 	                }
 	            }
 	        } catch (Exception e) {

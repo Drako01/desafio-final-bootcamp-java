@@ -1,17 +1,3 @@
-fetch('/backend/categorias/json')
-	.then(response => {
-		if (!response.ok) {
-			throw new Error('Error en la solicitud AJAX');
-		}
-		return response.json();
-	})
-	.then(data => {
-		categorias = data;
-		return data;
-	})
-	.catch(error => {
-		console.error('Error en la solicitud AJAX:', error);
-	});
 
 function inicializarEventoCategoria() {
 	let botonAgregarCat = document.getElementById("boton-agregar-cat");

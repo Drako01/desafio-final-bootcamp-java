@@ -32,14 +32,12 @@ public class SecurityConfig { // Back
 	        .csrf(csrf -> csrf.disable())
 	        .authorizeHttpRequests(authRequest ->
 	            authRequest
-	                .requestMatchers("/auth/**", "/swagger-ui/**")
-	                .permitAll()
-	                .requestMatchers("/css/**", "/js/**", "/login",
-                   		 "/img/**", "/favicon.ico", "/fecha/*", "/signup",
-                   		 "/**","/productos/**", "/backend/**"
-	                		, "/categorias/**", "/carritos/**",
-	                		"/backend/productos/json", "/backend/categorias/json")
-                   
+	                .requestMatchers("/auth/**", "/swagger-ui/**",
+		                		"/css/**", "/js/**", "/login",
+		                   		 "/img/**", "/favicon.ico", "/fecha/*", "/signup",
+		                   		 "/**","/productos/**", "/backend/**"
+		                		, "/categorias/**", "/carritos/**",
+		                		"/backend/productos/json", "/backend/categorias/json")                   
                    .permitAll()
 	                .requestMatchers("/productos-listar/**", "/categorias-listar/**"
 	                     )

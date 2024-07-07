@@ -34,8 +34,9 @@ public class SecurityConfig { //Front
                         .permitAll()
                         .requestMatchers("http://localhost:8080/productos-listar/**", 
                         				"http://localhost:8080/categorias-listar/**"
-       	                     )
-       	                .hasAnyRole("USER", "ADMIN")
+       	                     			,"/productos-listar/**", "/categorias-listar/**"
+    	                     )
+    	                .hasAnyRole("USER", "ADMIN")
     	                .anyRequest().authenticated()
     	                
                 )  
