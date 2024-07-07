@@ -71,6 +71,15 @@ INSERT INTO producto (nombre, descripcion, precio, imagen, stock, categoria_id) 
 ('Aceite', 'Aceite de Oliva', 1800.00, 'https://www.cocinista.es/download/bancorecursos/ingredientes/ingrediente-aceite-oliva-2.jpg', 90, 7),
 ('Harina', 'Harina 0000', 750.00, 'https://acdn.mitiendanube.com/stores/001/267/442/products/7792180139313_02-photoroom1-c91ec989b6b8ea789216894436656599-1024-1024.png', 180, 8);
 
+-- Insertar los roles
+INSERT INTO roles (`name`) VALUES 
+				("ROLE_ADMIN"), 
+				("ROLE_USER"), 
+				("ROLE_SELLER"), 
+				("ROLE_VISITOR");
+
+
+        
 ```
 
 ## Para iniciar el Servidor:
