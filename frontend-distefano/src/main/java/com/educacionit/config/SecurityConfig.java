@@ -27,16 +27,10 @@ public class SecurityConfig { //Front
                 .authorizeHttpRequests(authRequest -> authRequest
                         .requestMatchers("/css/**", "/js/**", "/login",
                         		 "/img/**", "/favicon.ico", "/fecha/*", "/signup",
-                        		 "/**","/productos/**", "/backend/**"
-    	                		, "/categorias/**", "/carritos/**",
-    	                		"/backend/productos/json", "/backend/categorias/json")
+                        		 "/","/productos*/**", "/backend/**"
+    	                		, "/categorias*/**", "/carritos/**")
                         
                         .permitAll()
-                        .requestMatchers("http://localhost:8080/productos-listar/**", 
-                        				"http://localhost:8080/categorias-listar/**"
-       	                     			,"/productos-listar/**", "/categorias-listar/**"
-    	                     )
-    	                .hasAnyRole("USER", "ADMIN")
     	                .anyRequest().authenticated()
     	                
                 )  

@@ -251,7 +251,12 @@ function confirmarEliminarProducto() {
 	$('#confirmDeleteModal').modal('hide');
 }
 
-fetch('/backend/productos/json')
+fetch('/backend/productos/json', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': 'Bearer ' + token
+                    }
+                })
 	.then(response => {
 		if (!response.ok) {
 			throw new Error('Error en la solicitud AJAX');
@@ -265,5 +270,9 @@ fetch('/backend/productos/json')
 	.catch(error => {
 		console.error('Error en la solicitud AJAX:', error);
 	})
+
+
+
+
 
 

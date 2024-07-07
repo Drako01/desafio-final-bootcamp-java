@@ -1,6 +1,12 @@
 let categorias = [];
 
-fetch('/backend/categorias/json')
+fetch('/backend/categorias/json', {
+	method: 'GET',
+	headers: {
+		'Authorization': 'Bearer ' + token
+	},
+
+})
 	.then(response => {
 		if (!response.ok) {
 			throw new Error('Error en la solicitud AJAX');
@@ -17,7 +23,13 @@ fetch('/backend/categorias/json')
 
 let productos = [];
 
-fetch('/backend/productos/json')
+fetch('/backend/productos/json', {
+	method: 'GET',
+	headers: {
+		'Authorization': 'Bearer ' + token
+	},
+
+})
 	.then(response => {
 		if (!response.ok) {
 			throw new Error('Error en la solicitud AJAX');
@@ -38,8 +50,45 @@ fetch('/backend/productos/json')
 		console.error('Error en la solicitud AJAX:', error);
 	});
 
+fetch('http://localhost:8080/productos-listar', {
+	method: 'GET',
+	headers: {
+		'Authorization': 'Bearer ' + token
+	}
+})
+	.then(response => {
+		if (response.status === 403) {
+			throw new Error('Forbidden');
+		}
+		return response.json();
+	})
+	.then(data => {
+		console.log(data);
+	})
+	.catch(error => {
+		console.error('Error:', error);
+	});
 
 
+
+fetch('http://localhost:8080/categorias-listar', {
+	method: 'GET',
+	headers: {
+		'Authorization': 'Bearer ' + token
+	}
+})
+	.then(response => {
+		if (response.status === 403) {
+			throw new Error('Forbidden');
+		}
+		return response.json();
+	})
+	.then(data => {
+		console.log(data);
+	})
+	.catch(error => {
+		console.error('Error:', error);
+	});
 
 function inicializarEventoProducto() {
 	let botonAgregarProducto = document.getElementById("boton-agregar-producto");
@@ -220,7 +269,8 @@ function agregarNuevoProducto() {
 			fetch('/backend/productos/agregar/', {
 				method: 'POST',
 				headers: {
-					'Content-Type': 'application/x-www-form-urlencoded'
+					'Content-Type': 'application/x-www-form-urlencoded',
+					'Authorization': 'Bearer ' + token
 				},
 				body: formData
 			})
@@ -300,7 +350,8 @@ function modificarProducto(filaProducto) {
 			fetch(`/backend/productos/modificar/${idProducto}`, {
 				method: 'POST',
 				headers: {
-					'Content-Type': 'application/x-www-form-urlencoded'
+					'Content-Type': 'application/x-www-form-urlencoded',
+					'Authorization': 'Bearer ' + token
 				},
 				body: formData
 			})
@@ -328,7 +379,12 @@ function eliminarProducto(fila) {
 
 	if (modal && confirmarEliminacionBtn) {
 		confirmarEliminacionBtn.addEventListener('click', () => {
-			fetch(`/backend/productos/eliminar/${idProducto}`)
+			fetch(`/backend/productos/eliminar/${idProducto}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': 'Bearer ' + token
+                    }
+                })
 				.then(response => {
 					if (response.ok) {
 						window.location.href = '/backend/productos/';

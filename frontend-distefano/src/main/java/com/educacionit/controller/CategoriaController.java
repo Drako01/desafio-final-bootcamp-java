@@ -4,7 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,10 +16,8 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.educacionit.entity.Categoria;
-import com.educacionit.service.VerificarTokenService;
 
 @Controller
-@PreAuthorize("hasAnyRole('ADMIN', 'USER', 'SELLER')")
 public class CategoriaController {
 	final Logger logger = LoggerFactory.getLogger(CategoriaController.class);
 
@@ -31,19 +28,24 @@ public class CategoriaController {
 	@Autowired
 	private String baseUrl;
 
-	@Autowired
-	private VerificarTokenService verificarToken;
-
+	
+	
+	private void setAuthHeader(RestTemplate restTemplate, String token) {
+        restTemplate.getInterceptors().clear();
+        restTemplate.getInterceptors().add((request, body, execution) -> {
+            request.getHeaders().set("Authorization", "Bearer " + token);
+            return execution.execute(request, body);
+        });
+    }
 	
 
 	@GetMapping("/backend/categorias/")
 	public String obtenerCategoriasBackend(@RequestHeader(name = "Authorization", required = false) String authHeader,
 			Model model) {
-		String username = "Invitado";
-
+		
 		if (authHeader != null && authHeader.startsWith("Bearer ")) {
-			String token = authHeader.substring(7);
-			username = verificarToken.verificarToken(token);
+			String token = authHeader.substring(7);	
+			setAuthHeader(restTemplateFront, token);
 		}
 
 		String apiUrlCategorias = baseUrl + "/categorias-listar/";
@@ -53,7 +55,7 @@ public class CategoriaController {
 		model.addAttribute("categorias", categorias);
 		model.addAttribute("pageTitle", "Categorias | App Spring Boot");
 		model.addAttribute("titulo", "Categorias");
-		model.addAttribute("username", username);
+		
 		return "backend/categorias-table";
 	}
 
@@ -61,11 +63,10 @@ public class CategoriaController {
 	public String detallesCategoriaPorIDBackend(
 			@RequestHeader(name = "Authorization", required = false) String authHeader, @PathVariable Integer id,
 			Model model) {
-		String username = "Invitado";
 
 		if (authHeader != null && authHeader.startsWith("Bearer ")) {
 			String token = authHeader.substring(7);
-			username = verificarToken.verificarToken(token);
+			setAuthHeader(restTemplateFront, token);
 		}
 
 		String apiUrl = baseUrl + "/categorias-listar/" + id;
@@ -77,7 +78,7 @@ public class CategoriaController {
 			model.addAttribute("imagePathEducaciontIt", "/img/educacionit.svg");
 			model.addAttribute("pageTitle", "Detalles de la Categoría");
 			model.addAttribute("titulo", "Detalles de la Categoría");
-			model.addAttribute("username", username);
+			
 			return "backend/categoria-detalle";
 		} else {
 			model.addAttribute("pageTitle", "Error 404 - La categoría no existe.");
@@ -91,11 +92,11 @@ public class CategoriaController {
 	@PostMapping("/backend/categorias/agregar/")
 	public String agregarCategoriaBackend(@RequestHeader(name = "Authorization", required = false) String authHeader,
 			@ModelAttribute Categoria nuevaCategoria, Model model) {
-		String username = "Invitado";
+		
 
 		if (authHeader != null && authHeader.startsWith("Bearer ")) {
 			String token = authHeader.substring(7);
-			username = verificarToken.verificarToken(token);
+			setAuthHeader(restTemplateFront, token);
 		}
 
 		String apiUrl = baseUrl + "/categorias-listar/";
@@ -107,11 +108,10 @@ public class CategoriaController {
 	public String mostrarFormularioModificarCategoria(
 			@RequestHeader(name = "Authorization", required = false) String authHeader, @PathVariable Integer id,
 			Model model) {
-		String username = "Invitado";
 
 		if (authHeader != null && authHeader.startsWith("Bearer ")) {
 			String token = authHeader.substring(7);
-			username = verificarToken.verificarToken(token);
+			setAuthHeader(restTemplateFront, token);
 		}
 
 		String apiUrl = baseUrl + "/categorias-listar/" + id;
@@ -123,7 +123,7 @@ public class CategoriaController {
 			model.addAttribute("titulo", "Modificar Categoría");
 			model.addAttribute("imagePath", "/img/spring.png");
 			model.addAttribute("imagePathEducaciontIt", "/img/educacionit.svg");
-			model.addAttribute("username", username);
+			
 			return "backend/modificar-categoria-form";
 		} else {
 			model.addAttribute("pageTitle", "Error 404 - La categoría no existe.");
@@ -136,11 +136,11 @@ public class CategoriaController {
 	public String modificarCategoriaPorIdBackend(
 			@RequestHeader(name = "Authorization", required = false) String authHeader, @PathVariable Integer id,
 			@ModelAttribute Categoria categoriaModificada, Model model) {
-		String username = "Invitado";
+		
 
 		if (authHeader != null && authHeader.startsWith("Bearer ")) {
 			String token = authHeader.substring(7);
-			username = verificarToken.verificarToken(token);
+			setAuthHeader(restTemplateFront, token);
 		}
 
 		String apiUrl = baseUrl + "/categorias-listar/" + id;
@@ -158,7 +158,7 @@ public class CategoriaController {
 			model.addAttribute("mensajeError", "La categoría con ID " + id + " no existe.");
 			model.addAttribute("imagePath", "/img/spring.png");
 			model.addAttribute("imagePathEducaciontIt", "/img/educacionit.svg");
-			model.addAttribute("username", username);
+			
 			return "error";
 		}
 	}
@@ -166,11 +166,11 @@ public class CategoriaController {
 	@GetMapping("/backend/categorias/eliminar/{id}")
 	public String eliminarCategoriaBackend(@RequestHeader(name = "Authorization", required = false) String authHeader,
 			@PathVariable Integer id, RedirectAttributes attributes) {
-		String username = "Invitado";
+	
 
 		if (authHeader != null && authHeader.startsWith("Bearer ")) {
 			String token = authHeader.substring(7);
-			username = verificarToken.verificarToken(token);
+			setAuthHeader(restTemplateFront, token);
 		}
 
 		String apiUrl = baseUrl + "/categorias-listar/" + id;
@@ -185,11 +185,11 @@ public class CategoriaController {
 	@GetMapping("/backend/eliminar/error-categoria/")
 	public String errorAlEliminarCategoriasBackend(
 			@RequestHeader(name = "Authorization", required = false) String authHeader, Model model) {
-		String username = "Invitado";
+		
 
 		if (authHeader != null && authHeader.startsWith("Bearer ")) {
 			String token = authHeader.substring(7);
-			username = verificarToken.verificarToken(token);
+			setAuthHeader(restTemplateFront, token);
 		}
 
 		model.addAttribute("pageTitle", "Error al eliminar categoría");
@@ -200,19 +200,20 @@ public class CategoriaController {
 		model.addAttribute("imageError403", "/img/error-403.jpg");
 		model.addAttribute("href", "/backend/categorias/");
 		model.addAttribute("imagePathEducaciontIt", "/img/educacionit.svg");
-		model.addAttribute("username", username);
+		
 		return "backend/error403";
 	}
 
 	@GetMapping("/backend/categorias/json")
 	@ResponseBody
 	public Categoria[] obtenerCategoriasJson(
-			@RequestHeader(name = "Authorization", required = false) String authHeader) {
-		String username = "Invitado";
+			@RequestHeader(name = "Authorization", required = false) 
+			String authHeader) {
+		
 
 		if (authHeader != null && authHeader.startsWith("Bearer ")) {
 			String token = authHeader.substring(7);
-			username = verificarToken.verificarToken(token);
+			setAuthHeader(restTemplateFront, token);
 		}
 
 		String apiUrlCategorias = baseUrl + "/categorias-listar/";

@@ -2,7 +2,6 @@ package com.educacionit.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,10 +15,8 @@ import org.springframework.web.client.RestTemplate;
 
 import com.educacionit.entity.Categoria;
 import com.educacionit.entity.Producto;
-import com.educacionit.service.VerificarTokenService;
 
 @Controller
-@PreAuthorize("hasAnyRole('ADMIN', 'USER', 'SELLER')")
 public class ProductoController {
 
 	@Autowired
@@ -29,14 +26,25 @@ public class ProductoController {
 	@Autowired
 	private String baseUrl;
 	
-	@Autowired
-	private VerificarTokenService verificarToken;
+	
+	private void setAuthHeader(RestTemplate restTemplate, String token) {
+        restTemplate.getInterceptors().clear();
+        restTemplate.getInterceptors().add((request, body, execution) -> {
+            request.getHeaders().set("Authorization", "Bearer " + token);
+            return execution.execute(request, body);
+        });
+    }
 
 	@GetMapping("/productos/")
-	public String obtenerProductos(@RequestHeader(name = "Authorization", required = false) String authHeader,
+	public String obtenerProductos(
+			@RequestHeader(name = "Authorization", required = false) 
+			String authHeader,
 			Model model) {
-		String username = verificarToken.verificarToken(authHeader);
-
+		
+		if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            String token = authHeader.substring(7);
+            setAuthHeader(restTemplateFront, token);
+		};
 		String apiUrl = baseUrl + "/productos-listar/";
 		Producto[] productos = restTemplateFront.getForObject(apiUrl, Producto[].class);
 
@@ -45,14 +53,17 @@ public class ProductoController {
 		model.addAttribute("productos", productos);
 		model.addAttribute("pageTitle", "Productos | App Spring Boot");
 		model.addAttribute("titulo", "Nuestros Productos");
-		model.addAttribute("username", username);
+		
 		return "productos";
 	}
 
 	@GetMapping("/productos/detalles/{id}")
 	public String obtenerDetallesProducto(@RequestHeader(name = "Authorization", required = false) String authHeader,
 			@PathVariable Integer id, Model model) {
-		String username = verificarToken.verificarToken(authHeader);
+		if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            String token = authHeader.substring(7);
+            setAuthHeader(restTemplateFront, token);
+		};
 
 		String apiUrl = baseUrl + "/productos-listar/" + id;
 		String apiUrlCategorias = baseUrl + "/categorias-listar/";
@@ -73,7 +84,7 @@ public class ProductoController {
 			model.addAttribute("imagen", producto.getImagen());
 			model.addAttribute("stock", producto.getStock());
 			model.addAttribute("categoria_id", producto.getCategoria().getId_categoria());
-			model.addAttribute("username", username);
+			
 
 			return "products_detail";
 		} else {
@@ -84,8 +95,11 @@ public class ProductoController {
 	@GetMapping("/backend/productos/")
 	public String obtenerProductosBackend(@RequestHeader(name = "Authorization", required = false) String authHeader,
 			Model model) {
-		String username = verificarToken.verificarToken(authHeader);
-
+		
+		if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            String token = authHeader.substring(7);
+            setAuthHeader(restTemplateFront, token);
+		};
 		String apiUrl = baseUrl + "/productos-listar/";
 		String apiUrlCategorias = baseUrl + "/categorias-listar/";
 
@@ -98,7 +112,7 @@ public class ProductoController {
 		model.addAttribute("categorias", categorias);
 		model.addAttribute("pageTitle", "Productos | App Spring Boot");
 		model.addAttribute("titulo", "Productos");
-		model.addAttribute("username", username);
+		
 		return "backend/productos-table";
 	}
 
@@ -106,8 +120,11 @@ public class ProductoController {
 	public String mostrarFormularioModificarProducto(
 			@RequestHeader(name = "Authorization", required = false) String authHeader, @PathVariable Integer id,
 			Model model) {
-		String username = verificarToken.verificarToken(authHeader);
-
+		
+		if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            String token = authHeader.substring(7);
+            setAuthHeader(restTemplateFront, token);
+		};
 		String apiUrl = baseUrl + "/productos-listar/" + id;
 		String apiUrlCategorias = baseUrl + "/categorias-listar/";
 		Producto producto = restTemplateFront.getForObject(apiUrl, Producto.class);
@@ -119,7 +136,7 @@ public class ProductoController {
 		model.addAttribute("categorias", categorias);
 		model.addAttribute("pageTitle", "Modificar Producto | App Spring Boot");
 		model.addAttribute("titulo", "Modificar Producto");
-		model.addAttribute("username", username);
+		
 
 		return "backend/productos-modificar";
 	}
@@ -129,7 +146,10 @@ public class ProductoController {
 			@PathVariable("id") Integer id, @ModelAttribute Producto productoModificado,
 			@RequestParam("categoriaId") Integer categoriaId, Model model) {
 
-		String username = verificarToken.verificarToken(authHeader);
+		if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            String token = authHeader.substring(7);
+            setAuthHeader(restTemplateFront, token);
+		};
 
 		String apiUrl = baseUrl + "/productos-listar/" + id;
 		Producto productoExistente = restTemplateFront.getForObject(apiUrl, Producto.class);
@@ -151,7 +171,7 @@ public class ProductoController {
 		} else {
 			model.addAttribute("pageTitle", "Error - Producto no encontrado");
 			model.addAttribute("mensajeError", "El producto con ID " + id + " no existe.");
-			model.addAttribute("username", username);
+			
 			return "error";
 		}
 
@@ -160,19 +180,27 @@ public class ProductoController {
 	@GetMapping("/backend/productos/eliminar/{id}")
 	public String eliminarProducto(@RequestHeader(name = "Authorization", required = false) String authHeader,
 			@PathVariable Integer id, Model model) {
-		String username = verificarToken.verificarToken(authHeader);
+		if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            String token = authHeader.substring(7);
+            setAuthHeader(restTemplateFront, token);
+		};
 
 		String apiUrl = baseUrl + "/productos-listar/" + id;
 		restTemplateFront.delete(apiUrl);
-		model.addAttribute("username", username);
+	
 		return "redirect:/backend/productos/";
 	}
 
 	@PostMapping("/backend/productos/agregar/")
-	public String agregarProductoBackend(@RequestHeader(name = "Authorization", required = false) String authHeader,
+	public String agregarProductoBackend(
+			@RequestHeader(name = "Authorization", required = false) 
+			String authHeader,
 			@ModelAttribute Producto nuevoProducto, @RequestParam("categoriaId") Integer categoriaId, Model model) {
-
-		String username = verificarToken.verificarToken(authHeader);
+		if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            String token = authHeader.substring(7);
+            setAuthHeader(restTemplateFront, token);
+		};
+		
 
 		String apiUrl = baseUrl + "/productos-listar/";
 		String apiUrlCategorias = baseUrl + "/categorias-listar/";
@@ -180,14 +208,20 @@ public class ProductoController {
 		nuevoProducto.setCategoria(categoria);
 		restTemplateFront.postForObject(apiUrl, nuevoProducto, Producto.class);
 
-		model.addAttribute("username", username);
+		
 		return "redirect:/backend/productos/";
 	}
 
 	@GetMapping("/backend/productos/json")
 	@ResponseBody
-	public Producto[] obtenerProductosJson() {
+	public Producto[] obtenerProductosJson(@RequestHeader(name = "Authorization", 
+	required = false) 
+	String authHeader) {
 		String apiUrl = baseUrl + "/productos-listar/";
+		if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            String token = authHeader.substring(7);
+            setAuthHeader(restTemplateFront, token);
+		};
 		return restTemplateFront.getForObject(apiUrl, Producto[].class);
 	}
 

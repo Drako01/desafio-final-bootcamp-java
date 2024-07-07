@@ -34,12 +34,13 @@ public class SecurityConfig { // Back
 	            authRequest
 	                .requestMatchers("/auth/**", "/swagger-ui/**",
 		                		"/css/**", "/js/**", "/login",
-		                   		 "/img/**", "/favicon.ico", "/fecha/*", "/signup",
-		                   		 "/**","/productos/**", "/backend/**"
-		                		, "/categorias/**", "/carritos/**",
-		                		"/backend/productos/json", "/backend/categorias/json")                   
+		                   		 "/img/**", "/favicon.ico", "/fecha/*", "/signup"
+		                   		 )                   
                    .permitAll()
-	                .requestMatchers("/productos-listar/**", "/categorias-listar/**"
+	                .requestMatchers("/productos-listar/**", "/categorias-listar/**",
+	                		"/productos/**", "/backend/**"
+		                	 ,"/categorias/**", "/carritos/**",
+		                	"/backend/productos/json", "/backend/categorias/json"
 	                     )
 	                .hasAnyRole("USER", "ADMIN")
 	                
