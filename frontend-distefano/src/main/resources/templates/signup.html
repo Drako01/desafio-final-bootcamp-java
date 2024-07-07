@@ -15,13 +15,13 @@
 		event.preventDefault();
 		const username = document.getElementById("username").value;
 		const password = document.getElementById("password").value;
-		const fullname = document.getElementById("fullname").value;
+		const nombre = document.getElementById("nombre").value;
 		const telefono = document.getElementById("telefono").value;
 
 		const formaData = {
 			username: username,
 			password: password,
-			fullName: fullname,
+			nombre: nombre,
 			telefono: telefono
 		};
 
@@ -68,9 +68,9 @@
 					<div class="card-body">
 						<form id="signupForm" onsubmit="signup(event)">
 							<div class="mb-3">
-								<label for="fullname" class="form-label">Nombre
-									Completo:</label> <input type="text" class="form-control" id="fullname"
-									name="fullname" required>
+								<label for="nombre" class="form-label">Nombre
+									Completo:</label> <input type="text" class="form-control" id="nombre"
+									name="nombre" required>
 							</div>
 							<div class="mb-3">
 								<label for="telefono" class="form-label">Teléfono:

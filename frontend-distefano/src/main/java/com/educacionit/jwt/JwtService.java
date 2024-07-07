@@ -28,14 +28,16 @@ public class JwtService {
 
     public String getToken(User user) {
         Map<String, Object> claims = new HashMap<>();
-        claims.put("roles", ((UserDetails) user).getAuthorities().stream().map(GrantedAuthority::getAuthority).toList());
-        claims.put("nombre", user.getNombre()); // Incluir el nombre del usuario en el token
+        claims.put("roles", ((UserDetails) user).getAuthorities().stream()
+        		.map(GrantedAuthority::getAuthority).toList());
+        claims.put("nombre", user.getNombre()); 
 
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(user.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + appConfig.jwtExpiration()))
+                .setExpiration(new Date(System.currentTimeMillis() + 
+                		appConfig.jwtExpiration()))
                 .signWith(getKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
@@ -46,7 +48,8 @@ public class JwtService {
     }
 
     private Claims getAllClaims(String token) {
-        return Jwts.parserBuilder().setSigningKey(getKey()).build().parseClaimsJws(token).getBody();
+        return Jwts.parserBuilder().setSigningKey(getKey()).build()
+        		.parseClaimsJws(token).getBody();
     }
 
     public <T> T getClaim(String token, Function<Claims, T> claimsResolver) {

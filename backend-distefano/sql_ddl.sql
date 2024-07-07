@@ -41,7 +41,7 @@ select * from carrito;
 select * from roles;
 select * from user;
 select * from users_roles;
-
+select * from historial_compras;
 SET SQL_SAFE_UPDATES = 0;
 DELETE FROM user;
 SET SQL_SAFE_UPDATES = 1;

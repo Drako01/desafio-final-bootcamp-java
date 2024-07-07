@@ -81,7 +81,6 @@ $(document).ready(function() {
 		const formDataCart = {
 			fecha_pedido: fecha_pedido,
 			estado: estado,
-			items: items,
 			precio_total: precioTotalCart
 		};
 
@@ -95,7 +94,8 @@ $(document).ready(function() {
 				fetch('/carritos/', {
 					method: 'POST',
 					headers: {
-						'Content-Type': 'application/json'
+						'Content-Type': 'application/json',
+						'Authorization': 'Bearer ' + token
 					},
 					body: formDataCart
 				})
@@ -266,17 +266,4 @@ fetch('/backend/productos/json')
 		console.error('Error en la solicitud AJAX:', error);
 	})
 
-fetch('/backend/categorias/json')
-	.then(response => {
-		if (!response.ok) {
-			throw new Error('Error en la solicitud AJAX');
-		}
-		return response.json();
-	})
-	.then(data => {
-		categorias = data;
-		return data;
-	})
-	.catch(error => {
-		console.error('Error en la solicitud AJAX:', error);
-	});
+
