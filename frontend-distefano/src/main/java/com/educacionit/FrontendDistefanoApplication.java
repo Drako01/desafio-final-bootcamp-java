@@ -2,6 +2,7 @@ package com.educacionit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -20,8 +21,10 @@ public class FrontendDistefanoApplication {
 		logger.info("http://localhost:" + port);
 
 	}
+	
 
 	@Bean
+	@Qualifier("restTemplateFront")
 	RestTemplate restTemplate() {
 		return new RestTemplate();
 	}

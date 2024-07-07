@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Arrays;
 import java.util.List;
@@ -18,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.*;
-
+@SpringBootTest
 class ItemServiceTest {
 
     @Mock
@@ -34,7 +35,7 @@ class ItemServiceTest {
 
     @Test
     void testSaveItem() {
-        Item item = new Item(new Producto(), 2, 100.50);
+        Item item = new Item(null, new Producto(), null, 2, 100.50);
         when(itemRepository.save(any(Item.class))).thenReturn(item);
 
         Item savedItem = itemService.save(item);
@@ -45,7 +46,7 @@ class ItemServiceTest {
 
     @Test
     void testGetItemById() {
-        Item item = new Item(new Producto(), 2, 100.50);
+        Item item = new Item(null, new Producto(), null, 2, 100.50);
         when(itemRepository.findById(anyInt())).thenReturn(Optional.of(item));
 
         Item foundItem = itemService.getById(1);
@@ -66,7 +67,7 @@ class ItemServiceTest {
 
     @Test
     void testGetAllItems() {
-        List<Item> items = Arrays.asList(new Item(new Producto(), 2, 100.50), new Item(new Producto(), 3, 200.75));
+        List<Item> items = Arrays.asList(new Item(null, new Producto(), null, 2, 100.50), new Item(null, new Producto(), null, 3, 200.75));
         when(itemRepository.findAll()).thenReturn(items);
 
         List<Item> foundItems = itemService.getAll();
@@ -77,8 +78,8 @@ class ItemServiceTest {
 
     @Test
     void testUpdateItem() throws Exception {
-        Item existingItem = new Item(new Producto(), 2, 100.50);
-        Item updatedItem = new Item(new Producto(), 3, 150.75);
+        Item existingItem = new Item(null, new Producto(), null, 2, 100.50);
+        Item updatedItem = new Item(null, new Producto(), null, 3, 150.75);
         when(itemRepository.findById(anyInt())).thenReturn(Optional.of(existingItem));
         when(itemRepository.save(any(Item.class))).thenReturn(updatedItem);
 
@@ -91,7 +92,7 @@ class ItemServiceTest {
 
     @Test
     void testUpdateItem_NotFound() {
-        Item updatedItem = new Item(new Producto(), 3, 150.75);
+        Item updatedItem = new Item(null, new Producto(), null, 3, 150.75);
         when(itemRepository.findById(anyInt())).thenReturn(Optional.empty());
 
         Exception exception = assertThrows(Exception.class, () -> {

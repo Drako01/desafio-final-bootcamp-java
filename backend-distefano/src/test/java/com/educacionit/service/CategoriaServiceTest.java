@@ -16,10 +16,11 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import com.educacionit.entity.Categoria;
 import com.educacionit.repository.CategoriaRepository;
-
+@SpringBootTest
 class CategoriaServiceTest {
 
     @Mock
@@ -35,7 +36,7 @@ class CategoriaServiceTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
 
-        categoria = new Categoria("Electrónica", "Categoría de productos electrónicos");
+        categoria = new Categoria(null, "Electrónica", "Categoría de productos electrónicos");
         categoriaList = new ArrayList<>();
         categoriaList.add(categoria);
     }
@@ -88,7 +89,7 @@ class CategoriaServiceTest {
         when(categoriaRepository.findById(1)).thenReturn(Optional.of(categoria));
         when(categoriaRepository.save(any())).thenReturn(categoria);
 
-        Categoria updatedCategoria = new Categoria("Electrodomésticos", "Categoría de productos para el hogar");
+        Categoria updatedCategoria = new Categoria(null, "Electrodomésticos", "Categoría de productos para el hogar");
         Categoria resultCategoria = categoriaService.update(1, updatedCategoria);
 
         assertNotNull(resultCategoria);

@@ -2,8 +2,6 @@ package com.educacionit.controller;
 
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -19,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.educacionit.entity.Carrito;
+import com.educacionit.entity.Item;
 import com.educacionit.service.CarritoService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -27,13 +26,13 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RestController
 @RequestMapping("/carritos")
 @Tag(name = "Gestión de Carritos", description = "Endpoints para gestionar carritos")
 public class CarritoController {
-
-	private static final Logger logger = LoggerFactory.getLogger(CarritoController.class);
 
 	@Autowired
 	@Qualifier("carritoService")
@@ -62,7 +61,7 @@ public class CarritoController {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 
-		logger.info(carrito.toString());
+		log.info(carrito.toString());
 		return new ResponseEntity<>(carrito, HttpStatus.OK);
 	}
 
@@ -71,19 +70,33 @@ public class CarritoController {
 			@ApiResponse(responseCode = "400", description = "Solicitud incorrecta", content = @Content),
 			@ApiResponse(responseCode = "500", description = "Error interno del servidor", content = @Content) })
 	@PostMapping(value = "/", consumes = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<Carrito> addCarrito(@RequestBody Carrito carrito) {
-		carritoService.save(carrito);
-		return new ResponseEntity<>(HttpStatus.CREATED);
+	public ResponseEntity<Carrito> addCarrito(@RequestBody Carrito formDataCart) {
+		try {
+			Carrito carrito = convertirACarrito(formDataCart);
+			carritoService.save(carrito);
+			return ResponseEntity.status(HttpStatus.CREATED).build();
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}
+	}
+
+	private Carrito convertirACarrito(Carrito formDataCart) {
+		Carrito carrito = new Carrito();
+		carrito.setFecha_pedido(formDataCart.getFecha_pedido());
+		carrito.setEstado(formDataCart.getEstado());
+		carrito.setItems(formDataCart.getItems());
+		carrito.setPrecio_total(formDataCart.getPrecio_total());
+		carrito.setId_carrito(formDataCart.getId_carrito());
+		return carrito;
 	}
 
 	@Operation(summary = "Actualizar un carrito existente")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Carrito actualizado exitosamente"),
 			@ApiResponse(responseCode = "404", description = "Carrito no encontrado", content = @Content),
 			@ApiResponse(responseCode = "500", description = "Error interno del servidor", content = @Content) })
-
 	@PutMapping(value = "/{id}", consumes = { MediaType.APPLICATION_JSON_VALUE })
-	public ResponseEntity<Void> updateCarrito(@PathVariable("id") Integer id,
-			@RequestBody Carrito carritoModificado) throws Exception {
+	public ResponseEntity<Void> updateCarrito(@PathVariable("id") Integer id, @RequestBody Carrito carritoModificado)
+			throws Exception {
 		Carrito currentCarrito = carritoService.getById(id);
 		if (currentCarrito == null) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -106,7 +119,38 @@ public class CarritoController {
 			carritoService.delete(id);
 			return new ResponseEntity<>(HttpStatus.OK);
 		} catch (Exception e) {
-			logger.error("Error al eliminar el carrito", e);
+			log.error("Error al eliminar el carrito", e);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	@Operation(summary = "Agregar un item a un carrito existente")
+	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Item agregado al carrito exitosamente"),
+			@ApiResponse(responseCode = "404", description = "Carrito no encontrado", content = @Content),
+			@ApiResponse(responseCode = "500", description = "Error interno del servidor", content = @Content) })
+	@PostMapping(value = "/{id}/items", consumes = { MediaType.APPLICATION_JSON_VALUE })
+	public ResponseEntity<Void> addItemToCarrito(@PathVariable("id") Integer id, @RequestBody Item item) {
+		try {
+			carritoService.agregarItemAlCarrito(id, item);
+			return new ResponseEntity<>(HttpStatus.OK);
+		} catch (Exception e) {
+			log.error("Error al agregar el item al carrito", e);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+
+	@Operation(summary = "Eliminar un item de un carrito existente")
+	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Item eliminado del carrito exitosamente"),
+			@ApiResponse(responseCode = "404", description = "Carrito o Item no encontrado", content = @Content),
+			@ApiResponse(responseCode = "500", description = "Error interno del servidor", content = @Content) })
+	@DeleteMapping(value = "/{carritoId}/items/{itemId}")
+	public ResponseEntity<Void> removeItemFromCarrito(@PathVariable("carritoId") Integer carritoId,
+			@PathVariable("itemId") Integer itemId) {
+		try {
+			carritoService.eliminarItemDelCarrito(carritoId, itemId);
+			return new ResponseEntity<>(HttpStatus.OK);
+		} catch (Exception e) {
+			log.error("Error al eliminar el item del carrito", e);
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}

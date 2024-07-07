@@ -191,12 +191,10 @@ function eliminarCategoria(fila) {
 	
 	 if (modal && confirmarEliminacionBtn) {
         confirmarEliminacionBtn.addEventListener('click', () => {
-            fetch(`/backend/categorias/eliminar/${idCategoria}`, {
-                method: 'GET',
-            })
+            fetch(`/backend/categorias/eliminar/${idCategoria}`)
                 .then(response => {
                     if (response.ok) {
-                        window.location.href = '/backend/categorias/';
+                        window.location.href = '/backend/categorias/?success';
                     } else {
 						window.location.href = '/backend/eliminar/error-categoria/';
 					}

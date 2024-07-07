@@ -2,115 +2,165 @@ package com.educacionit.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 import com.educacionit.entity.Carrito;
+import com.educacionit.entity.Item;
+import com.educacionit.entity.Producto;
 import com.educacionit.repository.CarritoRepository;
+import com.educacionit.repository.ItemRepository;
 
-class CarritoServiceTest {
+@SpringBootTest
+public class CarritoServiceTest {
 
-    @Mock
+    @MockBean
     private CarritoRepository carritoRepository;
 
-    @InjectMocks
+    @MockBean
+    private ItemRepository itemRepository;
+
+    @Autowired
     private CarritoService carritoService;
 
-    private List<Carrito> carritoList;
-
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
-        carritoList = new ArrayList<>();
-        carritoList.add(new Carrito());
-        carritoList.add(new Carrito());
+    @SuppressWarnings("unchecked")
+	@AfterEach
+    public void tearDown() {
+        reset(carritoRepository, itemRepository);
     }
 
     @Test
-    void testSave() {
+    public void testSaveCarrito() {
         Carrito carrito = new Carrito();
-        when(carritoRepository.save(any(Carrito.class))).thenReturn(carrito);
-
+        when(carritoRepository.save(carrito)).thenReturn(carrito);
         Carrito savedCarrito = carritoService.save(carrito);
-
         assertNotNull(savedCarrito);
-        assertEquals(carrito, savedCarrito);
+        verify(carritoRepository, times(1)).save(carrito);
     }
 
     @Test
-    void testGetById() {
-        int carritoId = 1;
-        Carrito carrito = carritoList.get(0);
-        when(carritoRepository.findById(carritoId)).thenReturn(Optional.of(carrito));
-
-        Carrito retrievedCarrito = carritoService.getById(carritoId);
-
-        assertNotNull(retrievedCarrito);
-        assertEquals(carrito, retrievedCarrito);
+    public void testGetById() {
+        Carrito carrito = new Carrito();
+        when(carritoRepository.findById(1)).thenReturn(Optional.of(carrito));
+        Carrito foundCarrito = carritoService.getById(1);
+        assertNotNull(foundCarrito);
+        verify(carritoRepository, times(1)).findById(1);
     }
 
     @Test
-    void testGetByIdNotFound() {
-        int carritoId = 3;
-        when(carritoRepository.findById(carritoId)).thenReturn(Optional.empty());
-
-        Carrito retrievedCarrito = carritoService.getById(carritoId);
-
-        assertNull(retrievedCarrito);
+    public void testGetAll() {
+        Carrito carrito1 = new Carrito();
+        Carrito carrito2 = new Carrito();
+        List<Carrito> carritos = Arrays.asList(carrito1, carrito2);
+        when(carritoRepository.findAll()).thenReturn(carritos);
+        List<Carrito> foundCarritos = carritoService.getAll();
+        assertEquals(2, foundCarritos.size());
+        verify(carritoRepository, times(1)).findAll();
     }
 
     @Test
-    void testGetAll() {
-        when(carritoRepository.findAll()).thenReturn(carritoList);
-
-        List<Carrito> retrievedCarritos = carritoService.getAll();
-
-        assertNotNull(retrievedCarritos);
-        assertEquals(carritoList, retrievedCarritos);
-    }
-
-    @Test
-    void testUpdate() throws Exception {
-        int carritoId = 1;
-        Carrito carritoModificado = new Carrito();
-        Carrito existingCarrito = carritoList.get(0);
-        when(carritoRepository.findById(carritoId)).thenReturn(Optional.of(existingCarrito));
-        when(carritoRepository.save(any(Carrito.class))).thenReturn(carritoModificado);
-
-        Carrito updatedCarrito = carritoService.update(carritoId, carritoModificado);
-
+    public void testUpdateCarrito() throws Exception {
+        Carrito existingCarrito = new Carrito();
+        existingCarrito.setId_carrito(1);
+        Carrito modifiedCarrito = new Carrito();
+        when(carritoRepository.findById(1)).thenReturn(Optional.of(existingCarrito));
+        when(carritoRepository.save(existingCarrito)).thenReturn(existingCarrito);
+        Carrito updatedCarrito = carritoService.update(1, modifiedCarrito);
         assertNotNull(updatedCarrito);
-        assertEquals(carritoModificado, updatedCarrito);
+        verify(carritoRepository, times(1)).findById(1);
+        verify(carritoRepository, times(1)).save(existingCarrito);
     }
 
     @Test
-    void testUpdateNotFound() {
-        int carritoId = 3;
-        Carrito carritoModificado = new Carrito();
-        when(carritoRepository.findById(carritoId)).thenReturn(Optional.empty());
-
-        assertThrows(Exception.class, () -> carritoService.update(carritoId, carritoModificado));
+    public void testUpdateCarrito_NotFound() {
+        Carrito modifiedCarrito = new Carrito();
+        when(carritoRepository.findById(1)).thenReturn(Optional.empty());
+        Exception exception = assertThrows(Exception.class, () -> {
+            carritoService.update(1, modifiedCarrito);
+        });
+        assertEquals("El Carrito con ID: 1 no Existe en la BD", exception.getMessage());
     }
 
     @Test
-    void testDelete() {
-        int carritoId = 1;
-        carritoService.delete(carritoId);
+    public void testDeleteCarrito() {
+        carritoService.delete(1);
+        verify(carritoRepository, times(1)).deleteById(1);
+    }
 
-        verify(carritoRepository, times(1)).deleteById(carritoId);
+    @Test
+    public void testAgregarItemAlCarrito() throws Exception {
+        Carrito carrito = new Carrito();
+        carrito.setId_carrito(1);
+        Producto producto = new Producto();
+        Item item = new Item(null, producto, carrito, 2, 50.0);
+        when(carritoRepository.findById(1)).thenReturn(Optional.of(carrito));
+        carritoService.agregarItemAlCarrito(1, item);
+        verify(carritoRepository, times(1)).findById(1);
+        verify(itemRepository, times(1)).save(item);
+        verify(carritoRepository, times(1)).save(carrito);
+        assertEquals(1, carrito.getItems().size());
+    }
+
+    @Test
+    public void testAgregarItemAlCarrito_CarritoNoEncontrado() {
+        Producto producto = new Producto();
+        Item item = new Item(null, producto, null, 2, 50.0);
+        when(carritoRepository.findById(1)).thenReturn(Optional.empty());
+        Exception exception = assertThrows(Exception.class, () -> {
+            carritoService.agregarItemAlCarrito(1, item);
+        });
+        assertEquals("El Carrito con ID: 1 no Existe en la BD", exception.getMessage());
+    }
+
+    @Test
+    public void testEliminarItemDelCarrito() throws Exception {
+        Carrito carrito = new Carrito();
+        carrito.setId_carrito(1);
+        Producto producto = new Producto();
+        Item item = new Item(null, producto, carrito, 2, 50.0);
+        item.setId_item(1);
+        carrito.agregarItem(item);
+        when(carritoRepository.findById(1)).thenReturn(Optional.of(carrito));
+        when(itemRepository.findById(1)).thenReturn(Optional.of(item));
+        carritoService.eliminarItemDelCarrito(1, 1);
+        verify(carritoRepository, times(1)).findById(1);
+        verify(itemRepository, times(1)).findById(1);
+        verify(itemRepository, times(1)).delete(item);
+        verify(carritoRepository, times(1)).save(carrito);
+        assertEquals(0, carrito.getItems().size());
+    }
+
+    @Test
+    public void testEliminarItemDelCarrito_CarritoNoEncontrado() {
+        when(carritoRepository.findById(1)).thenReturn(Optional.empty());
+        Exception exception = assertThrows(Exception.class, () -> {
+            carritoService.eliminarItemDelCarrito(1, 1);
+        });
+        assertEquals("El Carrito con ID: 1 no Existe en la BD", exception.getMessage());
+    }
+
+    @Test
+    public void testEliminarItemDelCarrito_ItemNoEncontrado() {
+        Carrito carrito = new Carrito();
+        carrito.setId_carrito(1);
+        when(carritoRepository.findById(1)).thenReturn(Optional.of(carrito));
+        when(itemRepository.findById(1)).thenReturn(Optional.empty());
+        Exception exception = assertThrows(Exception.class, () -> {
+            carritoService.eliminarItemDelCarrito(1, 1);
+        });
+        assertEquals("El Item con ID: 1 no Existe en el Carrito con ID: 1", exception.getMessage());
     }
 }

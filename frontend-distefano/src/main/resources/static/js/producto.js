@@ -1,18 +1,6 @@
 let categorias = [];
 
-fetch('/backend/categorias/json')
-	.then(response => {
-		if (!response.ok) {
-			throw new Error('Error en la solicitud AJAX');
-		}
-		return response.json();
-	})
-	.then(data => {
-		categorias = data;
-	})
-	.catch(error => {
-		console.error('Error en la solicitud AJAX:', error);
-	});
+
 
 let productos = [];
 
@@ -327,9 +315,7 @@ function eliminarProducto(fila) {
 
 	if (modal && confirmarEliminacionBtn) {
 		confirmarEliminacionBtn.addEventListener('click', () => {
-			fetch(`/backend/productos/eliminar/${idProducto}`, {
-				method: 'GET',
-			})
+			fetch(`/backend/productos/eliminar/${idProducto}`)
 				.then(response => {
 					if (response.ok) {
 						window.location.href = '/backend/productos/';

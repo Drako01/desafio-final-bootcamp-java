@@ -16,11 +16,12 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import com.educacionit.entity.Categoria;
 import com.educacionit.entity.Producto;
 import com.educacionit.repository.ProductoRepository;
-
+@SpringBootTest
 class ProductoServiceTest {
 
     @Mock
@@ -36,9 +37,9 @@ class ProductoServiceTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
 
-        Categoria categoria = new Categoria("NombreCategoria", "DescripcionCategoria");
+        Categoria categoria = new Categoria(null, "NombreCategoria", "DescripcionCategoria");
 
-        producto = new Producto("NombreProducto", "DescripcionProducto", 1050.50, null, null, categoria);
+        producto = new Producto(null, "NombreProducto", "DescripcionProducto", 1050.50, null, null, categoria, null);
         productoList = new ArrayList<>();
         productoList.add(producto);
     }
@@ -95,7 +96,7 @@ class ProductoServiceTest {
         when(productoRepository.findById(1)).thenReturn(Optional.of(producto));
         when(productoRepository.save(any())).thenReturn(producto);
 
-        Producto updatedProducto = new Producto("NuevoNombreProducto", "NuevaDescripcionProducto", 1000.0, null, null, producto.getCategoria());
+        Producto updatedProducto = new Producto(null, "NuevoNombreProducto", "NuevaDescripcionProducto", 1000.0, null, null, producto.getCategoria(), null);
         Producto resultProducto = productoService.update(1, updatedProducto);
 
         assertNotNull(resultProducto);

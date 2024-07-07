@@ -2,8 +2,6 @@ package com.educacionit.controller;
 
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -27,13 +25,14 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RestController
 @RequestMapping("/items")
 @Tag(name = "Gestión de Items", description = "Endpoints para gestionar items")
 public class ItemController {
 
-    private static final Logger logger = LoggerFactory.getLogger(ItemController.class);
 
     @Autowired
     @Qualifier("itemService")
@@ -62,7 +61,7 @@ public class ItemController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        logger.info(item.toString());
+        log.info(item.toString());
         return new ResponseEntity<>(item, HttpStatus.OK);
     }
 
@@ -105,7 +104,7 @@ public class ItemController {
             itemService.delete(id);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
-            logger.error("Error al eliminar el item", e);
+            log.error("Error al eliminar el item", e);
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

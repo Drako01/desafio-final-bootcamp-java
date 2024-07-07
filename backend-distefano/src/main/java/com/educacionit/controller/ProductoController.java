@@ -27,7 +27,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
-@RequestMapping("/productos")
+@RequestMapping("/productos-listar")
 @Tag(name = "Gestión de Productos", description = "Endpoints para gestionar productos")
 public class ProductoController {
 
