@@ -4,8 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
 
+import com.educacionit.config.AppConfig;
 import com.educacionit.service.VerificarTokenService;
 
 @Controller
@@ -13,10 +13,14 @@ public class IndexController {
 
     @Autowired
     private VerificarTokenService verificarTokenService;
+    
+    @Autowired
+    private AppConfig appConfig;
+    
 
     @GetMapping("/")
     public String index(String authHeader, Model model) {
-        String nombre = "Invitado";
+        String nombre = appConfig.bienvenida();
 
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             String token = authHeader.substring(7);
