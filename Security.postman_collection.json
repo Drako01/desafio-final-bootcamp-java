@@ -13,7 +13,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"username\": \"addistefano@live.com.ar\",\r\n  \"password\": \"Alejandro123\",\r\n  \"fullName\": \"Alejandro Di Stefano\",\r\n  \"telefono\": \"1155556666\"\r\n}",
+					"raw": "{\r\n  \"username\": \"addistefano76@gmail.com\",\r\n  \"password\": \"Alejandro123\",\r\n  \"nombre\": \"Alejandro Daniel Di Stefano\",\r\n  \"telefono\": \"1155556666\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -42,7 +42,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"username\": \"addistefano@live.com.ar\",\r\n  \"password\": \"Alejandro123\"\r\n}",
+					"raw": "{\r\n  \"username\": \"addistefano76@gmail.com\",\r\n  \"password\": \"Alejandro123\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -104,7 +104,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJST0xFX1VTRVIiXSwic3ViIjoiYWRkaXN0ZWZhbm83NkBnbWFpbC5jb20iLCJpYXQiOjE3MjA0NTcwMTQsImV4cCI6MTcyMDQ1ODQ1NH0.VSFdChYSwvC2OMFgtLZqJTwcaBIOObQpymhnXBwjMGY",
 							"type": "string"
 						}
 					]
@@ -134,7 +134,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJST0xFX1VTRVIiXSwic3ViIjoiYWRkaXN0ZWZhbm83NkBnbWFpbC5jb20iLCJpYXQiOjE3MjA0NTcwMTQsImV4cCI6MTcyMDQ1ODQ1NH0.VSFdChYSwvC2OMFgtLZqJTwcaBIOObQpymhnXBwjMGY",
 							"type": "string"
 						}
 					]
@@ -151,6 +151,45 @@
 					"path": [
 						"categorias-listar",
 						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Carrito",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlcyI6WyJST0xFX1VTRVIiXSwic3ViIjoiYWRkaXN0ZWZhbm83NkBnbWFpbC5jb20iLCJpYXQiOjE3MjA0NjQ4MTEsImV4cCI6MTcyMDQ2NjI1MX0.z9XGNur4tAwLYrz-h4sMZyYjiP9Yeptf-qXKdawMAj4",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"productos\": []\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/carrito/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"carrito",
+						"1"
 					]
 				}
 			},
