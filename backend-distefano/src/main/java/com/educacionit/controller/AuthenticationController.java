@@ -22,6 +22,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
 @RequestMapping("/auth")
@@ -38,16 +40,15 @@ public class AuthenticationController {
 			@ApiResponse(responseCode = "409", description = "Conflict: User already exists", content = @Content) })
 	@PostMapping("/signup")
 	public ResponseEntity<AuthResponse> registracion(@RequestBody RegisterRequest registracion) {
-	    try {	       
-	        AuthResponse response = authenticationService.register(registracion);	        
-	        return ResponseEntity.ok(response);
-	    } catch (IllegalArgumentException e) {	        
-	        return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
-	    } catch (Exception e) {	       
-	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-	    }
+		try {
+			AuthResponse response = authenticationService.register(registracion);
+			return ResponseEntity.ok(response);
+		} catch (IllegalArgumentException e) {
+			return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+		}
 	}
-
 
 	@Operation(summary = "Autenticación del Usuario")
 	@ApiResponses(value = {
@@ -57,21 +58,20 @@ public class AuthenticationController {
 	@PostMapping("/login")
 	public ResponseEntity<AuthResponse> autenticacion(@RequestBody LoginRequest request) {
 		try {
-            AuthResponse response = authenticationService.login(request);
+			AuthResponse response = authenticationService.login(request);
             return ResponseEntity.ok(response);
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-        }
+		} catch (IllegalArgumentException e) {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+		}
 	}
-	
+
 	@Operation(summary = "Logout del Usuario")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Logout successful", content = @Content) })
-    @GetMapping("/logout")
-    public ResponseEntity<Void> logout() {        
-        SecurityContextHolder.clearContext();
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
+	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "Logout successful", content = @Content) })
+	@GetMapping("/logout")
+	public ResponseEntity<Void> logout() {
+		SecurityContextHolder.clearContext();
+		return new ResponseEntity<>(HttpStatus.OK);
+	}
 }

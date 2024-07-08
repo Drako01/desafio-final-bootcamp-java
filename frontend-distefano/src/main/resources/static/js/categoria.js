@@ -194,7 +194,7 @@ function eliminarCategoria(fila) {
 	 if (modal && confirmarEliminacionBtn) {
         confirmarEliminacionBtn.addEventListener('click', () => {
             fetch(`/backend/categorias/eliminar/${idCategoria}`, {
-					method: 'DELETE',
+					method: 'GET',
 					headers: {
 						'Authorization': 'Bearer ' + token
 					},

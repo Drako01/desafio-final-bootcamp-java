@@ -380,7 +380,7 @@ function eliminarProducto(fila) {
 	if (modal && confirmarEliminacionBtn) {
 		confirmarEliminacionBtn.addEventListener('click', () => {
 			fetch(`/backend/productos/eliminar/${idProducto}`, {
-                    method: 'DELETE',
+                    method: 'GET',
                     headers: {
                         'Authorization': 'Bearer ' + token
                     }

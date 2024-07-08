@@ -30,7 +30,7 @@ public class Categoria {
 	private Integer id_categoria;
 
 	@Schema(description = "Nombre de la categoría", requiredMode = Schema.RequiredMode.REQUIRED, example = "Almacen")
-	@Column(name = "NOMBRE", nullable = false, length = 100)
+	@Column(name = "NOMBRE", nullable = false, length = 100, unique = true)
 	private String nombre;
 
 	@Schema(description = "Descripción de la categoría", requiredMode = Schema.RequiredMode.REQUIRED, example = "Productos de almacen")

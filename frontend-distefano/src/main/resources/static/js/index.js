@@ -10,9 +10,9 @@ function appendLink() {
 	} else {
 		logLink.innerHTML = `<a class="nav-link" aria-current="page" 
 						href="#" onClick="reenviarLogin(event)">Logout</a>`
-		
+
 	}
-}    
+}
 
 function reenviarLogin(event) {
 	event.preventDefault();
@@ -67,18 +67,12 @@ $(document).ready(function() {
 		const estado = "PENDIENTE";
 		let precioTotalCart = 0;
 
-		const items = carrito.map(item => ({
-			productoId: item.producto_id,
-			cantidad: item.cantidad,
-			nombre: item.nombre,
-			precio: item.precio,
-			subtotal: item.subtotal,
-			imagen: item.imagen
-		}));
+
 
 		precioTotalCart = carrito.reduce((total, item) => total + item.subtotal, 0);
 
 		const formDataCart = {
+			user: { id: userId },
 			fecha_pedido: fecha_pedido,
 			estado: estado,
 			precio_total: precioTotalCart
@@ -86,6 +80,7 @@ $(document).ready(function() {
 
 		return JSON.stringify(formDataCart);
 	}
+
 
 	if (botonComprarCarrito) {
 		botonComprarCarrito.addEventListener('click', () => {
@@ -101,10 +96,18 @@ $(document).ready(function() {
 				})
 					.then(response => {
 						if (response.ok) {
-							window.location.href = '/carrito/';
+							console.log(formDataCart)
+							return response.json();
 						} else {
 							throw new Error('Error en la respuesta del servidor');
 						}
+					})
+					.then(data => {
+						console.log('Carrito guardado con éxito:', data);
+						localStorage.setItem('carrito', JSON.stringify([]));
+						actualizarCarrito();
+						actualizarCarritoTable();
+						window.location.href = '/carrito/';
 					})
 					.catch(error => {
 						console.error('Error al guardar el carrito:', error);
@@ -252,11 +255,13 @@ function confirmarEliminarProducto() {
 }
 
 fetch('/backend/productos/json', {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': 'Bearer ' + token
-                    }
-                })
+
+	method: 'GET',
+	headers: {
+		'Authorization': 'Bearer ' + token
+	}
+})
+
 	.then(response => {
 		if (!response.ok) {
 			throw new Error('Error en la solicitud AJAX');
@@ -270,9 +275,5 @@ fetch('/backend/productos/json', {
 	.catch(error => {
 		console.error('Error en la solicitud AJAX:', error);
 	})
-
-
-
-
 
 

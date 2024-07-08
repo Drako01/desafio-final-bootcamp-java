@@ -18,7 +18,5 @@ public class FrontendDistefanoApplication {
 		logger.info("http://localhost:" + port);
 
 	}
-	
 
-	
 }

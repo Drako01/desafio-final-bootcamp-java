@@ -28,7 +28,10 @@ public class SecurityConfig { //Front
                         .requestMatchers("/css/**", "/js/**", "/login",
                         		 "/img/**", "/favicon.ico", "/fecha/*", "/signup",
                         		 "/","/productos*/**", "/backend/**"
-    	                		, "/categorias*/**", "/carritos/**")
+    	                		, "/categorias*/**", "/carrito*/**", "/swagger**",
+    	                		"http://localhost:8080/swagger-ui/index.html#/**",
+    	                		"*/swagger-ui/index.html#/")
+
                         
                         .permitAll()
     	                .anyRequest().authenticated()

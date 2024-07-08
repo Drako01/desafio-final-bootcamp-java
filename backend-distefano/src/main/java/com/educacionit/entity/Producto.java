@@ -16,44 +16,47 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 
-@Getter
-@Setter
-@ToString
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Schema(description = "Modelo de Producto")
 @Entity
-@Table(name = "producto", indexes = { @Index(name = "categoria_id", columnList = "categoria_id") })
+@Table(name = "producto", indexes = { @Index(name = "categoria_id", 
+columnList = "categoria_id") })
 public class Producto {
 
-	@Schema(description = "ID del Producto", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
+	@Schema(description = "ID del Producto", 
+			requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID")
 	private Integer id_producto;
 
-	@Schema(description = "Nombre del producto", requiredMode = Schema.RequiredMode.REQUIRED, example = "Fideos")
+	@Schema(description = "Nombre del producto", 
+			requiredMode = Schema.RequiredMode.REQUIRED, example = "Fideos")
 	@Column(name = "NOMBRE", nullable = false, length = 100)
 	private String nombre;
 
-	@Schema(description = "Descripción del Producto", requiredMode = Schema.RequiredMode.REQUIRED, example = "Fideos de Sémola")
+	@Schema(description = "Descripción del Producto", 
+			requiredMode = Schema.RequiredMode.REQUIRED, example = "Fideos de Sémola")
 	@Column(name = "DESCRIPCION", nullable = false, length = 255)
 	private String descripcion;
 
-	@Schema(description = "Precio del Producto", requiredMode = Schema.RequiredMode.REQUIRED, example = "1050.50")
+	@Schema(description = "Precio del Producto", 
+			requiredMode = Schema.RequiredMode.REQUIRED, example = "1050.50")
 	@Column(name = "PRECIO", nullable = false)
 	private double precio;
 
-	@Schema(description = "Imagen del Producto", requiredMode = Schema.RequiredMode.REQUIRED, example = "imagen.png")
+	@Schema(description = "Imagen del Producto", 
+			requiredMode = Schema.RequiredMode.REQUIRED, example = "imagen.png")
 	@Column(name = "IMAGEN", nullable = false)
 	private String imagen;
 
-	@Schema(description = "Stock del Producto", requiredMode = Schema.RequiredMode.REQUIRED, example = "100")
+	@Schema(description = "Stock del Producto", 
+			requiredMode = Schema.RequiredMode.REQUIRED, example = "100")
 	@Column(name = "STOCK", nullable = false)
 	private Integer stock;
 
@@ -61,7 +64,14 @@ public class Producto {
 	@JoinColumn(name = "categoria_id")
 	private Categoria categoria;
 
-	@ManyToMany(mappedBy = "productosFav", fetch = FetchType.LAZY)
+	@ManyToMany(mappedBy = "productosFav", fetch = FetchType.EAGER)
     private Set<User> usuariosFav = new HashSet<>();
+	
+	@ManyToMany(mappedBy = "productos", fetch = FetchType.EAGER)
+	private Set<Carrito> carritos = new HashSet<>();
+	
+	public double obtenerSubtotal(int cantidad) {
+        return this.precio * cantidad;
+    }
 
 }
