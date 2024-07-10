@@ -30,7 +30,7 @@ Estoy emocionado por ampliar mis habilidades al mundo de la programación Java.
 
 # Video explicativo
 
-## Para verlo haga [Click Acá](https://youtu.be/XXDOct6oupI)
+## Para verlo haga 🎥 🎞️ [Click Acá](https://youtu.be/XXDOct6oupI)
 
 
 
