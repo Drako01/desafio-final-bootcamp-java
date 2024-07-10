@@ -37,9 +37,9 @@ select * from categoria;
 select * from carrito;
 select * from roles;
 select * from user;
-select * from item;
 select * from users_roles;
-select * from historial_compras;
+select * from carrito_productos;
+select * from favoritos;
 
 
-
+SHOW CREATE TABLE carrito;
