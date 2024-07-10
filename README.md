@@ -23,9 +23,22 @@ Estoy emocionado por ampliar mis habilidades al mundo de la programación Java.
 
 ---
 
-## Explicación del Proyecto
+
+---
+
+
+
+# Video explicativo
+
+## Para verlo haga [Click Acá](https://youtu.be/XXDOct6oupI)
+
+
+
+# Explicación del Proyecto
 
 #### Sistema Backoffice de Gestión de Productos
+
+
 
 El sistema backoffice de gestión de productos es una parte fundamental de la aplicación que permite a los administradores del sistema administrar el catálogo de productos y categorías de manera eficiente. Aquí están las principales características de esta parte del proyecto:
 
